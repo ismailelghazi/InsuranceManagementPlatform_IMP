@@ -24,9 +24,9 @@ class User(_UserBase):
     class Config:
         orm_mode = True
 
-class AssureBase(_pydantic.BaseModel):
-    Cin : str
-    Assure_name : str
-    class Config:
-        orm_mode = True
-        from_attributes = True
+# class AssureBase(_pydantic.BaseModel):
+#     Cin : str
+#     Assure_name : str
+#     class Config:
+#         orm_mode = True
+#         from_attributes = True

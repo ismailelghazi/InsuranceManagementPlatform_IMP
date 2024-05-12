@@ -23,7 +23,7 @@ def get_db():
         yield db
     finally:
         db.close()
-
+create_database()
 async def get_user_by_email(email: str, db: _orm.Session):
     return db.query(_models.User).filter(_models.User.email == email).first()
 

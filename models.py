@@ -16,27 +16,26 @@ class User(_database.Base):
 
     def verify_password(self, password: str):
         return _hash.bcrypt.verify(password, self.hashed_password)
+class AssureModel(_database.Base):
+    __tablename__ = "Assure"
+    id = _sql.Column(_sql.Integer, primary_key=True, index=True)
+    Cin = _sql.Column(_sql.String, unique=True, primary_key=True)
+    Assure_name = _sql.Column(_sql.String)
+    products = _orm.relationship("ProductModel", back_populates="assure")
 
-# class AssureModel(db.Base):
-#     __tablename__ = "Assure"
-#     Cin = sqlalchemy.Column(String, unique=True,primary_key=True)
-#     Assure_name = sqlalchemy.Column(String)
-#     Products = orm.relationship("ProductModel", back_populates="assure")
-
-
-# class ProductModel(db):
-#     __tablename__ = "Product"
-#     id = sqlalchemy.Column(Integer, primary_key=True)
-#     Cin = sqlalchemy.Column(String, ForeignKey("Assure.Cin"))
-#     Police = sqlalchemy.Column(String, unique=True)
-#     Date_effet = sqlalchemy.Column(String)
-#     Acte = sqlalchemy.Column(String)
-#     Date_fin = sqlalchemy.Column(Date)
-#     Fractionn = sqlalchemy.Column(String)
-#     Contrat = sqlalchemy.Column(String)
-#     Periode = sqlalchemy.Column(String)
-#     Marque = sqlalchemy.Column(String)
-#     Matricule = sqlalchemy.Column(String)
-#     Attestation = sqlalchemy.Column(String)
-#     Prime_Totale = sqlalchemy.Column(Float)
-#     Products = orm.relationship("AssureModel", back_populates="Products")
+class ProductModel(_database.Base):
+    __tablename__ = "Product"
+    id = _sql.Column(_sql.Integer, primary_key=True)
+    Police = _sql.Column(_sql.String, unique=True)
+    Date_effet = _sql.Column(_sql.String)
+    Acte = _sql.Column(_sql.String)
+    Date_fin = _sql.Column(_sql.Date)
+    Fractionn = _sql.Column(_sql.String)
+    Contrat = _sql.Column(_sql.String)
+    Periode = _sql.Column(_sql.String)
+    Marque = _sql.Column(_sql.String)
+    Matricule = _sql.Column(_sql.String)
+    Attestation = _sql.Column(_sql.String)
+    Prime_Totale = _sql.Column(_sql.Float)
+    assure_id = _sql.Column(_sql.Integer, _sql.ForeignKey('Assure.id'))
+    assure = _orm.relationship("AssureModel", back_populates="products")
