@@ -1,5 +1,7 @@
 # fastapi-jwt/schemas.py
+import datetime
 import datetime as _dt
+from typing import Optional
 
 import pydantic as _pydantic
 
@@ -35,4 +37,39 @@ class AssureBase(_pydantic.BaseModel):
     class Config:
         orm_mode = True
         from_attributes = True
+
+class ProductBase(_pydantic.BaseModel):
+    id:int
+    Police: str
+    Date_effet: datetime.date
+    Acte: str
+    Date_fin: datetime.date
+    Fractionn: str
+    Contrat: str
+    Periode: str
+    Marque: str
+    Date_Emission: datetime.date
+    Matricule: str
+    Attestation: str
+    Prime_Totale: float
+    assure_id: str
+    class Config:
+        orm_mode = True
+        from_attributes = True
+
+class ProductCreate(_pydantic.BaseModel):
+    Police: str
+    Date_effet: datetime.date
+    Acte: str
+    Date_fin: datetime.date
+    Fractionn: str
+    Contrat: str
+    Periode: str
+    Marque: str
+    Date_Emission: datetime.date
+    Matricule: str
+    Attestation: str
+    Prime_Totale: float
+    assure_id: str
+
 
