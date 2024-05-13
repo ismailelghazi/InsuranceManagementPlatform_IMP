@@ -75,7 +75,7 @@ def delete_Assure(Cin: str, db: _orm.Session = _fastapi.Depends(_services.get_db
 @app.get("/Assure/{id}", response_model=_schemas.AssureBase)
 def read_Assure(Cin: str, db: _orm.Session = _fastapi.Depends(_services.get_db)):
     Assure = db.query(models.AssureModel).get(Cin)  # get item with the given id
-
+    print(Assure)
     # check if id exists. If not, return 404 not found response
     if not Assure:
         raise HTTPException(status_code=404, detail=f"item with id {Cin} not found")
@@ -128,12 +128,11 @@ def create_Assure(product: _schemas.ProductCreate,db: _orm.Session = _fastapi.De
 async def read_Product_list(Product : _schemas.ProductBase = _fastapi.Depends(_services.get_db)):
     Product_list = Product.query(models.ProductModel).all()  # get all
     return Product_list
-@app.get("/api/Product/{assure_id}", response_model=_schemas.ProductBase)
-async def Product_by_cin(assure_id: str,db: _orm.Session = _fastapi.Depends(_services.get_db)):
 
-    Product_by_cin = db.query(models.ProductModel).get(assure_id)
 
-    if not Product_by_cin:
-        raise HTTPException(status_code=404, detail=f" item with id {assure_id} not found")
-    return Product_by_cin
-
+@app.get("/Assure/{Cin}/Product/")
+def get_Assure_Product(Cin: str, db: _orm.Session = _fastapi.Depends(_services.get_db)):
+    Assure = db.query(models.AssureModel).filter(models.AssureModel.Cin == Cin).first()
+    if Assure is None:
+        raise HTTPException(status_code=404, detail="Teacher not found")
+    return Assure.products
