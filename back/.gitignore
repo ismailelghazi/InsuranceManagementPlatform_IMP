@@ -1,1 +1,4 @@
-lib
+lib/
+lib64/
+include/
+
