@@ -84,7 +84,7 @@ def read_Assure(Cin: str, db: _orm.Session = _fastapi.Depends(_services.get_db))
 ##########################################################Assure_insert_data_from_excel##########################################################
 @app.post("/api/insert_data_from_excel", status_code=status.HTTP_201_CREATED)
 def insert_data_from_excel(db: _orm.Session = _fastapi.Depends(_services.get_db)):
-    for index, row in data_ex.df.iterrows():
+    for index, row in data_ex.df1.iterrows():
         cin = row['CIN']
         assure_db = db.query(models.AssureModel).filter(models.AssureModel.Cin == cin).first()
         if assure_db:
@@ -129,10 +129,47 @@ async def read_Product_list(Product : _schemas.ProductBase = _fastapi.Depends(_s
     Product_list = Product.query(models.ProductModel).all()  # get all
     return Product_list
 
+@app.delete("/api/Product_delete/{id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_Assure(id: int, db: _orm.Session = _fastapi.Depends(_services.get_db)):
+    # Retrieve the Product object from the database
+    Productdb = db.query(models.ProductModel).filter(models.ProductModel.id == id).first()
 
+    # If Assure object does not exist, raise HTTPException with status code 404
+    if not Productdb:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Product not found")
+
+    # Delete the Product object
+    db.delete(Productdb)
+    db.commit()
 @app.get("/Assure/{Cin}/Product/")
 def get_Assure_Product(Cin: str, db: _orm.Session = _fastapi.Depends(_services.get_db)):
     Assure = db.query(models.AssureModel).filter(models.AssureModel.Cin == Cin).first()
     if Assure is None:
-        raise HTTPException(status_code=404, detail="Teacher not found")
+        raise HTTPException(status_code=404, detail="Assure not found")
     return Assure.products
+
+######################################################################
+@app.post("/api/Product/insert_data_from_excel", status_code=status.HTTP_201_CREATED)
+def insert_data_from_excel(db: _orm.Session = _fastapi.Depends(_services.get_db)):
+    global Product_da
+    for index, row in data_ex.df2.iterrows():
+        Product_data = models.ProductModel(
+            Date_Emission=row['Date Emission'],
+            Acte=row['Acte'], Police=row['Police'],
+            Date_effet=row['Date effet'], Date_fin=row['Date Fin'],Prime_Totale=row['Prime Totale']
+            ,assure_id=row['CIN'], Fractionn=row['Fractionn'], Contrat=row['Contrat'],
+            Matricule=row['Matricule'],Attestation=row['Attestation'],
+            Periode=row['Période'], Marque=row['Marque'],
+        )
+        print(Product_data)
+        Product_da = models.ProductModel(Date_Emission=Product_data.Date_Emission,
+                                       Date_effet=Product_data.Date_effet,Date_fin=Product_data.Date_fin,Contrat=Product_data.Contrat,
+                                         Periode=Product_data.Periode,Marque=Product_data.Marque,
+                                         Fractionn=Product_data.Fractionn,Matricule=Product_data.Matricule,Attestation=Product_data.Attestation,
+                                      Prime_Totale=Product_data.Prime_Totale,
+                                       assure_id=Product_data.assure_id, Acte=Product_data.Acte,Police=Product_data.Police,)
+        print(Product_da)
+        db.add(Product_da)
+        db.commit()
+        db.refresh(Product_da)
+    return {"message": "Data inserted successfully"}

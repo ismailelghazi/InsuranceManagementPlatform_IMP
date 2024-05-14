@@ -44,13 +44,13 @@ class ProductBase(_pydantic.BaseModel):
     Date_effet: datetime.date
     Acte: str
     Date_fin: datetime.date
-    Fractionn: str
+    Fractionn: Optional[str]
     Contrat: str
     Periode: str
     Marque: str
-    Date_Emission: datetime.date
+    Date_Emission: datetime.datetime
     Matricule: str
-    Attestation: str
+    Attestation: Optional[str]
     Prime_Totale: float
     assure_id: str
     class Config:
@@ -62,13 +62,13 @@ class ProductCreate(_pydantic.BaseModel):
     Date_effet: datetime.date
     Acte: str
     Date_fin: datetime.date
-    Fractionn: str
+    Fractionn: Optional[str]
     Contrat: str
     Periode: str
     Marque: str
-    Date_Emission: datetime.date
+    Date_Emission: datetime.datetime
     Matricule: str
-    Attestation: str
+    Attestation: Optional[str]
     Prime_Totale: float
     assure_id: str
 
