@@ -9,8 +9,10 @@ import datetime as dt
 
 import models
 import services as _services, schemas as _schemas
+import uvicorn
 
 app = _fastapi.FastAPI()
+
 
 ##############################################################User###################################################################################
 @app.post("/api/users")
@@ -173,3 +175,6 @@ def insert_data_from_excel(db: _orm.Session = _fastapi.Depends(_services.get_db)
         db.commit()
         db.refresh(Product_da)
     return {"message": "Data inserted successfully"}
+
+if __name__ == '__main__':
+    uvicorn.run('main:app',reload=True,port=5300)
