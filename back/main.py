@@ -3,6 +3,7 @@ from typing import List
 import fastapi as _fastapi
 import fastapi.security as _security
 from fastapi import FastAPI, status, HTTPException, Depends
+from fastapi.middleware.cors import CORSMiddleware
 import Execel_imoprt_data as data_ex
 import sqlalchemy.orm as _orm
 import datetime as dt
@@ -13,6 +14,15 @@ import uvicorn
 
 app = _fastapi.FastAPI()
 
+## Setting middlewares for cors
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=['*'],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 ##############################################################User###################################################################################
 @app.post("/api/users")
