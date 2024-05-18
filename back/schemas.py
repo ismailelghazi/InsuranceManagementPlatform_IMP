@@ -73,3 +73,21 @@ class ProductCreate(_pydantic.BaseModel):
     assure_id: str
 
 
+class ProductWithAssureName(_pydantic.BaseModel):
+    id: int
+    Police: str
+    Date_effet: datetime.date
+    Acte: str
+    Date_fin: datetime.date
+    Fractionn: Optional[str]
+    Contrat: str
+    Periode: str
+    Marque: str
+    Date_Emission: datetime.datetime
+    Matricule: str
+    Attestation: Optional[str]
+    Prime_Totale: float
+    assure_id: str
+    Date_effet: str
+    # Add other fields from ProductModel as needed
+    Assure_name: str

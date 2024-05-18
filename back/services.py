@@ -5,6 +5,7 @@ import jwt as _jwt  # pip install python_jwt https://pypi.org/project/python-jwt
 import datetime as _dt
 import sqlalchemy.orm as _orm
 import passlib.hash as _hash
+from fastapi import UploadFile
 
 import database as _database, models as _models, schemas as _schemas
 
@@ -69,3 +70,10 @@ async def get_current_user(
         )
 
     return _schemas.User.from_orm(user)
+
+
+async def create_upload_file(file: UploadFile):
+    # Example implementation that reads file content asynchronously
+    contents = await file.read()
+    # Your logic to handle the uploaded file
+    return contents  # Return the file content or a path to the saved file

@@ -3,18 +3,18 @@ from typing import List
 import fastapi as _fastapi
 import fastapi.security as _security
 from fastapi import FastAPI, status, HTTPException, Depends
-from fastapi.middleware.cors import CORSMiddleware
-import Execel_imoprt_data as data_ex
 import sqlalchemy.orm as _orm
-import datetime as dt
-
+from fastapi import FastAPI, UploadFile, File
+import pandas as pd
+import numpy as np
+import io
+from fastapi.middleware.cors import CORSMiddleware
 import models
 import services as _services, schemas as _schemas
-import uvicorn
 
 app = _fastapi.FastAPI()
 
-## Setting middlewares for cors
+
 
 app.add_middleware(
     CORSMiddleware,
@@ -23,7 +23,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
 ##############################################################User###################################################################################
 @app.post("/api/users")
 async def create_user(
@@ -94,21 +93,21 @@ def read_Assure(Cin: str, db: _orm.Session = _fastapi.Depends(_services.get_db))
 
     return Assure
 ##########################################################Assure_insert_data_from_excel##########################################################
-@app.post("/api/insert_data_from_excel", status_code=status.HTTP_201_CREATED)
-def insert_data_from_excel(db: _orm.Session = _fastapi.Depends(_services.get_db)):
-    for index, row in data_ex.df1.iterrows():
-        cin = row['CIN']
-        assure_db = db.query(models.AssureModel).filter(models.AssureModel.Cin == cin).first()
-        if assure_db:
-            continue
-        assure_data = models.AssureModel(
-            Cin=row['CIN'],
-            Assure_name=row['Assuré']
-        )
-        Assuredb = models.AssureModel(Cin=assure_data.Cin, Assure_name=assure_data.Assure_name)
-        db.add(Assuredb)
-        db.commit()
-    return {"message": "Data inserted successfully"}
+# @app.post("/api/insert_data_from_excel", status_code=status.HTTP_201_CREATED)
+# def insert_data_from_excel(db: _orm.Session = _fastapi.Depends(_services.get_db)):
+#     for index, row in data_ex.df1.iterrows():
+#         cin = row['CIN']
+#         assure_db = db.query(models.AssureModel).filter(models.AssureModel.Cin == cin).first()
+#         if assure_db:
+#             continue
+#         assure_data = models.AssureModel(
+#             Cin=row['CIN'],
+#             Assure_name=row['Assuré']
+#         )
+#         Assuredb = models.AssureModel(Cin=assure_data.Cin, Assure_name=assure_data.Assure_name)
+#         db.add(Assuredb)
+#         db.commit()
+#     return {"message": "Data inserted successfully"}
 ##########################################################Product##########################################################
 
 
@@ -141,6 +140,8 @@ async def read_Product_list(Product : _schemas.ProductBase = _fastapi.Depends(_s
     Product_list = Product.query(models.ProductModel).all()  # get all
     return Product_list
 
+
+
 @app.delete("/api/Product_delete/{id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_Assure(id: int, db: _orm.Session = _fastapi.Depends(_services.get_db)):
     # Retrieve the Product object from the database
@@ -161,30 +162,142 @@ def get_Assure_Product(Cin: str, db: _orm.Session = _fastapi.Depends(_services.g
     return Assure.products
 
 ######################################################################
-@app.post("/api/Product/insert_data_from_excel", status_code=status.HTTP_201_CREATED)
-def insert_data_from_excel(db: _orm.Session = _fastapi.Depends(_services.get_db)):
-    global Product_da
-    for index, row in data_ex.df2.iterrows():
-        Product_data = models.ProductModel(
+@app.get("/api/Reglement/AssureNames_Product", response_model=List[_schemas.ProductWithAssureName])
+async def read_Products_with_Assure_names(db: _orm.Session = _fastapi.Depends(_services.get_db)):
+    products = db.query(models.ProductModel).all()  # Get all products
+    products_with_assure_names = []
+    for product in products:
+        assure_data = db.query(models.AssureModel).filter(models.AssureModel.Cin == product.assure_id).first()
+        product_with_assure_name = _schemas.ProductWithAssureName(
+            id=product.id,
+            Police=product.Police,
+            Date_effet=str(product.Date_effet),
+            # Add other fields from ProductModel as needed
+            Assure_name=assure_data.Assure_name,
+            Acte=product.Acte,
+            Date_fin=product.Date_fin,
+            Fractionn=product.Fractionn,
+            Contrat=product.Contrat,
+            Periode=product.Periode,
+            Marque=product.Marque,
+            Date_Emission=product.Date_Emission,
+            Matricule=product.Matricule,
+            Attestation=product.Attestation,
+            Prime_Totale=product.Prime_Totale,
+            assure_id=product.assure_id)
+        products_with_assure_names.append(product_with_assure_name)
+    return products_with_assure_names
+
+
+
+async def create_upload_file(file: UploadFile):
+    contents = await file.read()
+    return contents  # Return the file contents
+##################################################################################################################################################################################################################
+
+
+
+@app.post("/upload", status_code=status.HTTP_201_CREATED)
+async def upload_file(file: UploadFile = File(...), db: _orm.Session = _fastapi.Depends(_services.get_db)):
+    # Process the uploaded file
+    df1, df2 = await process_file(file)
+
+    # Clean the DataFrames to ensure they are JSON serializable and ready for database insertion
+    df1 = df1.replace([np.inf, -np.inf], np.nan).fillna(0)
+    df2 = df2.replace([np.inf, -np.inf], np.nan).fillna(0)
+
+    # Check if the required columns exist in df1
+    required_columns_df1 = {'CIN', 'Assuré'}
+    if not required_columns_df1.issubset(df1.columns):
+        raise HTTPException(status_code=400,
+                            detail=f"Uploaded file must contain columns: {required_columns_df1} in sheet 1")
+
+    # Check if the required columns exist in df2
+    required_columns_df2 = {
+        'Date Emission', 'Acte', 'Police', 'Date effet', 'Date Fin', 'Prime Totale', 'CIN',
+        'Fractionn', 'Contrat', 'Matricule', 'Attestation', 'Période', 'Marque'
+    }
+    if not required_columns_df2.issubset(df2.columns):
+        raise HTTPException(status_code=400,
+                            detail=f"Uploaded file must contain columns: {required_columns_df2} in sheet 2")
+
+    # Insert data into AssureModel from df1
+    for index, row in df1.iterrows():
+        cin = row['CIN']
+        assure_db = db.query(models.AssureModel).filter(models.AssureModel.Cin == cin).first()
+        if assure_db:
+            continue
+        assure_data = models.AssureModel(
+            Cin=row['CIN'],
+            Assure_name=row['Assuré']
+        )
+        db.add(assure_data)
+        db.commit()
+        db.refresh(assure_data)
+    # Insert data into ProductModel from df2
+    for index, row in df2.iterrows():
+        # Check if product already exists to avoid duplicates
+        existing_product = db.query(models.ProductModel).filter(
+            models.ProductModel.Date_Emission == row['Date Emission'],
+            models.ProductModel.Acte == row['Acte'],
+            models.ProductModel.Police == row['Police'],
+            models.ProductModel.Date_effet == row['Date effet'],
+            models.ProductModel.Date_fin == row['Date Fin'],
+            models.ProductModel.Prime_Totale == row['Prime Totale'],
+            models.ProductModel.assure_id == row['CIN'],
+            models.ProductModel.Fractionn == row['Fractionn'],
+            models.ProductModel.Contrat == row['Contrat'],
+            models.ProductModel.Matricule == row['Matricule'],
+            models.ProductModel.Attestation == row['Attestation'],
+            models.ProductModel.Periode == row['Période'],
+            models.ProductModel.Marque == row['Marque']
+        ).first()
+        if existing_product:
+            continue
+        product_data = models.ProductModel(
             Date_Emission=row['Date Emission'],
             Acte=row['Acte'], Police=row['Police'],
-            Date_effet=row['Date effet'], Date_fin=row['Date Fin'],Prime_Totale=row['Prime Totale']
-            ,assure_id=row['CIN'], Fractionn=row['Fractionn'], Contrat=row['Contrat'],
-            Matricule=row['Matricule'],Attestation=row['Attestation'],
+            Date_effet=row['Date effet'], Date_fin=row['Date Fin'], Prime_Totale=row['Prime Totale'],
+            assure_id=row['CIN'], Fractionn=row['Fractionn'], Contrat=row['Contrat'],
+            Matricule=row['Matricule'], Attestation=row['Attestation'],
             Periode=row['Période'], Marque=row['Marque'],
         )
-        print(Product_data)
-        Product_da = models.ProductModel(Date_Emission=Product_data.Date_Emission,
-                                       Date_effet=Product_data.Date_effet,Date_fin=Product_data.Date_fin,Contrat=Product_data.Contrat,
-                                         Periode=Product_data.Periode,Marque=Product_data.Marque,
-                                         Fractionn=Product_data.Fractionn,Matricule=Product_data.Matricule,Attestation=Product_data.Attestation,
-                                      Prime_Totale=Product_data.Prime_Totale,
-                                       assure_id=Product_data.assure_id, Acte=Product_data.Acte,Police=Product_data.Police,)
-        print(Product_da)
-        db.add(Product_da)
+        db.add(product_data)
         db.commit()
-        db.refresh(Product_da)
+        db.refresh(product_data)
+
     return {"message": "Data inserted successfully"}
 
-if __name__ == '__main__':
-    uvicorn.run('main:app',reload=True,port=5300)
+async def process_file(file: UploadFile):
+    file_contents = await create_upload_file(file)
+    # Use an in-memory buffer to read the Excel file
+    buffer = io.BytesIO(file_contents)
+
+    # Read the Excel file
+    try:
+        excel_file = pd.ExcelFile(buffer)
+        print(f"Excel file sheets: {excel_file.sheet_names}")
+    except ValueError:
+        raise HTTPException(status_code=400, detail="Invalid Excel file")
+
+    # Check number of sheets in the Excel file
+    if len(excel_file.sheet_names) < 1:
+        raise HTTPException(status_code=400, detail="The uploaded Excel file must contain at least two sheets")
+
+    # Read data from the first two sheets
+    df1 = pd.read_excel(excel_file, sheet_name=0)  # First sheet for AssureModel
+    df2 = pd.read_excel(excel_file, sheet_name=0)  # Second sheet for ProductModel
+
+    # Ensure column names are stripped of leading/trailing spaces and are capitalized properly
+    df1.columns = [col.strip() for col in df1.columns]
+    df2.columns = [col.strip() for col in df2.columns]
+
+    print(f"Sheet 1 columns: {df1.columns}")
+    print(f"Sheet 2 columns: {df2.columns}")
+
+    return df1, df2
+
+
+async def create_upload_file(file: UploadFile):
+    contents = await file.read()
+    return contents  # Return the file contents

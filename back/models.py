@@ -39,3 +39,11 @@ class ProductModel(_database.Base):
     Prime_Totale = _sql.Column(_sql.Float)
     assure_id = _sql.Column(_sql.String, _sql.ForeignKey('Assure.Cin'))
     assure = _orm.relationship("AssureModel", back_populates="products")
+    reglements = _orm.relationship("ReglementModel", back_populates="product")
+
+
+class ReglementModel(_database.Base):
+    __tablename__ = "Reglement"
+    id = _sql.Column(_sql.Integer, primary_key=True,index=True, autoincrement=True)
+    Product_id = _sql.Column(_sql.String, _sql.ForeignKey('Product.id'))
+    product = _orm.relationship("ProductModel", back_populates="reglements")
