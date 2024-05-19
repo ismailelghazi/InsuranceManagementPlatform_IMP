@@ -46,4 +46,21 @@ class ReglementModel(_database.Base):
     __tablename__ = "Reglement"
     id = _sql.Column(_sql.Integer, primary_key=True,index=True, autoincrement=True)
     Product_id = _sql.Column(_sql.String, _sql.ForeignKey('Product.id'))
+    Reste=_sql.Column(_sql.Float)
+    Reglement=_sql.Column(_sql.Float)
+    Date_de_reglement = _sql.Column(_sql.Date)
+    Type_de_reglement = _sql.Column(_sql.String)
     product = _orm.relationship("ProductModel", back_populates="reglements")
+
+class HistoryModel(_database.Base):
+    __tablename__ = "history"
+    id = _sql.Column(_sql.Integer, primary_key=True, index=True, autoincrement=True)
+    assure_id = _sql.Column(_sql.String, _sql.ForeignKey('Assure.Cin'))
+    product_id = _sql.Column(_sql.Integer, _sql.ForeignKey('Product.id'))
+    reglement_id = _sql.Column(_sql.Integer, _sql.ForeignKey('Reglement.id'))
+    action = _sql.Column(_sql.String)
+    timestamp = _sql.Column(_sql.Date)
+
+    assure = _orm.relationship("AssureModel")
+    product = _orm.relationship("ProductModel")
+    reglement = _orm.relationship("ReglementModel")

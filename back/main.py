@@ -301,3 +301,78 @@ async def process_file(file: UploadFile):
 async def create_upload_file(file: UploadFile):
     contents = await file.read()
     return contents  # Return the file contents
+
+
+@app.get("/reglements/{id}",response_model=List[_schemas.ReglementDetail])
+def read_reglement_by_cin(id: int, db: _orm.Session = _fastapi.Depends(_services.get_db)):
+    reglements = db.query(models.ReglementModel).join(models.ProductModel).join(models.AssureModel).filter(models.ProductModel.id == id).all()
+
+    if not reglements:
+        raise HTTPException(status_code=404, detail="No reglements found for the given id")
+
+    result = []
+    for reglement in reglements:
+        product = reglement.product
+        assure = product.assure
+        result.append(_schemas.ReglementDetail(
+            cin=assure.Cin,
+            nom_assure=assure.Assure_name,
+            prime_totale=product.Prime_Totale,
+            reste=reglement.Reste,
+            matricule=product.Matricule,
+            reglement=reglement.Reglement,
+            type_de_reglement=reglement.Type_de_reglement
+        ))
+
+    return result
+
+
+@app.post("/reglements/", response_model=_schemas.ReglementBase)
+def create_reglement(reglement: _schemas.ReglementCreate, db: _orm.Session = _fastapi.Depends(_services.get_db)):
+    product = db.query(models.ProductModel).filter(models.ProductModel.id == reglement.Product_id).first()
+    if not product:
+        raise HTTPException(status_code=404, detail="Product not found")
+
+        # Fetch the last reglement for the product
+    last_reglement = db.query(models.ReglementModel).filter(
+        models.ReglementModel.Product_id == reglement.Product_id).order_by(models.ReglementModel.id.desc()).first()
+    if last_reglement:
+        last_reste = last_reglement.Reste
+    else:
+        last_reste = product.Prime_Totale  # If no previous reglement, start from Prime_Totale
+
+    # Calculate the new 'Reste'
+    new_reste = last_reste - reglement.Reglement
+    db_reglement =models.ReglementModel(
+        Product_id=reglement.Product_id,
+        Reste=new_reste,
+        Reglement=reglement.Reglement,
+        Date_de_reglement=reglement.Date_de_reglement,
+        Type_de_reglement=reglement.Type_de_reglement
+    )
+    db.add(db_reglement)
+    db.commit()
+    db.refresh(db_reglement)
+    # Log the creation in the history
+    db_history = models.HistoryModel(
+        assure_id=product.assure_id,
+        product_id=product.id,
+        reste=new_reste,
+        reglement=reglement.Reglement,
+        reglement_id=db_reglement.id,
+        action="create",
+    )
+    db.add(db_history)
+    db.commit()
+    db.refresh(db_history)
+    return db_reglement
+
+
+@app.get("/history/{cin}", response_model=List[_schemas.HistoryBase])
+def get_history_by_cin(cin: str, db: _orm.Session = _fastapi.Depends(_services.get_db)):
+    history = db.query(models.HistoryModel).join(models.AssureModel).filter(models.AssureModel.Cin == cin).all()
+
+    if not history:
+        raise HTTPException(status_code=404, detail="No history found for the given CIN")
+
+    return history

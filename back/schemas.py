@@ -91,3 +91,52 @@ class ProductWithAssureName(_pydantic.BaseModel):
     Date_effet: str
     # Add other fields from ProductModel as needed
     Assure_name: str
+class ReglementBase(_pydantic.BaseModel):
+    id: int
+    Product_id: int
+    Reste: float
+    Reglement: float
+    Date_de_reglement: datetime.date
+    Type_de_reglement: str
+
+    class Config:
+        orm_mode = True
+        from_attributes = True
+
+class ReglementCreate(_pydantic.BaseModel):
+    Product_id: int
+    Reste: float
+    Reglement: float
+    Date_de_reglement: datetime.date
+    Type_de_reglement: str
+
+class ReglementDetail(_pydantic.BaseModel):
+    cin: str
+    nom_assure: str
+    prime_totale: float
+    reste: float
+    matricule: str
+    reglement: float
+    type_de_reglement: str
+
+    class Config:
+        orm_mode = True
+        from_attributes = True
+class HistoryBase(_pydantic.BaseModel):
+    id: int
+    assure_id: str  # The CIN of the Assure associated with the change
+    product_id: int  # The ID of the Product associated with the change
+    reglement_id: int  # The ID of the Reglement associated with the change
+    timestamp: datetime.date  # The timestamp when the action was performed
+    reste: float  # The remaining amount after the change
+    reglement: float  # The amount of the current reglement
+
+    class Config:
+        orm_mode = True
+        from_attributes = True
+
+class HistoryCreate(_pydantic.BaseModel):
+    assure_id: str
+    product_id: int
+    reglement_id: int
+    action: str
