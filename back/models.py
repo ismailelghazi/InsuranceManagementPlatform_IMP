@@ -21,6 +21,8 @@ class AssureModel(_database.Base):
     Cin = _sql.Column(_sql.String, unique=True, primary_key=True)
     Assure_name = _sql.Column(_sql.String)
     products = _orm.relationship("ProductModel", back_populates="assure")
+    history = _orm.relationship("HistoryModel", back_populates="assure")
+
 
 class ProductModel(_database.Base):
     __tablename__ = "Product"
@@ -40,6 +42,8 @@ class ProductModel(_database.Base):
     assure_id = _sql.Column(_sql.String, _sql.ForeignKey('Assure.Cin'))
     assure = _orm.relationship("AssureModel", back_populates="products")
     reglements = _orm.relationship("ReglementModel", back_populates="product")
+    history = _orm.relationship("HistoryModel", back_populates="product")
+
 
 
 class ReglementModel(_database.Base):
@@ -50,6 +54,8 @@ class ReglementModel(_database.Base):
     Reglement=_sql.Column(_sql.Float)
     Date_de_reglement = _sql.Column(_sql.Date)
     Type_de_reglement = _sql.Column(_sql.String)
+    history = _orm.relationship("HistoryModel", back_populates="reglement")
+
     product = _orm.relationship("ProductModel", back_populates="reglements")
 
 class HistoryModel(_database.Base):
@@ -59,8 +65,10 @@ class HistoryModel(_database.Base):
     product_id = _sql.Column(_sql.Integer, _sql.ForeignKey('Product.id'))
     reglement_id = _sql.Column(_sql.Integer, _sql.ForeignKey('Reglement.id'))
     action = _sql.Column(_sql.String)
-    timestamp = _sql.Column(_sql.Date)
+    description = _sql.Column(_sql.String)
+    reste_amount = _sql.Column(_sql.Float)  # Renamed this column
+    reglement_amount = _sql.Column(_sql.Float)  # Renamed this column
 
-    assure = _orm.relationship("AssureModel")
-    product = _orm.relationship("ProductModel")
-    reglement = _orm.relationship("ReglementModel")
+    assure = _orm.relationship("AssureModel", back_populates="history")
+    product = _orm.relationship("ProductModel", back_populates="history")
+    reglement = _orm.relationship("ReglementModel", back_populates="history")

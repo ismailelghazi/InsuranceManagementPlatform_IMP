@@ -1,4 +1,5 @@
 # fastapi-jwt/main.py
+import datetime
 from typing import List
 import fastapi as _fastapi
 import fastapi.security as _security
@@ -336,14 +337,10 @@ def create_reglement(reglement: _schemas.ReglementCreate, db: _orm.Session = _fa
         # Fetch the last reglement for the product
     last_reglement = db.query(models.ReglementModel).filter(
         models.ReglementModel.Product_id == reglement.Product_id).order_by(models.ReglementModel.id.desc()).first()
-    if last_reglement:
-        last_reste = last_reglement.Reste
-    else:
-        last_reste = product.Prime_Totale  # If no previous reglement, start from Prime_Totale
-
-    # Calculate the new 'Reste'
+    last_reste = last_reglement.Reste if last_reglement else product.Prime_Totale
     new_reste = last_reste - reglement.Reglement
-    db_reglement =models.ReglementModel(
+
+    db_reglement = models.ReglementModel(
         Product_id=reglement.Product_id,
         Reste=new_reste,
         Reglement=reglement.Reglement,
@@ -353,14 +350,15 @@ def create_reglement(reglement: _schemas.ReglementCreate, db: _orm.Session = _fa
     db.add(db_reglement)
     db.commit()
     db.refresh(db_reglement)
-    # Log the creation in the history
+
     db_history = models.HistoryModel(
         assure_id=product.assure_id,
         product_id=product.id,
-        reste=new_reste,
-        reglement=reglement.Reglement,
         reglement_id=db_reglement.id,
         action="create",
+        description=f"Created reglement with Reglement: {reglement.Reglement} and Reste: {new_reste}",
+        reste_amount=new_reste,
+        reglement_amount=reglement.Reglement
     )
     db.add(db_history)
     db.commit()

@@ -127,9 +127,10 @@ class HistoryBase(_pydantic.BaseModel):
     assure_id: str  # The CIN of the Assure associated with the change
     product_id: int  # The ID of the Product associated with the change
     reglement_id: int  # The ID of the Reglement associated with the change
-    timestamp: datetime.date  # The timestamp when the action was performed
-    reste: float  # The remaining amount after the change
-    reglement: float  # The amount of the current reglement
+    action: str  # The type of action performed (e.g., create, update, delete)
+    description: str  # A detailed description of the change
+    reste_amount: float  # The remaining amount after the change, renamed
+    reglement_amount: float  # The amount of the current reglement, renamed
 
     class Config:
         orm_mode = True
