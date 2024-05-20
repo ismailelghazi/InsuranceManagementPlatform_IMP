@@ -21,6 +21,8 @@ class AssureModel(_database.Base):
     Cin = _sql.Column(_sql.String, unique=True, primary_key=True)
     Assure_name = _sql.Column(_sql.String)
     products = _orm.relationship("ProductModel", back_populates="assure")
+    history = _orm.relationship("HistoryModel", back_populates="assure")
+
 
 class ProductModel(_database.Base):
     __tablename__ = "Product"
@@ -40,10 +42,33 @@ class ProductModel(_database.Base):
     assure_id = _sql.Column(_sql.String, _sql.ForeignKey('Assure.Cin'))
     assure = _orm.relationship("AssureModel", back_populates="products")
     reglements = _orm.relationship("ReglementModel", back_populates="product")
+    history = _orm.relationship("HistoryModel", back_populates="product")
+
 
 
 class ReglementModel(_database.Base):
     __tablename__ = "Reglement"
     id = _sql.Column(_sql.Integer, primary_key=True,index=True, autoincrement=True)
     Product_id = _sql.Column(_sql.String, _sql.ForeignKey('Product.id'))
+    Reste=_sql.Column(_sql.Float)
+    Reglement=_sql.Column(_sql.Float)
+    Date_de_reglement = _sql.Column(_sql.Date)
+    Type_de_reglement = _sql.Column(_sql.String)
+    history = _orm.relationship("HistoryModel", back_populates="reglement")
+
     product = _orm.relationship("ProductModel", back_populates="reglements")
+
+class HistoryModel(_database.Base):
+    __tablename__ = "history"
+    id = _sql.Column(_sql.Integer, primary_key=True, index=True, autoincrement=True)
+    assure_id = _sql.Column(_sql.String, _sql.ForeignKey('Assure.Cin'))
+    product_id = _sql.Column(_sql.Integer, _sql.ForeignKey('Product.id'))
+    reglement_id = _sql.Column(_sql.Integer, _sql.ForeignKey('Reglement.id'))
+    action = _sql.Column(_sql.String)
+    description = _sql.Column(_sql.String)
+    reste_amount = _sql.Column(_sql.Float)  # Renamed this column
+    reglement_amount = _sql.Column(_sql.Float)  # Renamed this column
+
+    assure = _orm.relationship("AssureModel", back_populates="history")
+    product = _orm.relationship("ProductModel", back_populates="history")
+    reglement = _orm.relationship("ReglementModel", back_populates="history")
