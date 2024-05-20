@@ -1,17 +1,29 @@
 import { createSignal } from 'solid-js';
-import { BACKEND_URL } from './env.js'
+import { BACKEND_URL } from './env.js';
+import { fetcher, store } from './Helpers/FetchHelper.js'
+import { useNavigate } from '@solidjs/router';
 
 function Login() {
+    const navigate=useNavigate();
     const [loginCred,setLoginCred]=createSignal();
-    const loggerInfo= (ev)=>{
+    const [errorMsg,setErrorMsg]=createSignal('');
+    const loggerInfo =(ev)=>{
         ev.preventDefault();
         setLoginCred(new FormData(ev.target));
-        console.log(JSON.stringify(loginCred()))
-        fetch(`${BACKEND_URL}/token`,{
-            method:'POST',
-            body:loginCred(),
-            headers:{ "Content-Type": "application/json"}
-        }).then((response)=>console.log(response));
+        const data = new URLSearchParams();
+        data.append('username', loginCred().get('username'));
+        data.append('password', loginCred().get('password'));
+        fetcher(`${BACKEND_URL}/token`,'POST',data,{
+         "Content-Type": "application/x-www-form-urlencoded" 
+        }).then(
+            resolved=>{
+                navigate('/uploadExcel')
+            },
+            rejected=>{
+                console.log(rejected,store.errorMessage)
+                setErrorMsg(store.errorMessage.message)
+            }
+        )
     }
     return (
         <div class="w-screen h-screen bg-cyan-100 flex justify-center items-center">
@@ -26,6 +38,9 @@ function Login() {
                         <label for="password">Password:</label>
                         <input type="password" name="password"/>
                     </div>
+                    <span class={errorMsg==false?"none":"block text-red-700"}>
+                        {errorMsg()}
+                    </span>
                     <button type="submit" class="w-1/2 py-2 rounded bg-blue-950 text-white mx-auto">Submit</button>
                 </form>
             </div>

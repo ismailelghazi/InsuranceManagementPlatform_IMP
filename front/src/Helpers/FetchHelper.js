@@ -1,27 +1,46 @@
 import { useNavigate } from "@solidjs/router";
 import { createStore } from "solid-js/store";
 
-const [store,setStore]=createStore({
-    token:null    
+export const [store,setStore]=createStore({
+    token:null,
+    errorMessage:null
 })
 
-async function fetcher(url,method='GET',body){
-    // this will: 
-    //      check the store if we already have the bearer token, if not redirect to login,
-    //      if we do have the token in the store, we fetch the "/${url}" same as backend, with the method & body:data
+const errStatuses=[401,404,419]
+
+export async function fetcher(url,method='GET',body=null,headers=null){
+
     if(store.token==null && document.URL.toString().split('/').at(-1) !== 'login' ){
         const navigate=useNavigate();
         navigate('/login')
     }
-    fetch(url,{
+    return fetch(url,{
         method:method,
-        body:body
+        body:body,
+        headers: headers ?? { "Content-Type": "application/json" }
     }).then((response)=>{
-        if(response.status==401){
-            const navigate=useNavigate();
-            navigate('/login');
+        if(errStatuses.includes(response.status)){
+            setStore('errorMessage',{status:response.status,message:response.statusText})
+            return Promise.reject(store.errorMessage);
+        }else if(document.URL.toString().split('/'.at(-1) === 'login')){
+            response=response.json().then((response)=>{
+                response.token_type=response.token_type.replace(response.token_type[0],response.token_type[0].toUpperCase())
+                setStore('token',response)
+                return Promise.resolve(store)
+            })
         }else{
-            console.log(response.body)
+            return Promise.resolve(response.json())
         }
+    })
+}
+
+export async function tokenChecker(){
+    return new Promise((resolve, reject) => {
+        const intervalId = setInterval(() => {
+            if (store.token !== null) {
+            clearInterval(intervalId);
+                resolve(store.token);
+            }
+        }, 100);
     });
 }
