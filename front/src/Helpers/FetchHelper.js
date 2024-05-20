@@ -1,31 +1,33 @@
-import { useNavigate } from "@solidjs/router";
 import { createStore } from "solid-js/store";
+import { BACKEND_URL,BACKEND_URL_API } from "../env";
 
 export const [store,setStore]=createStore({
-    token:null,
     errorMessage:null
 })
 
-const errStatuses=[401,404,419]
 
-export async function fetcher(url,method='GET',body=null,headers=null){
+export async function fetcher(url,is_api,method='GET',body=null,headers=null,navigate){
 
-    if(store.token==null && document.URL.toString().split('/').at(-1) !== 'login' ){
-        const navigate=useNavigate();
+    if(localStorage.getItem('token')===null && document.URL.toString().split('/').at(-1) !== 'login' ){
         navigate('/login')
     }
-    return fetch(url,{
+    const errStatuses=[401,419,422]
+    let full_url=is_api?`${BACKEND_URL_API}${url}`:`${BACKEND_URL}${url}`
+    // i should configure how to setup headers
+    
+    return fetch(full_url,{
         method:method,
         body:body,
-        headers: headers ?? { "Content-Type": "application/json" }
+        headers: body instanceof FormData? headers : headers ?? { "Content-Type": "application/json" }
     }).then((response)=>{
         if(errStatuses.includes(response.status)){
             setStore('errorMessage',{status:response.status,message:response.statusText})
             return Promise.reject(store.errorMessage);
-        }else if(document.URL.toString().split('/'.at(-1) === 'login')){
+        }else if(document.URL.toString().split('/').at(-1)=== 'login'){
             response=response.json().then((response)=>{
                 response.token_type=response.token_type.replace(response.token_type[0],response.token_type[0].toUpperCase())
-                setStore('token',response)
+                response=`${response['token_type']} ${response['access_token']}`
+                localStorage.setItem('token',response)
                 return Promise.resolve(store)
             })
         }else{
@@ -37,10 +39,10 @@ export async function fetcher(url,method='GET',body=null,headers=null){
 export async function tokenChecker(){
     return new Promise((resolve, reject) => {
         const intervalId = setInterval(() => {
-            if (store.token !== null) {
-            clearInterval(intervalId);
+            if (localStorage.getItem('token') !== null) {
+                clearInterval(intervalId);
                 resolve(store.token);
             }
-        }, 100);
+        }, 250);
     });
 }

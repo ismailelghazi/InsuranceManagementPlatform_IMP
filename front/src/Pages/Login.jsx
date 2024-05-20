@@ -1,6 +1,5 @@
 import { createSignal } from 'solid-js';
-import { BACKEND_URL } from './env.js';
-import { fetcher, store } from './Helpers/FetchHelper.js'
+import { fetcher, store } from '../Helpers/FetchHelper.js'
 import { useNavigate } from '@solidjs/router';
 
 function Login() {
@@ -13,17 +12,16 @@ function Login() {
         const data = new URLSearchParams();
         data.append('username', loginCred().get('username'));
         data.append('password', loginCred().get('password'));
-        fetcher(`${BACKEND_URL}/token`,'POST',data,{
+        fetcher('/token',true,'POST',data,{
          "Content-Type": "application/x-www-form-urlencoded" 
-        }).then(
-            resolved=>{
-                navigate('/uploadExcel')
-            },
-            rejected=>{
-                console.log(rejected,store.errorMessage)
-                setErrorMsg(store.errorMessage.message)
-            }
-        )
+        },navigate).then(
+                resolved=>{
+                    navigate('/uploadExcel')
+                },
+                rejected=>{
+                    console.log(rejected,store.errorMessage)
+                    setErrorMsg(store.errorMessage.message)
+                })
     }
     return (
         <div class="w-screen h-screen bg-cyan-100 flex justify-center items-center">
