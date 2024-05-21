@@ -15,6 +15,7 @@ export async function fetcher(url,is_api,method='GET',body=null,headers=null,nav
     let full_url=is_api?`${BACKEND_URL_API}${url}`:`${BACKEND_URL}${url}`
     // i should configure how to setup headers
     
+    console.log(method,headers)
     return fetch(full_url,{
         method:method,
         body:body,

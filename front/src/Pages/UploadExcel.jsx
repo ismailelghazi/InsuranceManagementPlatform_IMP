@@ -9,6 +9,9 @@ function UploadExcel(){
     tokenChecker();
     const[Uploaded,setUploaded]=createSignal(false);
     const navigate=useNavigate();
+    const redirectorAssure=()=>{
+        navigate('/assurer')
+    }
     const xclUploader=(ev)=>{
         //  watch the file input if it's null or not
         if(ev.target.files[0]!==null){
@@ -38,7 +41,7 @@ function UploadExcel(){
                             <input type="file" id="participation-file" name="file" class="hidden" on:change={xclUploader}/>
                         </label>
                         <span class={Uploaded()?"block":"hidden"}>it's uploaded </span>
-                        <button class=" bg-white rounded-md text-3xl font-bold py-2 px-4" type="submit">Dashboard</button>
+                        <button class=" bg-white rounded-md text-3xl font-bold py-2 px-4" type="button" on:click={redirectorAssure}>Dashboard</button>
                 </div>
             </div>
         </div>

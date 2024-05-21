@@ -15,7 +15,7 @@ let routes = [
     },
     {
         path:"/assurer",
-        component:lazy(()=>import('./'))
+        component:lazy(()=>import('./Pages/Assurer/index'))
     },
 ];
 
