@@ -26,7 +26,6 @@ function UploadExcel(){
             let formData=new FormData();
             // listen to the even 
             Uploader(file).then((response)=>{
-                console.log(file.name,file)
                 formData.append('file',new Blob([response]),file.name) // backend expects UploadFile
                 fetcher('/upload',false,'POST',formData,{},navigate).then(()=>setUploaded(true))
                 .finally(()=>navigate('/assurer'))

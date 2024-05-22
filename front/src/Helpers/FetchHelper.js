@@ -6,7 +6,7 @@ export const [store,setStore]=createStore({
 })
 
 
-export async function fetcher(url,is_api,method='GET',body=null,headers=null,navigate){
+export async function fetcher(url,is_api,method,body=null,headers=null,navigate){
 
     if(localStorage.getItem('token')===null && document.URL.toString().split('/').at(-1) !== 'login' ){
         navigate('/login')
@@ -15,7 +15,6 @@ export async function fetcher(url,is_api,method='GET',body=null,headers=null,nav
     let full_url=is_api?`${BACKEND_URL_API}${url}`:`${BACKEND_URL}${url}`
     // i should configure how to setup headers
     
-    console.log(method,headers)
     return fetch(full_url,{
         method:method,
         body:body,
@@ -32,6 +31,9 @@ export async function fetcher(url,is_api,method='GET',body=null,headers=null,nav
                 return Promise.resolve(store)
             })
         }else{
+            if(method==="DELETE"){
+                return Promise.resolve(response.text())
+            }
             return Promise.resolve(response.json())
         }
     })
