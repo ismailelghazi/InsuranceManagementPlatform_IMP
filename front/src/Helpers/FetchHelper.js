@@ -19,7 +19,7 @@ export async function fetcher(url,is_api,method,body=null,headers=null,navigate)
         method:method,
         body:body,
         headers: body instanceof FormData? headers : headers ?? { "Content-Type": "application/json" },
-        credentials:is_api?'include':null
+        credentials:'include'
     }).then((response)=>{
         if(errStatuses.includes(response.status)){
             setStore('errorMessage',{status:response.status,message:response.statusText})
