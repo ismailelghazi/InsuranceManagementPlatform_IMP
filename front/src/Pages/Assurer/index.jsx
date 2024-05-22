@@ -82,7 +82,7 @@ function IndexAssure() {
     return (
         <div class="flex w-screen h-screen bg-gray-100">
             <Navbar />
-            <div class="dashboard-assurer-container w-full h-full pl-48 py-24">
+            <div class="dashboard-assurer-container w-full h-full pl-16 py-24">
                 <h1 class="text-5xl text-blue-900 font-bold mb-8">Assure Management</h1>
                 <div class="bg-white shadow-md rounded-lg p-6 w-6/6 mr-12">
                     <div class="flex justify-between items-center mb-4">
@@ -107,7 +107,7 @@ function IndexAssure() {
                             <span class="col-span-1">Nom Assurer</span>
                             <span class="col-span-1 text-center">Actions</span>
                         </div>
-                        <div class="table-body overflow-y-scroll max-h-96 styled-scrollbar">
+                        <div class="table-body overflow-y-scroll max-h-[550px] styled-scrollbar">
                             <For each={filteredAssures()}>
                                 {(item) => (
                                     <div class="grid grid-cols-3 py-2 px-4 border-b border-gray-200">

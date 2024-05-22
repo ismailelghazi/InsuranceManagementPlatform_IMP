@@ -2,24 +2,24 @@ import { lazy } from "solid-js";
 
 let routes = [
     {
-        path:"/login",
-        component:lazy(()=>import('./Pages/Login'))
+        path: "/login",
+        component: lazy(() => import('./Pages/Login'))
     },
     {
-        path:"/",
-        component:lazy(()=>import('./Pages/Intro'))
+        path: "/",
+        component: lazy(() => import('./Pages/Intro'))
     },
     {
-        path:"/uploadExcel",
-        component:lazy(()=>import('./Pages/UploadExcel'))
+        path: "/uploadExcel",
+        component: lazy(() => import('./Pages/UploadExcel'))
     },
     {
-        path:"/assurer",
-        component:lazy(()=>import('./Pages/Assurer/index'))
+        path: "/assurer",
+        component: lazy(() => import('./Pages/Assurer/index'))
     },
     {
-        path:"/reglement",
-        component:lazy(()=>import('./Pages/reglement/reglement'))
+        path: "/product",
+        component: lazy(() => import('./Pages/Assurer/products'))
     },
 ];
 

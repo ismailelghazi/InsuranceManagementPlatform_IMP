@@ -16,7 +16,7 @@ function Navbar() {
                     <span>Assure</span>
                 </A>
                 <A 
-                    href="/produit" 
+                    href="/product" 
                     class={`px-6 py-3 flex items-center gap-4 hover:bg-blue-700 transition-colors ${activeLink() === 'Produit' ? 'bg-blue-700' : ''}`}
                     onClick={() => setActiveLink("Produit")}
                 >
