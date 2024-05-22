@@ -82,9 +82,9 @@ function IndexAssure() {
     return (
         <div class="flex w-screen h-screen bg-gray-100">
             <Navbar />
-            <div class="dashboard-assurer-container w-full pl-48 py-24">
+            <div class="dashboard-assurer-container w-full h-full pl-48 py-24">
                 <h1 class="text-5xl text-blue-900 font-bold mb-8">Assure Management</h1>
-                <div class="bg-white shadow-md rounded-lg p-6 w-3/4 mx-auto">
+                <div class="bg-white shadow-md rounded-lg p-6 w-6/6 mr-12">
                     <div class="flex justify-between items-center mb-4">
                         <h2 class="text-3xl font-semibold text-gray-800">Assures List</h2>
                         <div class="flex items-center">
