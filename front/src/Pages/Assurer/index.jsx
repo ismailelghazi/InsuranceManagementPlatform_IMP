@@ -122,20 +122,27 @@ function IndexAssure() {
                         </div>
                     </div>
                     <Show when={addAssure()}>
-                        <form class="mt-6 p-4 bg-gray-50 rounded-lg shadow-inner" onSubmit={addAssureData}>
-                            <div class="grid grid-cols-2 gap-4">
-                                <div class="flex flex-col">
-                                    <label for="Cin" class="mb-1 font-medium text-gray-700">CIN</label>
-                                    <input type="text" name="Cin" class="py-2 px-3 border border-gray-300 rounded-lg" required />
-                                </div>
-                                <div class="flex flex-col">
-                                    <label for="Assure_name" class="mb-1 font-medium text-gray-700">Nom Assure</label>
-                                    <input type="text" name="Assure_name" class="py-2 px-3 border border-gray-300 rounded-lg" required />
-                                </div>
-                            </div>
-                            <button class="mt-4 py-2 px-4 bg-blue-500 text-white rounded-lg hover:bg-blue-600">Add Assure</button>
-                        </form>
-                    </Show>
+    <div class="absolute inset-0 flex flex-col items-center justify-center bg-gray-900 bg-opacity-50">
+        <div class="p-4 bg-gray-50 rounded-lg shadow-inner">
+            <form onSubmit={addAssureData}>
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="flex flex-col">
+                        <label for="Cin" class="mb-1 font-medium text-gray-700">CIN</label>
+                        <input type="text" name="Cin" class="py-2 px-3 border border-gray-300 rounded-lg" required />
+                    </div>
+                    <div class="flex flex-col">
+                        <label for="Assure_name" class="mb-1 font-medium text-gray-700">Nom Assure</label>
+                        <input type="text" name="Assure_name" class="py-2 px-3 border border-gray-300 rounded-lg" required />
+                    </div>
+                </div>
+                <div class="mt-4 flex justify-between">
+                    <button type="button" class="py-2 px-4 bg-red-500 text-white rounded-lg hover:bg-red-600" onClick={() => setAddAssure(false)}>Cancel</button>
+                    <button type="submit" class="py-2 px-4 bg-blue-500 text-white rounded-lg hover:bg-blue-600">Add Assure</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</Show>
                 </div>
             </div>
         </div>

@@ -2,13 +2,13 @@ import { A } from "@solidjs/router";
 import { createSignal } from "solid-js";
 
 function Navbar() {
-    const [activeLink, setActiveLink] = createSignal("Assure");
+    const [activeLink, setActiveLink] = createSignal("Assure",'Reglement');
 
     return (
         <div class="bg-blue-600 text-white h-screen w-64 flex flex-col items-center py-8">
             <div class="flex flex-col items-center justify-center w-full h-full gap-4">
                 <A 
-                    href="/assure" 
+                    href="/assurer" 
                     class={`px-6 py-3 flex items-center gap-4 hover:bg-blue-700 transition-colors ${activeLink() === 'Assure' ? 'bg-blue-700' : ''}`}
                     onClick={() => setActiveLink("Assure")}
                 >

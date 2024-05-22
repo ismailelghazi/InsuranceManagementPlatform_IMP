@@ -17,6 +17,10 @@ let routes = [
         path:"/assurer",
         component:lazy(()=>import('./Pages/Assurer/index'))
     },
+    {
+        path:"/reglement",
+        component:lazy(()=>import('./Pages/reglement/reglement'))
+    },
 ];
 
 export default routes;
