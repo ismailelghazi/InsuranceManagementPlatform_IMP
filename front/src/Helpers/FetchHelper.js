@@ -13,7 +13,6 @@ export async function fetcher(url,is_api,method,body=null,headers=null,navigate)
     }
     const errStatuses=[401,419,422]
     let full_url=is_api?`${BACKEND_URL_API}${url}`:`${BACKEND_URL}${url}`
-    // i should configure how to setup headers
     
     return fetch(full_url,{
         method:method,

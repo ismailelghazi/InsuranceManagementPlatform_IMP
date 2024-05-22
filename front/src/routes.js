@@ -15,11 +15,11 @@ let routes = [
     },
     {
         path: "/assurer",
-        component: lazy(() => import('./Pages/Assurer/index'))
+        component: lazy(() => import('./Pages/index'))
     },
     {
         path: "/product",
-        component: lazy(() => import('./Pages/Assurer/products'))
+        component: lazy(() => import('./Pages/products'))
     },
 ];
 
