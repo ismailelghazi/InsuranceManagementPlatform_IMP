@@ -101,7 +101,7 @@ function IndexProduct() {
                             </button>
                         </div>
                     </div>
-                    <div class="overflow-x-auto">
+                    <div class="overflow-x-auto styled-scrollbar">
                         <div class="table-content-product min-w-full">
                             <div class="table-head grid bg-gray-200 text-gray-700 w-[200%] font-semibold py-2 px-4 rounded-t-lg"
        style={{"grid-template-columns":`repeat(${headersCount()},1fr)`}}>
@@ -120,10 +120,10 @@ function IndexProduct() {
                                 <span class="col-span-1">Periode</span>
                                 <span class="col-span-1">Actions</span>
                             </div>
-                            <div class="table-body overflow-y-scroll max-h-[550px] overflow-x-scroll  w-[200%] styled-scrollbar">
+                            <div class="table-body overflow-y-scroll max-h-[550px] w-[200%] styled-scrollbar">
                                 <For each={filteredProducts()}>
                                     {(item) => (
-                                        <div class="grid py-2 px-4 border-b border-gray-200"
+                                        <div class="grid py-2 px-4 border-b border-gray-200 gap-y-8"
                                         style={{"grid-template-columns":`repeat(${Object.keys(products()[0]).length},1fr)`}}>
                                             <div class="col-span-1 truncate">{item.id}</div>
                                             <div class="col-span-1 truncate">{item.Police}</div>
@@ -138,8 +138,9 @@ function IndexProduct() {
                                             <div class="col-span-1 truncate">{item.Fractionn}</div>
                                             <div class="col-span-1 truncate">{item.Contrat}</div>
                                             <div class="col-span-1 truncate">{item.Periode}</div>
-                                            <div class="col-span-1 text-center">
+                                            <div class="col-span-1 flex justify-start gap-x-8">
                                                 <i class="fa-regular fa-trash-can cursor-pointer text-red-500 hover:text-red-700" data-id={item.id} onClick={deleteProduct}></i>
+                                                <i class="fa-solid fa-pen-to-square"></i>
                                             </div>
                                         </div>
                                     )}
