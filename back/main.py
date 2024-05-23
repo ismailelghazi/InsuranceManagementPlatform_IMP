@@ -304,7 +304,7 @@ async def create_upload_file(file: UploadFile):
     return contents  # Return the file contents
 
 
-@app.get("/reglements/{id}",response_model=List[_schemas.ReglementDetail])
+@app.get("/api/reglements/{id}", response_model=List[_schemas.ReglementDetail])
 def read_reglement_by_cin(id: int, db: _orm.Session = _fastapi.Depends(_services.get_db)):
     reglements = db.query(models.ReglementModel).join(models.ProductModel).join(models.AssureModel).filter(models.ProductModel.id == id).all()
 

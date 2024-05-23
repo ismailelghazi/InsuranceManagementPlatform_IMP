@@ -8,6 +8,7 @@
 .styled-scrollbar::-webkit-scrollbar{
     background-color: #dbeafe;
     width: 4px;
+    height: 4px;
 }
 .styled-scrollbar::-webkit-scrollbar-thumb{
     background-color: #312e81;

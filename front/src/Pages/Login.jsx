@@ -1,7 +1,7 @@
 import { createSignal } from 'solid-js';
-import { fetcher, store } from '../Helpers/FetchHelper.js'
+import { fetcher } from '../Helpers/FetchHelper.js'
 import { useNavigate } from '@solidjs/router';
-
+import { store,setStore } from '../Helpers/Stores.js';
 function Login() {
     const navigate = useNavigate();
     const [loginCred, setLoginCred] = createSignal();

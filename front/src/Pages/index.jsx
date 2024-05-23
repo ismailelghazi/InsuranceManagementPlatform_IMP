@@ -1,7 +1,7 @@
 import { For, Show, createEffect, createSignal } from "solid-js";
-import { fetcher } from '../../Helpers/FetchHelper';
+import { fetcher } from '../Helpers/FetchHelper';
 import { useNavigate } from "@solidjs/router";
-import Navbar from "../Components/Navbar";
+import Navbar from "./Components/Navbar";
 import Swal from 'sweetalert2';
 
 function IndexAssure() {
@@ -84,7 +84,7 @@ function IndexAssure() {
             <Navbar />
             <div class="dashboard-assurer-container w-full h-full pl-16 py-24">
                 <h1 class="text-5xl text-blue-900 font-bold mb-8">Assure Management</h1>
-                <div class="bg-white shadow-md rounded-lg p-6 w-6/6 mr-12">
+                <div class="bg-white shadow-md rounded-lg p-6  w-11/12 mr-12">
                     <div class="flex justify-between items-center mb-4">
                         <h2 class="text-3xl font-semibold text-gray-800">Assures List</h2>
                         <div class="flex items-center">
