@@ -10,7 +10,7 @@ const AddReglement = () => {
   const [reglement, setReglement] = createSignal(null);
 
   createEffect(() => {
-    fetcher(`/reglements/${params.id}`, true, 'GET', null, {}, navigate)
+    fetcher(`/reglements/product/${params.id}`, true, 'GET', null, {}, navigate)
       .then((res) => setReglement(res[0]))
       .catch((err) => Swal.fire('Error', err.message, 'error'));
   });
