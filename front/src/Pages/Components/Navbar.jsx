@@ -1,10 +1,8 @@
 import { A } from "@solidjs/router";
-import { createSignal } from "solid-js";
 import {store,setStore} from '../../Helpers/Stores'
 
 
 function Navbar() {
-    setStore('activeLink',"Assure")
     console.log(store)
     return (
         <div class="bg-blue-600 text-white h-screen w-64 flex flex-col items-center py-8">
@@ -12,7 +10,10 @@ function Navbar() {
                 <A 
                     href="/assurer" 
                     class={`px-6 py-3 flex items-center gap-4 hover:bg-blue-700 transition-colors ${store.activeLink === 'Assure' ? 'bg-blue-700' : ''}`}
-                    onClick={() => setStore("Assure")}
+                    onClick={() => {
+                        setStore('activeLink',"Assure")
+                        console.log(store)
+                    }}
                 >
                     <i class="fas fa-user-shield"></i>
                     <span>Assure</span>
@@ -20,7 +21,10 @@ function Navbar() {
                 <A 
                     href="/product" 
                     class={`px-6 py-3 flex items-center gap-4 hover:bg-blue-700 transition-colors ${store.activeLink === 'Produit' ? 'bg-blue-700' : ''}`}
-                    onClick={() => setStore("Produit")}
+                    onClick={() =>{
+                        setStore('activeLink',"Produit")
+                        console.log(store)
+                    }}
                 >
                     <i class="fas fa-box"></i>
                     <span>Produit</span>
@@ -28,7 +32,10 @@ function Navbar() {
                 <A 
                     href="/reglement" 
                     class={`px-6 py-3 flex items-center gap-4 hover:bg-blue-700 transition-colors ${store.activeLink === 'Reglement' ? 'bg-blue-700' :'' }`}
-                    onClick={() => setStore("Reglement")}
+                    onClick={() => {
+                        setStore('activeLink',"Reglement")
+                        console.log(store)
+                    }}
                 >
                     <i class="fas fa-file-invoice"></i>
                     <span>Reglement</span>
