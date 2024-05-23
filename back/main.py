@@ -1,6 +1,6 @@
 # fastapi-jwt/main.py
 import datetime
-from typing import List
+from typing import List,Union
 import fastapi as _fastapi
 import fastapi.security as _security
 from fastapi import FastAPI, status, HTTPException, Depends
@@ -19,7 +19,7 @@ app = _fastapi.FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["http://127.0.0.1:3000"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -304,7 +304,7 @@ async def create_upload_file(file: UploadFile):
     return contents  # Return the file contents
 
 
-@app.get("/reglements/{id}",response_model=List[_schemas.ReglementDetail])
+@app.get("/api/reglements/{id}", response_model=List[_schemas.ReglementDetail])
 def read_reglement_by_cin(id: int, db: _orm.Session = _fastapi.Depends(_services.get_db)):
     reglements = db.query(models.ReglementModel).join(models.ProductModel).join(models.AssureModel).filter(models.ProductModel.id == id).all()
 
@@ -374,3 +374,51 @@ def get_history_by_cin(cin: str, db: _orm.Session = _fastapi.Depends(_services.g
         raise HTTPException(status_code=404, detail="No history found for the given CIN")
 
     return history
+
+class BasicProductInfo(_schemas.ReglementDetail):
+    reste: Union[None, int] = None
+    reglement: Union[None, int] = None
+    type_de_reglement: Union[None, str] = None
+
+
+@app.get("/api/reglements/product/{product_id}",
+            response_model=List[Union[_schemas.ReglementDetail, BasicProductInfo]])
+def get_reglement_by_product_id(product_id: int, db: _orm.Session = Depends(_services.get_db)):
+    # Fetch the product by ID
+    product = db.query(models.ProductModel).filter(models.ProductModel.id == product_id).first()
+
+    if not product:
+        raise HTTPException(status_code=404, detail="No product found for the given ID")
+
+    # Fetch the associated assure
+    assure = db.query(models.AssureModel).filter(models.AssureModel.Cin == product.assure_id).first()
+
+    # Fetch reglements associated with the product
+    reglements = db.query(models.ReglementModel).filter(models.ReglementModel.Product_id == product.id).all()
+
+    result = []
+
+    if not reglements:
+        # If no reglements are found, return basic product information
+        result.append(BasicProductInfo(
+            cin=assure.Cin,
+            nom_assure=assure.Assure_name,
+            prime_totale=product.Prime_Totale,
+            reste=None,
+            matricule=product.Matricule,
+            reglement=None,
+            type_de_reglement=None
+        ))
+    else:
+        for reglement in reglements:
+            result.append(_schemas.ReglementDetail(
+                cin=assure.Cin,
+                nom_assure=assure.Assure_name,
+                prime_totale=product.Prime_Totale,
+                reste=reglement.Reste,
+                matricule=product.Matricule,
+                reglement=reglement.Reglement,
+                type_de_reglement=reglement.Type_de_reglement
+            ))
+
+    return result

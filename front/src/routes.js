@@ -20,6 +20,10 @@ let routes = [
     {
         path: "/product",
         component: lazy(() => import('./Pages/products'))
+    }, 
+    {
+        path: "/add-reglement/:id",
+        component: lazy(() => import('./Pages/AddReglement'))
     },
 ];
 

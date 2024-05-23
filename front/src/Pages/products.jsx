@@ -11,7 +11,7 @@ function IndexProduct() {
     const [filteredProducts, setFilteredProducts] = createSignal([]);
     const [headersCount, setHeadersCount] = createSignal(0);
     const [currentPage, setCurrentPage] = createSignal(1);
-    const itemsPerPage = 10;
+    const itemsPerPage = 12;
     const navigate = useNavigate();
 
     createEffect(() => {
@@ -73,7 +73,8 @@ function IndexProduct() {
         const filtered = products().filter(
             (product) =>
                 product.Police.toLowerCase().includes(query.toLowerCase()) ||
-                product.Matricule.toLowerCase().includes(query.toLowerCase())
+                product.Matricule.toLowerCase().includes(query.toLowerCase()) ||
+                product.assure_id.toLowerCase().includes(query.toLowerCase())
         );
         setFilteredProducts(filtered);
         setCurrentPage(1); // Reset to the first page on new filter
@@ -128,7 +129,7 @@ function IndexProduct() {
                                 <span class="col-span-1">Periode</span>
                                 <span class="col-span-1">Actions</span>
                             </div>
-                            <div class="table-body overflow-y-scroll max-h-[550px] w-[200%] styled-scrollbar">
+                            <div class="table-body overflow-y-scroll max-h-[600px] w-[200%] styled-scrollbar">
                                 <For each={paginatedProducts()}>
                                     {(item) => (
                                         <div class="grid py-2 px-4 border-b border-gray-200 gap-y-8"
@@ -148,7 +149,7 @@ function IndexProduct() {
                                             <div class="col-span-1 truncate">{item.Periode}</div>
                                             <div class="col-span-1 flex justify-start gap-x-8">
                                                 <i class="fa-regular fa-trash-can cursor-pointer text-red-500 hover:text-red-700" data-id={item.id} onClick={deleteProduct}></i>
-                                                <i class="fa-solid fa-pen-to-square"></i>
+                                                <i class="fa-solid fa-pen-to-square cursor-pointer" onClick={() => navigate(`/add-reglement/${item.id}`)}></i>
                                             </div>
                                         </div>
                                     )}
@@ -246,4 +247,3 @@ function IndexProduct() {
 }
 
 export default IndexProduct;
-
