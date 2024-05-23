@@ -3,7 +3,6 @@ import {store,setStore} from '../../Helpers/Stores'
 
 
 function Navbar() {
-    console.log(store)
     return (
         <div class="bg-blue-600 text-white h-screen w-64 flex flex-col items-center py-8">
             <div class="flex flex-col items-center justify-center w-full h-full gap-4">

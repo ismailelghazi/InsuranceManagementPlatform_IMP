@@ -19,7 +19,6 @@ function IndexAssure() {
                     setAssures(res);
                     setFilteredAssures(res);
                 })
-                .then(() => console.log(assures()));
         }
     });
 
