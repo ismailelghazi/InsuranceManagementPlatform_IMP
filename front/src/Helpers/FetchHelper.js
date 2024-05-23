@@ -1,10 +1,6 @@
 import { createStore } from "solid-js/store";
 import { BACKEND_URL,BACKEND_URL_API } from "../env";
-
-export const [store,setStore]=createStore({
-    errorMessage:null
-})
-
+import {store,setStore} from './Stores'
 
 export async function fetcher(url,is_api,method,body=null,headers=null,navigate){
 

@@ -8,8 +8,10 @@ function IndexProduct() {
     const [products, setProducts] = createSignal(null);
     const [addProduct, setAddProduct] = createSignal(false);
     const [searchQuery, setSearchQuery] = createSignal('');
-    const [filteredProducts, setFilteredProducts] = createSignal(null);
-    const [headersCount,setheadersCount]=createSignal(0)
+    const [filteredProducts, setFilteredProducts] = createSignal([]);
+    const [headersCount, setHeadersCount] = createSignal(0);
+    const [currentPage, setCurrentPage] = createSignal(1);
+    const itemsPerPage = 10;
     const navigate = useNavigate();
 
     createEffect(() => {
@@ -18,11 +20,9 @@ function IndexProduct() {
                 .then((res) => {
                     setProducts(res);
                     setFilteredProducts(res);
-                    const count=Object.keys(res[0]).length
-                    console.log(count)
-                    setheadersCount(count)
-                })
-                .then(() => console.log(products()));
+                    const count = Object.keys(res[0]).length;
+                    setHeadersCount(count);
+                });
         }
     });
 
@@ -66,7 +66,6 @@ function IndexProduct() {
                     'New product has been added.',
                     'success'
                 );
-                console.log(products());
             });
     };
 
@@ -77,7 +76,16 @@ function IndexProduct() {
                 product.Matricule.toLowerCase().includes(query.toLowerCase())
         );
         setFilteredProducts(filtered);
+        setCurrentPage(1); // Reset to the first page on new filter
     };
+
+    const paginatedProducts = () => {
+        const startIndex = (currentPage() - 1) * itemsPerPage;
+        const endIndex = startIndex + itemsPerPage;
+        return filteredProducts().slice(startIndex, endIndex);
+    };
+
+    const totalPages = () => Math.ceil(filteredProducts().length / itemsPerPage);
 
     return (
         <div class="flex w-screen h-screen bg-gray-100 overflow-x-hidden">
@@ -121,7 +129,7 @@ function IndexProduct() {
                                 <span class="col-span-1">Actions</span>
                             </div>
                             <div class="table-body overflow-y-scroll max-h-[550px] w-[200%] styled-scrollbar">
-                                <For each={filteredProducts()}>
+                                <For each={paginatedProducts()}>
                                     {(item) => (
                                         <div class="grid py-2 px-4 border-b border-gray-200 gap-y-8"
                                         style={{"grid-template-columns":`repeat(${Object.keys(products()[0]).length},1fr)`}}>
@@ -148,6 +156,27 @@ function IndexProduct() {
                             </div>
                         </div>
                     </div>
+                    <Show when={filteredProducts().length > itemsPerPage}>
+                        <div class="flex justify-between mt-4">
+                            <button
+                                class="py-2 px-4 bg-gray-300 rounded-lg hover:bg-gray-400"
+                                onClick={() => setCurrentPage(currentPage() - 1)}
+                                disabled={currentPage() === 1}
+                            >
+                                Previous
+                            </button>
+                            <div class="flex items-center">
+                                Page {currentPage()} of {totalPages()}
+                            </div>
+                            <button
+                                class="py-2 px-4 bg-gray-300 rounded-lg hover:bg-gray-400"
+                                onClick={() => setCurrentPage(currentPage() + 1)}
+                                disabled={currentPage() === totalPages()}
+                            >
+                                Next
+                            </button>
+                        </div>
+                    </Show>
                     <Show when={addProduct()}>
                         <div class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">
                             <div class="bg-white p-4 rounded-lg shadow-inner w-full md:w-3/4 lg:w-1/2">
@@ -217,3 +246,4 @@ function IndexProduct() {
 }
 
 export default IndexProduct;
+
