@@ -16,7 +16,7 @@ const AddReglement = () => {
   });
 
   return (
-    <div class="flex flex-col w-screen h-screen bg-gray-100 overflow-x-hidden">
+    <div class="flex  w-screen h-screen bg-gray-100 overflow-x-hidden">
       <Navbar/>
       <div class="flex flex-grow justify-center items-center py-12">
         <div class="bg-white shadow-lg rounded-lg p-8 w-full max-w-4xl">
