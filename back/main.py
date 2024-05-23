@@ -401,6 +401,7 @@ def get_reglement_by_product_id(product_id: int, db: _orm.Session = Depends(_ser
     if not reglements:
         # If no reglements are found, return basic product information
         result.append(BasicProductInfo(
+            id=product.id,
             cin=assure.Cin,
             nom_assure=assure.Assure_name,
             prime_totale=product.Prime_Totale,
@@ -412,6 +413,7 @@ def get_reglement_by_product_id(product_id: int, db: _orm.Session = Depends(_ser
     else:
         for reglement in reglements:
             result.append(_schemas.ReglementDetail(
+                id=product.id,
                 cin=assure.Cin,
                 nom_assure=assure.Assure_name,
                 prime_totale=product.Prime_Totale,

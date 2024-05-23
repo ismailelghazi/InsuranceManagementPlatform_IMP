@@ -111,6 +111,7 @@ class ReglementCreate(_pydantic.BaseModel):
     Type_de_reglement: str
 
 class ReglementDetail(_pydantic.BaseModel):
+    id:int
     cin: str
     nom_assure: str
     prime_totale: float

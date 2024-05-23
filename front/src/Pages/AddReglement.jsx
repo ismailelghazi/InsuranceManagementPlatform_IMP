@@ -11,10 +11,11 @@ const AddReglement = () => {
 
   createEffect(() => {
     fetcher(`/reglements/product/${params.id}`, true, 'GET', null, {}, navigate)
-      .then((res) => setReglement(res[0]))
+      .then((res) => setReglement(res))
       .catch((err) => Swal.fire('Error', err.message, 'error'));
+      
   });
-
+  
   return (
     <div class="flex  w-screen h-screen bg-gray-100 overflow-x-hidden">
       <Navbar/>

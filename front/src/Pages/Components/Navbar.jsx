@@ -9,7 +9,7 @@ function Navbar() {
             <div class="flex flex-col items-center justify-center w-full h-full gap-4">
                 <A 
                     href="/assurer" 
-                    class={`px-6 py-3 flex items-center gap-4 hover:bg-blue-700 transition-colors ${store.activeLink === 'Assure' ? 'bg-blue-700' : ''}`}
+                    class={`px-6 py-3 flex items-center gap-4 hover:bg-blue-800 transition-colors ${store.activeLink === 'Assure' ? 'bg-blue-700' : ''}`}
                     onClick={() => {
                         setStore('activeLink',"Assure")
                         console.log(store)
