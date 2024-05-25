@@ -25,6 +25,10 @@ let routes = [
         path: "/add-reglement/:id",
         component: lazy(() => import('./Pages/AddReglement'))
     },
+    {
+        path: "/reglement",
+        component: lazy(() => import('./Pages/reglement'))
+    },
 ];
 
 export default routes;
