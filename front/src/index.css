@@ -16,3 +16,51 @@
 .styled-scrollbar::-webkit-scrollbar-button{
     display: none;
 }
+/* Add this to your CSS file */
+.shake-and-color-animation {
+    animation: shake 0.5s, color-change 0.5s;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    50% { transform: translateX(5px); }
+    75% { transform: translateX(-5px); }
+}
+
+@keyframes color-change {
+    0%, 100% { border-color: #d1d5db; } /* original border color */
+    50% { border-color: #ff0000; } /* red color */
+}
+
+/* Add this to your CSS file */
+
+.table-content-assure {
+    display: grid;
+    grid-template-columns: 1fr;
+}
+
+@media (min-width: 768px) {
+    .table-content-assure {
+        grid-template-columns: 1fr 1fr 1fr;
+    }
+}
+
+.styled-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: #b0bec5 #f5f5f5;
+}
+
+.styled-scrollbar::-webkit-scrollbar {
+    width: 12px;
+}
+
+.styled-scrollbar::-webkit-scrollbar-thumb {
+    background-color: #b0bec5;
+    border-radius: 10px;
+}
+
+.styled-scrollbar::-webkit-scrollbar-track {
+    background: #f5f5f5;
+    border-radius: 10px;
+}

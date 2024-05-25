@@ -29,6 +29,7 @@ let routes = [
         path:"/reglement",
         component:lazy(()=> import('./Pages/reglement'))
     }
+
 ];
 
 export default routes;

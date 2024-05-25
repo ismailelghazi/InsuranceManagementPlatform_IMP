@@ -96,6 +96,7 @@ function Reglement() {
                 <div class="bg-white shadow-md w-11/12 rounded-lg p-6 mr-12">
                     <div class="flex flex-col md:flex-row justify-between items-center mb-4">
                         <h2 class="text-xl md:text-3xl font-semibold text-gray-800 mb-4 md:mb-0">Products List</h2>
+
                         <div class="flex items-center">
                             <input
                                 type="text"
@@ -103,6 +104,7 @@ function Reglement() {
                                 class="py-2 px-3 border border-gray-300 rounded-lg mr-4"
                                 value={searchQuery()}
                                 onInput={(e) => setSearchQuery(e.target.value)}
+<<<<<<< HEAD
                                 onKeyUp={() => filterProducts(searchQuery())}
                             />
                             <button class="py-2 px-4 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700" onClick={() => setAddProduct(!addProduct())}>
@@ -158,6 +160,7 @@ function Reglement() {
                         </div>
                     </div>
                     <Show when={filteredProducts().length > itemsPerPage}>
+
                         <div class="flex justify-between mt-4">
                             <button
                                 class="py-2 px-4 bg-gray-300 rounded-lg hover:bg-gray-400"
@@ -247,3 +250,4 @@ function Reglement() {
 }
 
 export default Reglement;
+
