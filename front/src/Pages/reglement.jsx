@@ -67,10 +67,10 @@ function IndexAssure() {
         <div class="flex w-screen h-screen bg-gray-100 overflow-x-hidden">
             <Navbar />
             <div class="w-full h-full p-6">
-                <h1 class="text-3xl md:text-5xl text-blue-900 font-bold mb-8">Assure Management</h1>
+                <h1 class="text-3xl md:text-5xl text-blue-900 font-bold mb-8">Reglement Management</h1>
                 <div class="bg-white shadow-md w-full rounded-lg p-6">
                     <div class="flex justify-between items-center mb-4">
-                        <h2 class="text-xl md:text-3xl font-semibold text-gray-800">Assures List</h2>
+                        <h2 class="text-xl md:text-3xl font-semibold text-gray-800">Reglement List</h2>
                         <div class="flex items-center">
                             <input
                                 type="text"
