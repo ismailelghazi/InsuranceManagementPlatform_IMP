@@ -4,7 +4,7 @@ import { useNavigate } from "@solidjs/router";
 import Navbar from "./Components/Navbar";
 import Swal from 'sweetalert2';
 
-function IndexAssure() {
+function IndexReglement() {
     const [assures, setAssures] = createSignal([]);
     const [addAssure, setAddAssure] = createSignal(false);
     const [searchQuery, setSearchQuery] = createSignal('');
@@ -93,10 +93,10 @@ function IndexAssure() {
         <div class="flex w-screen h-screen bg-gray-100">
             <Navbar />
             <div class="dashboard-assurer-container w-full h-full pl-16 py-24">
-                <h1 class="text-5xl text-blue-900 font-bold mb-8">Assure Management</h1>
+                <h1 class="text-5xl text-blue-900 font-bold mb-8">Reglement Management</h1>
                 <div class="bg-white shadow-md rounded-lg p-6 w-11/12 mr-12">
                     <div class="flex justify-between items-center mb-4">
-                        <h2 class="text-3xl font-semibold text-gray-800">Assures List</h2>
+                        <h2 class="text-3xl font-semibold text-gray-800">Reglement List</h2>
                         <div class="flex items-center">
                             <input
                                 type="text"
@@ -180,4 +180,4 @@ function IndexAssure() {
     );
 }
 
-export default IndexAssure;
+export default IndexReglement;
