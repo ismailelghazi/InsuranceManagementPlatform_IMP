@@ -4,11 +4,11 @@ import { Uploader } from "../Helpers/Uploader";
 import { useNavigate } from "@solidjs/router";
 
 function UploadExcel() {
-    tokenChecker();
 
     const [uploaded, setUploaded] = createSignal(false);
     const navigate = useNavigate();
 
+    tokenChecker(navigate);
     const redirectorAssure = () => {
         navigate('/assurer');
     };

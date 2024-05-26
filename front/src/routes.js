@@ -28,8 +28,11 @@ let routes = [
     {
         path:"/reglement",
         component:lazy(()=> import('./Pages/reglement'))
+    },
+    {
+        path:"/logout",
+        component:lazy(()=>import('./Pages/Logout'))
     }
-
 ];
 
 export default routes;

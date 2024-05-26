@@ -8,7 +8,6 @@ export async function fetcher(url,is_api,method,body=null,headers=null,navigate)
     }
     const errStatuses=[401,419,422]
     let full_url=is_api?`${BACKEND_URL_API}${url}`:`${BACKEND_URL}${url}`
-    
     return fetch(full_url,{
         method:method,
         body:body,
@@ -34,13 +33,10 @@ export async function fetcher(url,is_api,method,body=null,headers=null,navigate)
     })
 }
 
-export async function tokenChecker(){
-    return new Promise((resolve, reject) => {
-        const intervalId = setInterval(() => {
-            if (localStorage.getItem('token') !== null) {
-                clearInterval(intervalId);
-                resolve(store.token);
-            }
-        }, 250);
-    });
+export async function tokenChecker(navigate){
+    if (localStorage.getItem('token') !== null) {
+        return;
+    }else{
+        return navigate('/login')
+    }
 }
