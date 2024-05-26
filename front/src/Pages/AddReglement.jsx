@@ -23,6 +23,7 @@ const AddReglement = () => {
             Product_id: parseInt(params.id), // Ensure the ID is an integer
             Date_de_reglement: formData.get('date_reglement'), // Ensure this date is in the correct format
             Type_de_reglement: formData.get('type_reglement'),
+            Reste:0,
             Reglement: parseFloat(formData.get('reglement')) // Convert to float if it's a numeric field
         };
 
@@ -31,7 +32,7 @@ const AddReglement = () => {
         fetcher('/reglements/', true, 'POST', JSON.stringify(reglementData), { 'Content-Type': 'application/json' }, navigate)
             .then((res) => {
                 Swal.fire('Success', 'Reglement added successfully', 'success');
-                navigate(`/some-path`); // Redirect to the desired path after success
+                navigate(`/products`); // Redirect to the desired path after success
             })
             .catch((err) => {
                 console.error('Error response:', err); // Log the full error response
