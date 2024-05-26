@@ -328,7 +328,7 @@ def read_reglement_by_cin(id: int, db: _orm.Session = _fastapi.Depends(_services
     return result
 
 
-@app.post("/reglements/", response_model=_schemas.ReglementBase)
+@app.post("/api/reglements/", response_model=_schemas.ReglementBase)
 def create_reglement(reglement: _schemas.ReglementCreate, db: _orm.Session = _fastapi.Depends(_services.get_db)):
     product = db.query(models.ProductModel).filter(models.ProductModel.id == reglement.Product_id).first()
     if not product:
@@ -422,5 +422,51 @@ def get_reglement_by_product_id(product_id: int, db: _orm.Session = Depends(_ser
                 reglement=reglement.Reglement,
                 type_de_reglement=reglement.Type_de_reglement
             ))
+
+    return result
+@app.get("/api/reglements/assure/{cin}", response_model=List[Union[_schemas.ReglementDetail, BasicProductInfo]])
+def get_reglement_by_cin(cin: str, db: _orm.Session = Depends(_services.get_db)):
+    # Fetch the assure by CIN
+    assure = db.query(models.AssureModel).filter(models.AssureModel.Cin == cin).first()
+
+    if not assure:
+        raise HTTPException(status_code=404, detail="No assure found for the given CIN")
+
+    # Fetch the products associated with the assure
+    products = db.query(models.ProductModel).filter(models.ProductModel.assure_id == assure.Cin).all()
+
+    if not products:
+        raise HTTPException(status_code=404, detail="No products found for the given CIN")
+
+    result = []
+
+    for product in products:
+        # Fetch reglements associated with each product
+        reglements = db.query(models.ReglementModel).filter(models.ReglementModel.Product_id == product.id).all()
+
+        if not reglements:
+            # If no reglements are found, return basic product information
+            result.append(BasicProductInfo(
+                id=product.id,
+                cin=assure.Cin,
+                nom_assure=assure.Assure_name,
+                prime_totale=product.Prime_Totale,
+                reste=None,
+                matricule=product.Matricule,
+                reglement=None,
+                type_de_reglement=None
+            ))
+        else:
+            for reglement in reglements:
+                result.append(_schemas.ReglementDetail(
+                    id=product.id,
+                    cin=assure.Cin,
+                    nom_assure=assure.Assure_name,
+                    prime_totale=product.Prime_Totale,
+                    reste=reglement.Reste,
+                    matricule=product.Matricule,
+                    reglement=reglement.Reglement,
+                    type_de_reglement=reglement.Type_de_reglement
+                ))
 
     return result

@@ -106,53 +106,28 @@ function IndexReglement() {
                                 onInput={(e) => setSearchQuery(e.target.value)}
                                 onKeyUp={() => filterAssures(searchQuery())}
                             />
-                            <button class="py-2 px-4 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700" onClick={() => setAddAssure(!addAssure())}>
-                                {addAssure() ? 'Cancel' : 'Add Assure'}
-                            </button>
+                            
                         </div>
                     </div>
                     <div class="table-content-assurer">
-                        <div class="table-head grid grid-cols-3 bg-gray-200 text-gray-700 font-semibold py-2 px-4 rounded-t-lg">
+                        <div class="table-head grid grid-cols-2 place-content-center bg-gray-200 text-gray-700 font-semibold py-2 px-4 rounded-t-lg">
                             <span class="col-span-1">CIN</span>
                             <span class="col-span-1">Nom Assurer</span>
-                            <span class="col-span-1 text-center">Actions</span>
+                          
                         </div>
-                        <div class="table-body overflow-y-scroll max-h-[550px] styled-scrollbar">
+                        <div class="table-body overflow-y-scroll max-h-[550px]  styled-scrollbar">
                             <For each={paginatedAssures()}>
                                 {(item) => (
-                                    <div class="grid grid-cols-3 py-2 px-4 border-b border-gray-200">
+                                    <div class="grid grid-cols-2  place-content-center py-2 px-4 border-b  border-gray-200">
                                         <div class="col-span-1">{item.Cin}</div>
                                         <div class="col-span-1">{item.Assure_name}</div>
-                                        <div class="col-span-1 text-center">
-                                            <i class="fa-regular fa-trash-can cursor-pointer text-red-500 hover:text-red-700" data-cin={item.Cin} onClick={deleteAssure}></i>
-                                        </div>
+                                        
                                     </div>
                                 )}
                             </For>
                         </div>
                     </div>
-                    <Show when={addAssure()}>
-                        <div class="absolute inset-0 flex flex-col items-center justify-center bg-gray-900 bg-opacity-50">
-                            <div class="p-4 bg-gray-50 rounded-lg shadow-inner">
-                                <form onSubmit={addAssureData}>
-                                    <div class="grid grid-cols-2 gap-4">
-                                        <div class="flex flex-col">
-                                            <label for="Cin" class="mb-1 font-medium text-gray-700">CIN</label>
-                                            <input type="text" name="Cin" class="py-2 px-3 border border-gray-300 rounded-lg" required />
-                                        </div>
-                                        <div class="flex flex-col">
-                                            <label for="Assure_name" class="mb-1 font-medium text-gray-700">Nom Assure</label>
-                                            <input type="text" name="Assure_name" class="py-2 px-3 border border-gray-300 rounded-lg" required />
-                                        </div>
-                                    </div>
-                                    <div class="mt-4 flex justify-between">
-                                        <button type="button" class="py-2 px-4 bg-red-500 text-white rounded-lg hover:bg-red-600" onClick={() => setAddAssure(false)}>Cancel</button>
-                                        <button type="submit" class="py-2 px-4 bg-blue-500 text-white rounded-lg hover:bg-blue-600">Add Assure</button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </Show>
+                   
                     <Show when={filteredAssures().length > itemsPerPage}>
                         <div class="flex justify-between mt-4">
                             <button

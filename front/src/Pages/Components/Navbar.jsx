@@ -8,7 +8,7 @@ function Navbar() {
             <div class="flex flex-col items-center justify-center w-full h-full gap-4">
                 <A 
                     href="/assurer" 
-                    class={`px-6 py-3 flex items-center gap-4 hover:bg-blue-800 transition-colors ${store.activeLink === 'Assure' ? 'bg-blue-700' : ''}`}
+                    class={`justify-center  py-3 flex items-center gap-4 hover:bg-blue-800  w-full transition-colors ${store.activeLink === 'Assure' ? 'bg-blue-700' : ''}`}
                     onClick={() => {
                         setStore('activeLink',"Assure")
                         console.log(store)
@@ -19,7 +19,7 @@ function Navbar() {
                 </A>
                 <A 
                     href="/product" 
-                    class={`px-6 py-3 flex items-center gap-4 hover:bg-blue-700 transition-colors ${store.activeLink === 'Produit' ? 'bg-blue-700' : ''}`}
+                    class={` py-3 flex items-center gap-4 hover:bg-blue-700 w-full justify-center transition-colors ${store.activeLink === 'Produit' ? 'bg-blue-700' : ''}`}
                     onClick={() =>{
                         setStore('activeLink',"Produit")
                         console.log(store)
@@ -30,7 +30,7 @@ function Navbar() {
                 </A>
                 <A 
                     href="/reglement" 
-                    class={`px-6 py-3 flex items-center gap-4 hover:bg-blue-700 transition-colors ${store.activeLink === 'Reglement' ? 'bg-blue-700' :'' }`}
+                    class={`justify-center  py-3 flex items-center gap-4 hover:bg-blue-700 w-full  transition-colors ${store.activeLink === 'Reglement' ? 'bg-blue-700' :'' }`}
                     onClick={() => {
                         setStore('activeLink',"Reglement")
                         console.log(store)
