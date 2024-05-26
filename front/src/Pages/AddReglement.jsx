@@ -32,7 +32,8 @@ const AddReglement = () => {
         fetcher('/reglements/', true, 'POST', JSON.stringify(reglementData), { 'Content-Type': 'application/json' }, navigate)
             .then((res) => {
                 Swal.fire('Success', 'Reglement added successfully', 'success');
-                navigate(`/products`); // Redirect to the desired path after success
+
+                navigate(`/product`); // Redirect to the desired path after success
             })
             .catch((err) => {
                 console.error('Error response:', err); // Log the full error response
