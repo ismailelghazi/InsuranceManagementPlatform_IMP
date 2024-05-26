@@ -11,7 +11,6 @@ function Navbar() {
                     class={`justify-center  py-3 flex items-center gap-4 hover:bg-blue-800  w-full transition-colors ${store.activeLink === 'Assure' ? 'bg-blue-700' : ''}`}
                     onClick={() => {
                         setStore('activeLink',"Assure")
-                        console.log(store)
                     }}
                 >
                     <i class="fas fa-user-shield"></i>
@@ -22,7 +21,6 @@ function Navbar() {
                     class={` py-3 flex items-center gap-4 hover:bg-blue-700 w-full justify-center transition-colors ${store.activeLink === 'Produit' ? 'bg-blue-700' : ''}`}
                     onClick={() =>{
                         setStore('activeLink',"Produit")
-                        console.log(store)
                     }}
                 >
                     <i class="fas fa-box"></i>
@@ -33,7 +31,6 @@ function Navbar() {
                     class={`justify-center  py-3 flex items-center gap-4 hover:bg-blue-700 w-full  transition-colors ${store.activeLink === 'Reglement' ? 'bg-blue-700' :'' }`}
                     onClick={() => {
                         setStore('activeLink',"Reglement")
-                        console.log(store)
                     }}
                 >
                     <i class="fas fa-file-invoice"></i>

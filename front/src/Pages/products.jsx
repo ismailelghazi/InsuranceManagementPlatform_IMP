@@ -56,7 +56,7 @@ function IndexProduct() {
         ev.preventDefault();
         const formData = Object.fromEntries(new FormData(ev.target));
         const jsonformdata = JSON.stringify(formData);
-        fetcher('/Product_create', true, 'POST', jsonformdata)
+        fetcher('/product_create', true, 'POST', jsonformdata,{"Content-Type":"application/json"},navigate)
             .then(() => {
                 setProducts([...products(), formData]);
                 setFilteredProducts([...filteredProducts(), formData]);
@@ -112,8 +112,7 @@ function IndexProduct() {
                     </div>
                     <div class="overflow-x-auto styled-scrollbar">
                         <div class="table-content-product min-w-full">
-                            <div class="table-head grid bg-gray-200 text-gray-700 w-[200%] font-semibold py-2 px-4 rounded-t-lg"
-       style={{"grid-template-columns":`repeat(${headersCount()},1fr)`}}>
+                            <div class="table-head grid bg-gray-200 text-gray-700 w-[200%] font-semibold py-2 px-4 rounded-t-lg" style={`grid-template-columns:repeat(${headersCount()},1fr);`} >
                                 <span class="col-span-1">ID</span>
                                 <span class="col-span-1">Police</span>
                                 <span class="col-span-1">Date Emission</span>
@@ -226,6 +225,10 @@ function IndexProduct() {
                                         <div class="flex flex-col">
                                             <label for="Attestation" class="mb-1 font-medium text-gray-700">Attestation</label>
                                             <input type="text" name="Attestation" class="py-2 px-3 border border-gray-300 rounded-lg" required />
+                                        </div>
+                                        <div class="flex flex-col">
+                                            <label for="Prime_Totale" class="mb-1 font-medium text-gray-700">Prime Totale</label>
+                                            <input type="text" name="Prime_Totale" class="py-2 px-3 border border-gray-300 rounded-lg" required />
                                         </div>
                                         <div class="flex flex-col">
                                             <label for="assure_id" class="mb-1 font-medium text-gray-700">Assure ID</label>
