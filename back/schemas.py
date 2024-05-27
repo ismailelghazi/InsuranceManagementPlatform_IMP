@@ -2,6 +2,7 @@
 import datetime
 import datetime as _dt
 from typing import Optional
+import datetime as dt
 
 import pydantic as _pydantic
 
@@ -32,113 +33,126 @@ class AssureCreat(_pydantic.BaseModel):
 
 
 class AssureBase(_pydantic.BaseModel):
-    Cin: str
-    Assure_name: str
+    Cin: Optional[str] = None
+    Assure_name: Optional[str] = None
+
     class Config:
         orm_mode = True
         from_attributes = True
+
 
 class ProductBase(_pydantic.BaseModel):
-    id:int
-    Police: str
-    Date_effet: datetime.date
-    Acte: str
-    Date_fin: datetime.date
-    Fractionn: Optional[str]
-    Contrat: str
-    Periode: str
-    Marque: str
-    Date_Emission: datetime.datetime
-    Matricule: str
-    Attestation: Optional[str]
-    Prime_Totale: float
-    assure_id: str
+    id: Optional[int] = None
+    Police: Optional[str] = None
+    Date_effet: Optional[dt.date] = None
+    Acte: Optional[str] = None
+    Date_fin: Optional[dt.date] = None
+    Fractionn: Optional[str] = None
+    Contrat: Optional[str] = None
+    Periode: Optional[str] = None
+    Marque: Optional[str] = None
+    Date_Emission: Optional[dt.datetime] = None
+    Matricule: Optional[str] = None
+    Attestation: Optional[str] = None
+    Prime_Totale: Optional[float] = None
+    assure_id: Optional[str] = None
+
     class Config:
         orm_mode = True
         from_attributes = True
 
+
 class ProductCreate(_pydantic.BaseModel):
-    Police: str
-    Date_effet: datetime.date
-    Acte: str
-    Date_fin: datetime.date
-    Fractionn: Optional[str]
-    Contrat: str
-    Periode: str
-    Marque: str
-    Date_Emission: datetime.datetime
-    Matricule: str
-    Attestation: Optional[str]
-    Prime_Totale: float
-    assure_id: str
+    Police: Optional[str] = None
+    Date_effet: Optional[dt.date] = None
+    Acte: Optional[str] = None
+    Date_fin: Optional[dt.date] = None
+    Fractionn: Optional[str] = None
+    Contrat: Optional[str] = None
+    Periode: Optional[str] = None
+    Marque: Optional[str] = None
+    Date_Emission: Optional[dt.datetime] = None
+    Matricule: Optional[str] = None
+    Attestation: Optional[str] = None
+    Prime_Totale: Optional[float] = None
+    assure_id: Optional[str] = None
 
 
 class ProductWithAssureName(_pydantic.BaseModel):
-    id: int
-    Police: str
-    Date_effet: datetime.date
-    Acte: str
-    Date_fin: datetime.date
-    Fractionn: Optional[str]
-    Contrat: str
-    Periode: str
-    Marque: str
-    Date_Emission: datetime.datetime
-    Matricule: str
-    Attestation: Optional[str]
-    Prime_Totale: float
-    assure_id: str
-    Date_effet: str
-    # Add other fields from ProductModel as needed
-    Assure_name: str
-class ReglementBase(_pydantic.BaseModel):
-    id: int
-    Product_id: int
-    Reste: float
-    Reglement: float
-    Date_de_reglement: datetime.date
-    Type_de_reglement: str
+    id: Optional[int] = None
+    Police: Optional[str] = None
+    Date_effet: Optional[dt.date] = None
+    Acte: Optional[str] = None
+    Date_fin: Optional[dt.date] = None
+    Fractionn: Optional[str] = None
+    Contrat: Optional[str] = None
+    Periode: Optional[str] = None
+    Marque: Optional[str] = None
+    Date_Emission: Optional[dt.datetime] = None
+    Matricule: Optional[str] = None
+    Attestation: Optional[str] = None
+    Prime_Totale: Optional[float] = None
+    assure_id: Optional[str] = None
+    Assure_name: Optional[str] = None
 
     class Config:
         orm_mode = True
         from_attributes = True
+
+
+class ReglementBase(_pydantic.BaseModel):
+    id: Optional[int] = None
+    Product_id: Optional[int] = None
+    Reste: Optional[float] = None
+    Reglement: Optional[float] = None
+    Date_de_reglement: Optional[dt.date] = None
+    Type_de_reglement: Optional[str] = None
+
+    class Config:
+        orm_mode = True
+        from_attributes = True
+
 
 class ReglementCreate(_pydantic.BaseModel):
-    Product_id: int
-    Reste: float
-    Reglement: float
-    Date_de_reglement: datetime.date
-    Type_de_reglement: str
+    Product_id: Optional[int] = None
+    Reste: Optional[float] = None
+    Reglement: Optional[float] = None
+    Date_de_reglement: Optional[dt.date] = None
+    Type_de_reglement: Optional[str] = None
+
 
 class ReglementDetail(_pydantic.BaseModel):
-    id:int
-    cin: str
-    nom_assure: str
-    prime_totale: float
-    reste: float
-    matricule: str
-    reglement: float
-    type_de_reglement: str
+    id: Optional[int] = None
+    cin: Optional[str] = None
+    nom_assure: Optional[str] = None
+    prime_totale: Optional[float] = None
+    reste: Optional[float] = None
+    matricule: Optional[str] = None
+    reglement: Optional[float] = None
+    type_de_reglement: Optional[str] = None
 
     class Config:
         orm_mode = True
         from_attributes = True
+
+
 class HistoryBase(_pydantic.BaseModel):
-    id: int
-    assure_id: str  # The CIN of the Assure associated with the change
-    product_id: int  # The ID of the Product associated with the change
-    reglement_id: int  # The ID of the Reglement associated with the change
-    action: str  # The type of action performed (e.g., create, update, delete)
-    description: str  # A detailed description of the change
-    reste_amount: float  # The remaining amount after the change, renamed
-    reglement_amount: float  # The amount of the current reglement, renamed
+    id: Optional[int] = None
+    assure_id: Optional[str] = None  # The CIN of the Assure associated with the change
+    product_id: Optional[int] = None  # The ID of the Product associated with the change
+    reglement_id: Optional[int] = None  # The ID of the Reglement associated with the change
+    action: Optional[str] = None  # The type of action performed (e.g., create, update, delete)
+    description: Optional[str] = None  # A detailed description of the change
+    reste_amount: Optional[float] = None  # The remaining amount after the change, renamed
+    reglement_amount: Optional[float] = None  # The amount of the current reglement, renamed
 
     class Config:
         orm_mode = True
         from_attributes = True
+
 
 class HistoryCreate(_pydantic.BaseModel):
-    assure_id: str
-    product_id: int
-    reglement_id: int
-    action: str
+    assure_id: Optional[str] = None
+    product_id: Optional[int] = None
+    reglement_id: Optional[int] = None
+    action: Optional[str] = None

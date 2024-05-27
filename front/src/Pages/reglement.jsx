@@ -10,7 +10,7 @@ function IndexReglement() {
     const [searchQuery, setSearchQuery] = createSignal('');
     const [filteredAssures, setFilteredAssures] = createSignal([]);
     const [currentPage, setCurrentPage] = createSignal(1);
-    const itemsPerPage = 10;
+    const itemsPerPage = 12;
     const navigate = useNavigate();
 
     // Fetch assures data on component mount
