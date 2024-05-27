@@ -52,6 +52,7 @@ class ReglementModel(_database.Base):
     Product_id = _sql.Column(_sql.String, _sql.ForeignKey('Product.id'))
     Reste=_sql.Column(_sql.Float)
     Reglement=_sql.Column(_sql.Float)
+    numero = _sql.Column(_sql.String)
     Date_de_reglement = _sql.Column(_sql.Date)
     Type_de_reglement = _sql.Column(_sql.String)
     history = _orm.relationship("HistoryModel", back_populates="reglement")
@@ -66,6 +67,7 @@ class HistoryModel(_database.Base):
     reglement_id = _sql.Column(_sql.Integer, _sql.ForeignKey('Reglement.id'))
     action = _sql.Column(_sql.String)
     description = _sql.Column(_sql.String)
+    numero = _sql.Column(_sql.String)
     reste_amount = _sql.Column(_sql.Float)  # Renamed this column
     reglement_amount = _sql.Column(_sql.Float)  # Renamed this column
 
