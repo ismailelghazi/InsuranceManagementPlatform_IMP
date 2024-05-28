@@ -80,6 +80,7 @@ function IndexReglement() {
         setCurrentPage(1);
     };
 
+
     // Function to paginate assures
     const paginatedAssures = () => {
         const startIndex = (currentPage() - 1) * itemsPerPage;
