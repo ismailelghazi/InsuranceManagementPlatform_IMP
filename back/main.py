@@ -343,6 +343,7 @@ def create_reglement(reglement: _schemas.ReglementCreate, db: _orm.Session = _fa
     db_reglement = models.ReglementModel(
         Product_id=reglement.Product_id,
         Reste=new_reste,
+        numero = reglement.numero,
         Reglement=reglement.Reglement,
         Date_de_reglement=reglement.Date_de_reglement,
         Type_de_reglement=reglement.Type_de_reglement
@@ -357,7 +358,7 @@ def create_reglement(reglement: _schemas.ReglementCreate, db: _orm.Session = _fa
         reglement_id=db_reglement.id,
         action="create",
         description=f"Created reglement with Reglement: {reglement.Reglement} and Reste: {new_reste}",
-        reste_amount=new_reste,
+        reste_amount=new_reste,        numero = reglement.numero,
         reglement_amount=reglement.Reglement
     )
     db.add(db_history)

@@ -13,7 +13,6 @@ function IndexReglement() {
     const itemsPerPage = 12;
     const navigate = useNavigate();
 
-    // Fetch assures data on component mount
     createEffect(() => {
         if (assures().length === 0) {
             fetcher('/Assure', true, 'GET', null, {}, navigate)
@@ -24,7 +23,6 @@ function IndexReglement() {
         }
     });
 
-    // Handle assure deletion with confirmation
     const deleteAssure = (ev) => {
         const CIN = ev.target.attributes['data-cin'].nodeValue;
         Swal.fire({
@@ -51,7 +49,6 @@ function IndexReglement() {
         });
     };
 
-    // Handle new assure addition with success notification
     const addAssureData = (ev) => {
         ev.preventDefault();
         const formData = Object.fromEntries(new FormData(ev.target));
@@ -69,7 +66,6 @@ function IndexReglement() {
             });
     };
 
-    // Function to filter assures based on search query
     const filterAssures = (query) => {
         const filtered = assures().filter(
             (assure) =>
@@ -81,7 +77,6 @@ function IndexReglement() {
     };
 
 
-    // Function to paginate assures
     const paginatedAssures = () => {
         const startIndex = (currentPage() - 1) * itemsPerPage;
         const endIndex = startIndex + itemsPerPage;
@@ -107,28 +102,24 @@ function IndexReglement() {
                                 onInput={(e) => setSearchQuery(e.target.value)}
                                 onKeyUp={() => filterAssures(searchQuery())}
                             />
-                            
                         </div>
                     </div>
                     <div class="table-content-assurer">
                         <div class="table-head grid grid-cols-2 place-content-center bg-gray-200 text-gray-700 font-semibold py-2 px-4 rounded-t-lg">
                             <span class="col-span-1">CIN</span>
                             <span class="col-span-1">Nom Assurer</span>
-                          
                         </div>
-                        <div class="table-body overflow-y-scroll max-h-[550px]  styled-scrollbar">
+                        <div class="table-body overflow-y-scroll max-h-[550px] styled-scrollbar">
                             <For each={paginatedAssures()}>
                                 {(item) => (
-                                    <div class="grid grid-cols-2  place-content-center py-2 px-4 border-b  border-gray-200">
+                                    <div class="grid grid-cols-2 place-content-center py-2 px-4 border-b border-gray-200 cursor-pointer" onClick={() => navigate(`/details/${item.Cin}`)}>
                                         <div class="col-span-1">{item.Cin}</div>
                                         <div class="col-span-1">{item.Assure_name}</div>
-                                        
                                     </div>
                                 )}
                             </For>
                         </div>
                     </div>
-                   
                     <Show when={filteredAssures().length > itemsPerPage}>
                         <div class="flex justify-between mt-4">
                             <button
