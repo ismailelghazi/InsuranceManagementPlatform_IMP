@@ -36,6 +36,7 @@ const AddReglement = () => {
             Product_id: parseInt(params.id), // Ensure the ID is an integer
             Date_de_reglement: formData.get('date_reglement'), // Ensure this date is in the correct format
             Type_de_reglement: formData.get('type_reglement'),
+            Num_Operation:formData.get('num_operation'),
             Reste:0,
             Reglement: parseFloat(formData.get('reglement')) // Convert to float if it's a numeric field
         };
