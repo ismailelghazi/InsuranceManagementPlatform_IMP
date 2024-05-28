@@ -36,7 +36,7 @@ const AddReglement = () => {
             Product_id: parseInt(params.id), // Ensure the ID is an integer
             Date_de_reglement: formData.get('date_reglement'), // Ensure this date is in the correct format
             Type_de_reglement: formData.get('type_reglement'),
-            Num_Operation:formData.get('num_operation'),
+            numero:formData.get('numero'),
             Reste:0,
             Reglement: parseFloat(formData.get('reglement')) // Convert to float if it's a numeric field
         };
@@ -44,7 +44,7 @@ const AddReglement = () => {
         console.log('Payload to be sent:', reglementData); // Log the payload to verify the data
 
         fetcher('/reglements/', true, 'POST', JSON.stringify(reglementData), { 'Content-Type': 'application/json' }, navigate)
-            .then((res) => {
+            .then(() => {
                 Swal.fire('Success', 'Reglement added successfully', 'success');
 
                 navigate(`/product`); // Redirect to the desired path after success
@@ -101,9 +101,9 @@ const AddReglement = () => {
                             </div>
                             <Show when={doesRequireOperationID()}>
                              <div>
-                                <label for="num_operation" class="block text-sm font-medium text-gray-700">N° d'operation
+                                <label for="numero" class="block text-sm font-medium text-gray-700">N° d'operation
                         </label>
-                                <input type="text" name="num_operation" class="mt-1 py-2 px-3 border border-gray-300 rounded-lg w-full" />
+                                <input type="text" name="numero" class="mt-1 py-2 px-3 border border-gray-300 rounded-lg w-full" />
                             </div>
                             </Show>
                             <div>
