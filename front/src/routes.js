@@ -30,9 +30,13 @@ let routes = [
         component:lazy(()=> import('./Pages/reglement'))
     },
     {
+        path:"/details/:cin",
+        component:lazy(()=>import('./Pages/details.jsx'))
+    },
+    {
         path:"/logout",
         component:lazy(()=>import('./Pages/Logout'))
-    }
+    },
 ];
 
 export default routes;
