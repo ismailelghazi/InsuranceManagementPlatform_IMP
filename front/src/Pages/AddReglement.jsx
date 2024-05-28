@@ -1,4 +1,4 @@
-import { createEffect, createSignal } from "solid-js";
+import { Show, createEffect, createSignal } from "solid-js";
 import { useParams, useNavigate } from "@solidjs/router";
 import { fetcher } from '../Helpers/FetchHelper';
 import Swal from 'sweetalert2';
@@ -8,14 +8,25 @@ const AddReglement = () => {
     const params = useParams();
     const navigate = useNavigate();
     const [reglement, setReglement] = createSignal(null);
-    const []=createSignal(false);
+    const [doesRequireOperationID,setDoesRequireOperationID]=createSignal(false);
 
     // what i'll do is that i'll check if the on change event on the select element if it does require the OperationID ()
     createEffect(() => {
         fetcher(`/reglements/product/${params.id}`, true, 'GET', null, {}, navigate)
-          .then((res) => { setReglement(res[res.length - 1]); })
+          .then((res) => { setReglement(res[res.length - 1]) })
           .catch((err) => Swal.fire('Error', err.message, 'error'));
     });
+
+    const readReglement=function(ev){
+
+        console.log(ev.target.value)
+        const values=['cheque','lettre_de_change','virement','banque','credit']
+        if(values.includes(ev.target.value)){
+            setDoesRequireOperationID(true)
+        }else{
+            setDoesRequireOperationID(false)
+        }
+    }
 
     const submitReglement = (ev) => {
         ev.preventDefault();
@@ -25,6 +36,7 @@ const AddReglement = () => {
             Product_id: parseInt(params.id), // Ensure the ID is an integer
             Date_de_reglement: formData.get('date_reglement'), // Ensure this date is in the correct format
             Type_de_reglement: formData.get('type_reglement'),
+            numero:formData.get('numero'),
             Reste:0,
             Reglement: parseFloat(formData.get('reglement')) // Convert to float if it's a numeric field
         };
@@ -32,7 +44,7 @@ const AddReglement = () => {
         console.log('Payload to be sent:', reglementData); // Log the payload to verify the data
 
         fetcher('/reglements/', true, 'POST', JSON.stringify(reglementData), { 'Content-Type': 'application/json' }, navigate)
-            .then((res) => {
+            .then(() => {
                 Swal.fire('Success', 'Reglement added successfully', 'success');
 
                 navigate(`/product`); // Redirect to the desired path after success
@@ -72,7 +84,7 @@ const AddReglement = () => {
                             </div>
                             <div>
                                 <label for="type_de_reglement" class="block text-sm font-medium text-gray-700">Type de reglement</label>
-                                <select name="type_reglement" class="mt-1 py-2 px-3 border border-gray-300 rounded-lg w-full">
+                                <select name="type_reglement" on:change={readReglement}  class="mt-1 py-2 px-3 border border-gray-300 rounded-lg w-full">
                                     <option value="null">Veuillez selectionner</option>
                                     <option value="cheque">Cheque</option>
                                     <option value="espece">Espece</option>
@@ -87,6 +99,13 @@ const AddReglement = () => {
                                 <label for="reglement" class="block text-sm font-medium text-gray-700">Reglement</label>
                                 <input type="text" name="reglement" class="mt-1 py-2 px-3 border border-gray-300 rounded-lg w-full" />
                             </div>
+                            <Show when={doesRequireOperationID()}>
+                             <div>
+                                <label for="numero" class="block text-sm font-medium text-gray-700">N° d'operation
+                        </label>
+                                <input type="text" name="numero" class="mt-1 py-2 px-3 border border-gray-300 rounded-lg w-full" />
+                            </div>
+                            </Show>
                             <div>
                                 <label for="reste" class="block text-sm font-medium text-gray-700">Rest</label>
                                 <input type="text" name="reste" value={reglement().reste} disabled class="mt-1 py-2 px-3 border border-gray-300 rounded-lg w-full" />

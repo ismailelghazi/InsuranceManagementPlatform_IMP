@@ -40,13 +40,13 @@ function IndexProduct() {
             if (result.isConfirmed) {
                 fetcher(`/Product_delete/${id}`, true, 'DELETE', null, null, navigate)
                     .then(() => {
-                        setProducts(products().filter((el) => el.id !== id));
-                        setFilteredProducts(filteredProducts().filter((el) => el.id !== id));
                         Swal.fire(
                             'Deleted!',
                             'The product has been deleted.',
                             'success'
-                        );
+                        ).then(() => {
+                            location.reload(); // Reload the page after the product is deleted
+                        });
                     });
             }
         });

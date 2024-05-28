@@ -160,3 +160,4 @@ class HistoryCreate(_pydantic.BaseModel):
     product_id: Optional[int] = None
     reglement_id: Optional[int] = None
     action: Optional[str] = None
+    numero : Optional[str] = None
