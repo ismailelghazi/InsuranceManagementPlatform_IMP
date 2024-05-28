@@ -8,6 +8,7 @@ function DetailsPage() {
     const [details, setDetails] = createSignal(null);
     const [searchQuery, setSearchQuery] = createSignal('');
     const [filteredAssures, setFilteredAssures] = createSignal([]);
+
     const navigate = useNavigate();
 
     createEffect(() => {
@@ -27,7 +28,7 @@ function DetailsPage() {
                 <h1 class="text-5xl text-blue-900 font-bold mb-8">{details() ? details()[0]['nom_assure'] : 'Loading...'}</h1>
                 <h1 class="text-3xl text-blue-900 font-bold mb-8">{details() ? details()[0]['cin'] : 'Loading...'}</h1>
                 <div class="bg-white shadow-md rounded-lg p-6 w-11/12 mr-12">
-                    <div class="flex items-center">
+                     <div class="flex items-center">
                             <input
                                 type="text"
                                 placeholder="Search"
@@ -37,7 +38,7 @@ function DetailsPage() {
                                 onKeyUp={() => filteredAssures(searchQuery())}
                             />
                         </div>
-                    </div>
+
                     <div class="table-content-assurer">
                         <div class="table-head grid grid-cols-5 place-content-center bg-gray-200 text-gray-700 font-semibold py-2 px-4 rounded-t-lg">
                             <span class="col-span-1">ID</span>

@@ -8,7 +8,9 @@ const AddReglement = () => {
     const params = useParams();
     const navigate = useNavigate();
     const [reglement, setReglement] = createSignal(null);
+    const []=createSignal(false);
 
+    // what i'll do is that i'll check if the on change event on the select element if it does require the OperationID ()
     createEffect(() => {
         fetcher(`/reglements/product/${params.id}`, true, 'GET', null, {}, navigate)
           .then((res) => { setReglement(res[res.length - 1]); })
@@ -72,10 +74,13 @@ const AddReglement = () => {
                                 <label for="type_de_reglement" class="block text-sm font-medium text-gray-700">Type de reglement</label>
                                 <select name="type_reglement" class="mt-1 py-2 px-3 border border-gray-300 rounded-lg w-full">
                                     <option value="null">Veuillez selectionner</option>
-                                    <option value="cheque">Cheques</option>
-                                    <option value="espece">Especes</option>
+                                    <option value="cheque">Cheque</option>
+                                    <option value="espece">Espece</option>
+                                    <option value="lettre_de_change">Lettre De Change</option>
+                                    <option value="virement">Virement</option>
+                                    <option value="banque">Banque</option>
                                     <option value="credit">Credit</option>
-                                    <option value="autres">Autres</option>
+                                    <option value="autres"></option>
                                 </select>
                             </div>
                             <div>
