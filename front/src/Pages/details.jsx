@@ -16,6 +16,7 @@ function DetailsPage() {
             fetcher(`/reglements/assure/${params.cin}`, true, 'GET', null, {}, navigate)
                 .then((res) => {
                     setDetails(res);
+                    console.log(res)
                 });
         }
     });
@@ -27,7 +28,7 @@ function DetailsPage() {
                 <h1 class="text-5xl text-blue-900 font-bold mb-8">{details() ? details()[0]['nom_assure'] : 'Loading...'}</h1>
                 <h1 class="text-3xl text-blue-900 font-bold mb-8">{details() ? details()[0]['cin'] : 'Loading...'}</h1>
                 <div class="bg-white shadow-md rounded-lg p-6 w-11/12 mr-12">
-                     <div class="flex justify-end pb-4">
+                     <div class="flex items-center">
                             <input
                                 type="text"
                                 placeholder="Search"
