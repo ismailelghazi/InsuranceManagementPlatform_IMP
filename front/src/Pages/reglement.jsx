@@ -6,7 +6,6 @@ import Swal from 'sweetalert2';
 
 function IndexReglement() {
     const [assures, setAssures] = createSignal([]);
-    const [addAssure, setAddAssure] = createSignal(false);
     const [searchQuery, setSearchQuery] = createSignal('');
     const [filteredAssures, setFilteredAssures] = createSignal([]);
     const [currentPage, setCurrentPage] = createSignal(1);
@@ -22,49 +21,6 @@ function IndexReglement() {
                 });
         }
     });
-
-    const deleteAssure = (ev) => {
-        const CIN = ev.target.attributes['data-cin'].nodeValue;
-        Swal.fire({
-            title: 'Are you sure?',
-            text: `Do you really want to delete assure with CIN: ${CIN}?`,
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#d33',
-            cancelButtonColor: '#3085d6',
-            confirmButtonText: 'Yes, delete it!'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                fetcher(`/Assure_delete/${CIN}`, true, 'DELETE', null, null, navigate)
-                    .then(() => {
-                        setAssures(assures().filter((el) => el.Cin !== CIN));
-                        setFilteredAssures(filteredAssures().filter((el) => el.Cin !== CIN));
-                        Swal.fire(
-                            'Deleted!',
-                            'The assure has been deleted.',
-                            'success'
-                        );
-                    });
-            }
-        });
-    };
-
-    const addAssureData = (ev) => {
-        ev.preventDefault();
-        const formData = Object.fromEntries(new FormData(ev.target));
-        const jsonformdata = JSON.stringify(formData);
-        fetcher('/Assure_create', true, 'POST', jsonformdata)
-            .then(() => {
-                setAssures([...assures(), formData]);
-                setFilteredAssures([...filteredAssures(), formData]);
-                setAddAssure(false);
-                Swal.fire(
-                    'Added!',
-                    'New assure has been added.',
-                    'success'
-                );
-            });
-    };
 
     const filterAssures = (query) => {
         const filtered = assures().filter(
