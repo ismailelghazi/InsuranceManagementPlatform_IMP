@@ -20,7 +20,7 @@ class AssureModel(_database.Base):
     __tablename__ = "Assure"
     Cin = _sql.Column(_sql.String, unique=True, primary_key=True)
     Assure_name = _sql.Column(_sql.String)
-    products = _orm.relationship("ProductModel", back_populates="assure")
+    products = _orm.relationship("ProductModel", back_populates="assure",cascade="all, delete")
     history = _orm.relationship("HistoryModel", back_populates="assure")
 
 
