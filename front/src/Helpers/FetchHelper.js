@@ -1,6 +1,6 @@
-import { createStore } from "solid-js/store";
-import { BACKEND_URL,BACKEND_URL_API } from "../env";
 import { store,setStore } from "./Stores";
+import { BACKEND_URL,BACKEND_URL_API } from '../env.js';
+
 export async function fetcher(url,is_api,method,body=null,headers=null,navigate){
 
     if(localStorage.getItem('token')===null && document.URL.toString().split('/').at(-1) !== 'login' ){

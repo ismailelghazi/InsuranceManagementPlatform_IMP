@@ -19,7 +19,6 @@ const AddReglement = () => {
 
     const readReglement=function(ev){
 
-        console.log(ev.target.value)
         const values=['cheque','lettre_de_change','virement','banque','credit']
         if(values.includes(ev.target.value)){
             setDoesRequireOperationID(true)
@@ -41,7 +40,6 @@ const AddReglement = () => {
             Reglement: parseFloat(formData.get('reglement')) // Convert to float if it's a numeric field
         };
 
-        console.log('Payload to be sent:', reglementData); // Log the payload to verify the data
 
         fetcher('/reglements/', true, 'POST', JSON.stringify(reglementData), { 'Content-Type': 'application/json' }, navigate)
             .then(() => {
@@ -50,10 +48,7 @@ const AddReglement = () => {
                 navigate(`/product`); // Redirect to the desired path after success
             })
             .catch((err) => {
-                console.error('Error response:', err); // Log the full error response
-                if (err.response && err.response.data) {
-                    console.error('Error details:', err.response.data); // Log specific error details if available
-                }
+                
                 Swal.fire('Error', err.message, 'error');
             });
     };

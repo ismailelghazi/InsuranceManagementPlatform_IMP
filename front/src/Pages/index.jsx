@@ -64,7 +64,6 @@ function IndexAssure() {
                     'New assure has been added.',
                     'success'
                 );
-                console.log(assures());
             });
     };
 
