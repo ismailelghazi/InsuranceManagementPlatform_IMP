@@ -40,7 +40,6 @@ function Login() {
         }, navigate)
             .then(
                 resolved => {
-                    console.log('ana hna')
                     navigate('/uploadExcel');
                 },
                 rejected => {
