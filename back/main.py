@@ -117,10 +117,10 @@ def read_Assure(Cin: str, db: _orm.Session = _fastapi.Depends(_services.get_db))
 def create_Assure(product: _schemas.ProductCreate,db: _orm.Session = _fastapi.Depends(_services.get_db)):
     Productdb = models.ProductModel(  Police=product.Police,
     Date_effet=product.Date_effet,
-    Acte=product.Acte,
-    Date_fin=product.Date_fin,
+    # Acte=product.Acte,
+    # Date_fin=product.Date_fin,
     Fractionn=product.Fractionn,
-    Contrat=product.Contrat,
+    # Contrat=product.Contrat,
     Periode=product.Periode,
     Marque=product.Marque,
     Date_Emission=product.Date_Emission,
@@ -175,10 +175,10 @@ async def read_Products_with_Assure_names(db: _orm.Session = _fastapi.Depends(_s
             Date_effet=str(product.Date_effet),
             # Add other fields from ProductModel as needed
             Assure_name=assure_data.Assure_name,
-            Acte=product.Acte,
-            Date_fin=product.Date_fin,
+            # Acte=product.Acte,
+            # Date_fin=product.Date_fin,
             Fractionn=product.Fractionn,
-            Contrat=product.Contrat,
+            # Contrat=product.Contrat,
             Periode=product.Periode,
             Marque=product.Marque,
             Date_Emission=product.Date_Emission,
@@ -215,12 +215,12 @@ async def upload_file(file: UploadFile = File(...), db: _orm.Session = _fastapi.
 
     # Check if the required columns exist in df2
     required_columns_df2 = {
-        'Date Emission', 'Acte', 'Police', 'Date effet', 'Date Fin', 'Prime Totale', 'CIN',
-        'Fractionn', 'Contrat', 'Matricule', 'Attestation', 'Période', 'Marque'
+        'Date Emission', 'Police', 'Date effet',  'Prime Totale', 'CIN',
+        'Fractionn',  'Matricule', 'Attestation', 'Période', 'Marque'
     }
     if not required_columns_df2.issubset(df2.columns):
         raise HTTPException(status_code=400,
-                            detail=f"Uploaded file must contain columns: {required_columns_df2} in sheet 2")
+                            detail=f"Uploaded file must contain columns: {required_columns_df2} in sheet 1")
 
     # Insert data into AssureModel from df1
     for index, row in df1.iterrows():
@@ -240,14 +240,14 @@ async def upload_file(file: UploadFile = File(...), db: _orm.Session = _fastapi.
         # Check if product already exists to avoid duplicates
         existing_product = db.query(models.ProductModel).filter(
             models.ProductModel.Date_Emission == row['Date Emission'],
-            models.ProductModel.Acte == row['Acte'],
+            # models.ProductModel.Acte == row['Acte'],
             models.ProductModel.Police == row['Police'],
             models.ProductModel.Date_effet == row['Date effet'],
-            models.ProductModel.Date_fin == row['Date Fin'],
+            # models.ProductModel.Date_fin == row['Date Fin'],
             models.ProductModel.Prime_Totale == row['Prime Totale'],
             models.ProductModel.assure_id == row['CIN'],
             models.ProductModel.Fractionn == row['Fractionn'],
-            models.ProductModel.Contrat == row['Contrat'],
+            # models.ProductModel.Contrat == row['Contrat'],
             models.ProductModel.Matricule == row['Matricule'],
             models.ProductModel.Attestation == row['Attestation'],
             models.ProductModel.Periode == row['Période'],
@@ -257,9 +257,9 @@ async def upload_file(file: UploadFile = File(...), db: _orm.Session = _fastapi.
             continue
         product_data = models.ProductModel(
             Date_Emission=row['Date Emission'],
-            Acte=row['Acte'], Police=row['Police'],
-            Date_effet=row['Date effet'], Date_fin=row['Date Fin'], Prime_Totale=row['Prime Totale'],
-            assure_id=row['CIN'], Fractionn=row['Fractionn'], Contrat=row['Contrat'],
+            Police=row['Police'],
+            Date_effet=row['Date effet'],  Prime_Totale=row['Prime Totale'],
+            assure_id=row['CIN'], Fractionn=row['Fractionn'],
             Matricule=row['Matricule'], Attestation=row['Attestation'],
             Periode=row['Période'], Marque=row['Marque'],
         )
