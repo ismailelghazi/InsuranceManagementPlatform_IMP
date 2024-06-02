@@ -53,7 +53,7 @@ class ProductBase(_pydantic.BaseModel):
     # Marque: Optional[str] = None
     Date_Emission: Optional[dt.date] = None
     Matricule: Optional[str] = None
-    Attestation: Optional[str] = None
+    # Attestation: Optional[str] = None
     Prime_Totale: Optional[float] = None
     assure_id: Optional[str] = None
 
@@ -73,7 +73,7 @@ class ProductCreate(_pydantic.BaseModel):
     # Marque: Optional[str] = None
     Date_Emission: Optional[dt.date] = None
     Matricule: Optional[str] = None
-    Attestation: Optional[str] = None
+    # Attestation: Optional[str] = None
     Prime_Totale: Optional[float] = None
     assure_id: Optional[str] = None
 
@@ -90,7 +90,7 @@ class ProductWithAssureName(_pydantic.BaseModel):
     # Marque: Optional[str] = None
     Date_Emission: Optional[dt.date] = None
     Matricule: Optional[str] = None
-    Attestation: Optional[str] = None
+    # Attestation: Optional[str] = None
     Prime_Totale: Optional[float] = None
     assure_id: Optional[str] = None
     Assure_name: Optional[str] = None
