@@ -26,6 +26,18 @@ function IndexProduct() {
         }
     });
 
+    function setDefaultDate() {
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('Date_effet').value = today;
+        document.getElementById('Date_Emission').value = today;
+    }
+
+    createEffect(() => {
+        if (addProduct()) {
+            setDefaultDate();
+        }
+    });
+
     const deleteProduct = (ev) => {
         const id = ev.target.attributes['data-id'].nodeValue;
         Swal.fire({
@@ -56,7 +68,7 @@ function IndexProduct() {
         ev.preventDefault();
         const formData = Object.fromEntries(new FormData(ev.target));
         const jsonformdata = JSON.stringify(formData);
-        fetcher('/product_create', true, 'POST', jsonformdata,{"Content-Type":"application/json"},navigate)
+        fetcher('/product_create', true, 'POST', jsonformdata, {"Content-Type": "application/json"}, navigate)
             .then(() => {
                 setProducts([...products(), formData]);
                 setFilteredProducts([...filteredProducts(), formData]);
@@ -111,62 +123,62 @@ function IndexProduct() {
                         </div>
                     </div>
                     <div class="styled-scrollbar">
-                    <div class="table-content-product min-w-full">
-                        <div class="table-head grid bg-gray-200 text-gray-700 font-semibold py-2 px-4 rounded-t-lg hidden md:grid"
-                            style="grid-template-columns: repeat(9, 1fr);">
-                            <span class="col-span-1">ID</span>
-                            <span class="col-span-1">Police</span>
-                            <span class="col-span-1">Date Effet</span>
-                            <span class="col-span-1">Date Emission</span>
-                            <span class="col-span-1">Matricule</span>
-                            <span class="col-span-1">Assure ID</span>
-                            <span class="col-span-1">Fractionn</span>
-                            <span class="col-span-1">Prime Totale</span>
-                            <span class="col-span-1">Actions</span>
-                        </div>
-                        <div class="table-body overflow-y-scroll max-h-[600px] styled-scrollbar">
-                            <For each={paginatedProducts()}>
-                                {(item) => (
-                                    <div class="grid py-2 px-4 border-b border-gray-200 gap-y-8 grid-cols-1 md:grid-cols-9">
-                                        <div class="md:hidden font-semibold">ID</div>
-                                        <div class="col-span-1 truncate">{item.id}</div>
-                                        
-                                        <div class="md:hidden font-semibold">Police</div>
-                                        <div class="col-span-1 truncate">{item.Police}</div>
-                                        
-                                        <div class="md:hidden font-semibold">Date Effet</div>
-                                        <div class="col-span-1 truncate">{item.Date_effet}</div>
-                                        
-                                        <div class="md:hidden font-semibold">Date Emission</div>
-                                        <div class="col-span-1 truncate">{item.Date_Emission}</div>
-                                        
-                                        <div class="md:hidden font-semibold">Matricule</div>
-                                        <div class="col-span-1 truncate">{item.Matricule}</div>
-                                        
-                                        <div class="md:hidden font-semibold">Assure ID</div>
-                                        <div class="col-span-1 truncate">{item.assure_id}</div>
-                                        
-                                        <div class="md:hidden font-semibold">Fractionn</div>
-                                        <div class="col-span-1 truncate">{item.Fractionn}</div>
-                                        
-                                        <div class="md:hidden font-semibold">Prime Totale</div>
-                                        <div class={`col-span-1 truncate ${item.Prime_Totale < 0 ? 'text-red-500' : ''}`}>
-                                            {item.Prime_Totale}
+                        <div class="table-content-product min-w-full">
+                            <div class="table-head grid bg-gray-200 text-gray-700 font-semibold py-2 px-4 rounded-t-lg hidden md:grid"
+                                style="grid-template-columns: repeat(9, 1fr);">
+                                <span class="col-span-1">ID</span>
+                                <span class="col-span-1">Police</span>
+                                <span class="col-span-1">Date Effet</span>
+                                <span class="col-span-1">Date Emission</span>
+                                <span class="col-span-1">Matricule</span>
+                                <span class="col-span-1">Assure ID</span>
+                                <span class="col-span-1">Fractionn</span>
+                                <span class="col-span-1">Prime Totale</span>
+                                <span class="col-span-1">Actions</span>
+                            </div>
+                            <div class="table-body overflow-y-scroll max-h-[600px] styled-scrollbar">
+                                <For each={paginatedProducts()}>
+                                    {(item) => (
+                                        <div class="grid py-2 px-4 border-b border-gray-200 gap-y-8 grid-cols-1 md:grid-cols-9">
+                                            <div class="md:hidden font-semibold">ID</div>
+                                            <div class="col-span-1 truncate">{item.id}</div>
+
+                                            <div class="md:hidden font-semibold">Police</div>
+                                            <div class="col-span-1 truncate">{item.Police}</div>
+
+                                            <div class="md:hidden font-semibold">Date Effet</div>
+                                            <div class="col-span-1 truncate">{item.Date_effet}</div>
+
+                                            <div class="md:hidden font-semibold">Date Emission</div>
+                                            <div class="col-span-1 truncate">{item.Date_Emission}</div>
+
+                                            <div class="md:hidden font-semibold">Matricule</div>
+                                            <div class="col-span-1 truncate">{item.Matricule}</div>
+
+                                            <div class="md:hidden font-semibold">Assure ID</div>
+                                            <div class="col-span-1 truncate">{item.assure_id}</div>
+
+                                            <div class="md:hidden font-semibold">Fractionn</div>
+                                            <div class="col-span-1 truncate">{item.Fractionn}</div>
+
+                                            <div class="md:hidden font-semibold">Prime Totale</div>
+                                            <div class={`col-span-1 truncate ${item.Prime_Totale < 0 ? 'text-red-500' : ''}`}>
+                                                {item.Prime_Totale}
+                                            </div>
+
+                                            <div class="md:hidden font-semibold">Actions</div>
+                                            <div class="col-span-1 flex justify-start gap-x-8">
+                                                <i class="fa-regular fa-trash-can cursor-pointer text-red-500 hover:text-red-700"
+                                                    data-id={item.id} onClick={deleteProduct}></i>
+                                                <i class="fa-solid fa-pen-to-square cursor-pointer"
+                                                    onClick={() => navigate(`/add-reglement/${item.id}`)}></i>
+                                            </div>
                                         </div>
-                                        
-                                        <div class="md:hidden font-semibold">Actions</div>
-                                        <div class="col-span-1 flex justify-start gap-x-8">
-                                            <i class="fa-regular fa-trash-can cursor-pointer text-red-500 hover:text-red-700"
-                                            data-id={item.id} onClick={deleteProduct}></i>
-                                            <i class="fa-solid fa-pen-to-square cursor-pointer"
-                                            onClick={() => navigate(`/add-reglement/${item.id}`)}></i>
-                                        </div>
-                                    </div>
-                                )}
-                            </For>
+                                    )}
+                                </For>
+                            </div>
                         </div>
                     </div>
-                </div>
 
                     <Show when={filteredProducts().length > itemsPerPage}>
                         <div class="flex justify-between mt-4">
@@ -189,6 +201,7 @@ function IndexProduct() {
                             </button>
                         </div>
                     </Show>
+
                     <Show when={addProduct()}>
                         <div class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">
                             <div class="bg-white p-4 rounded-lg shadow-inner w-full md:w-3/4 lg:w-1/2">
@@ -200,35 +213,16 @@ function IndexProduct() {
                                         </div>
                                         <div class="flex flex-col">
                                             <label for="Date_effet" class="mb-1 font-medium text-gray-700">Date Effet</label>
-                                            <input type="date" name="Date_effet" class="py-2 px-3 border border-gray-300 rounded-lg" required />
+                                            <input type="date" id="Date_effet" name="Date_effet" class="py-2 px-3 border border-gray-300 rounded-lg" required />
                                         </div>
-                                        <div class="flex flex-col">
-                                            <label for="Acte" class="mb-1 font-medium text-gray-700">Acte</label>
-                                            <input type="text" name="Acte" class="py-2 px-3 border border-gray-300 rounded-lg" required />
-                                        </div>
-                                        <div class="flex flex-col">
-                                            <label for="Date_fin" class="mb-1 font-medium text-gray-700">Date Fin</label>
-                                            <input type="date" name="Date_fin" class="py-2 px-3 border border-gray-300 rounded-lg" required />
-                                        </div>
+
                                         <div class="flex flex-col">
                                             <label for="Fractionn" class="mb-1 font-medium text-gray-700">Fractionn</label>
                                             <input type="text" name="Fractionn" class="py-2 px-3 border border-gray-300 rounded-lg" required />
                                         </div>
                                         <div class="flex flex-col">
-                                            <label for="Contrat" class="mb-1 font-medium text-gray-700">Contrat</label>
-                                            <input type="text" name="Contrat" class="py-2 px-3 border border-gray-300 rounded-lg" required />
-                                        </div>
-                                        <div class="flex flex-col">
-                                            <label for="Periode" class="mb-1 font-medium text-gray-700">Periode</label>
-                                            <input type="text" name="Periode" class="py-2 px-3 border border-gray-300 rounded-lg" required />
-                                        </div>
-                                        <div class="flex flex-col">
-                                            <label for="Marque" class="mb-1 font-medium text-gray-700">Marque</label>
-                                            <input type="text" name="Marque" class="py-2 px-3 border border-gray-300 rounded-lg" required />
-                                        </div>
-                                        <div class="flex flex-col">
                                             <label for="Date_Emission" class="mb-1 font-medium text-gray-700">Date Emission</label>
-                                            <input type="date" name="Date_Emission" class="py-2 px-3 border border-gray-300 rounded-lg" required />
+                                            <input type="date" id="Date_Emission" name="Date_Emission" class="py-2 px-3 border border-gray-300 rounded-lg" required />
                                         </div>
                                         <div class="flex flex-col">
                                             <label for="Matricule" class="mb-1 font-medium text-gray-700">Matricule</label>
@@ -255,6 +249,7 @@ function IndexProduct() {
                             </div>
                         </div>
                     </Show>
+
                 </div>
             </div>
         </div>
