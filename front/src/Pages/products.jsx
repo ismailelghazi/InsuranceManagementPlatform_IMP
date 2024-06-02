@@ -110,52 +110,64 @@ function IndexProduct() {
                             </button>
                         </div>
                     </div>
-                    <div class="overflow-x-auto styled-scrollbar">
-                        <div class="table-content-product min-w-full">
-                            <div class="table-head grid bg-gray-200 text-gray-700 w-[200%] font-semibold py-2 px-4 rounded-t-lg" style={`grid-template-columns:repeat(${headersCount()},1fr);`} >
-                                <span class="col-span-1">ID</span>
-                                <span class="col-span-1">Police</span>
-                                <span class="col-span-1">Date Emission</span>
-                                <span class="col-span-1">Date Effet</span>
-                                <span class="col-span-1">Marque</span>
-                                <span class="col-span-1">Matricule</span>
-                                <span class="col-span-1">Acte</span>
-                                <span class="col-span-1">Date Fin</span>
-                                <span class="col-span-1">Attestation</span>
-                                <span class="col-span-1">Assure ID</span>
-                                <span class="col-span-1">Fractionn</span>
-                                <span class="col-span-1">Contrat</span>
-                                <span class="col-span-1">Periode</span>
-                                <span class="col-span-1">Actions</span>
-                            </div>
-                            <div class="table-body overflow-y-scroll max-h-[600px] w-[200%] styled-scrollbar">
-                                <For each={paginatedProducts()}>
-                                    {(item) => (
-                                        <div class="grid py-2 px-4 border-b border-gray-200 gap-y-8"
-                                        style={{"grid-template-columns":`repeat(${Object.keys(products()[0]).length},1fr)`}}>
-                                            <div class="col-span-1 truncate">{item.id}</div>
-                                            <div class="col-span-1 truncate">{item.Police}</div>
-                                            <div class="col-span-1 truncate">{item.Date_Emission}</div>
-                                            <div class="col-span-1 truncate">{item.Date_effet}</div>
-                                            <div class="col-span-1 truncate">{item.Marque}</div>
-                                            <div class="col-span-1 truncate">{item.Matricule}</div>
-                                            <div class="col-span-1 truncate">{item.Acte}</div>
-                                            <div class="col-span-1 truncate">{item.Date_fin}</div>
-                                            <div class="col-span-1 truncate">{item.Attestation}</div>
-                                            <div class="col-span-1 truncate">{item.assure_id}</div>
-                                            <div class="col-span-1 truncate">{item.Fractionn}</div>
-                                            <div class="col-span-1 truncate">{item.Contrat}</div>
-                                            <div class="col-span-1 truncate">{item.Periode}</div>
-                                            <div class="col-span-1 flex justify-start gap-x-8">
-                                                <i class="fa-regular fa-trash-can cursor-pointer text-red-500 hover:text-red-700" data-id={item.id} onClick={deleteProduct}></i>
-                                                <i class="fa-solid fa-pen-to-square cursor-pointer" onClick={() => navigate(`/add-reglement/${item.id}`)}></i>
-                                            </div>
+                    <div class="styled-scrollbar">
+                    <div class="table-content-product min-w-full">
+                        <div class="table-head grid bg-gray-200 text-gray-700 font-semibold py-2 px-4 rounded-t-lg hidden md:grid"
+                            style="grid-template-columns: repeat(9, 1fr);">
+                            <span class="col-span-1">ID</span>
+                            <span class="col-span-1">Police</span>
+                            <span class="col-span-1">Date Effet</span>
+                            <span class="col-span-1">Date Emission</span>
+                            <span class="col-span-1">Matricule</span>
+                            <span class="col-span-1">Assure ID</span>
+                            <span class="col-span-1">Fractionn</span>
+                            <span class="col-span-1">Prime Totale</span>
+                            <span class="col-span-1">Actions</span>
+                        </div>
+                        <div class="table-body overflow-y-scroll max-h-[600px] styled-scrollbar">
+                            <For each={paginatedProducts()}>
+                                {(item) => (
+                                    <div class="grid py-2 px-4 border-b border-gray-200 gap-y-8 grid-cols-1 md:grid-cols-9">
+                                        <div class="md:hidden font-semibold">ID</div>
+                                        <div class="col-span-1 truncate">{item.id}</div>
+                                        
+                                        <div class="md:hidden font-semibold">Police</div>
+                                        <div class="col-span-1 truncate">{item.Police}</div>
+                                        
+                                        <div class="md:hidden font-semibold">Date Effet</div>
+                                        <div class="col-span-1 truncate">{item.Date_effet}</div>
+                                        
+                                        <div class="md:hidden font-semibold">Date Emission</div>
+                                        <div class="col-span-1 truncate">{item.Date_Emission}</div>
+                                        
+                                        <div class="md:hidden font-semibold">Matricule</div>
+                                        <div class="col-span-1 truncate">{item.Matricule}</div>
+                                        
+                                        <div class="md:hidden font-semibold">Assure ID</div>
+                                        <div class="col-span-1 truncate">{item.assure_id}</div>
+                                        
+                                        <div class="md:hidden font-semibold">Fractionn</div>
+                                        <div class="col-span-1 truncate">{item.Fractionn}</div>
+                                        
+                                        <div class="md:hidden font-semibold">Prime Totale</div>
+                                        <div class={`col-span-1 truncate ${item.Prime_Totale < 0 ? 'text-red-500' : ''}`}>
+                                            {item.Prime_Totale}
                                         </div>
-                                    )}
-                                </For>
-                            </div>
+                                        
+                                        <div class="md:hidden font-semibold">Actions</div>
+                                        <div class="col-span-1 flex justify-start gap-x-8">
+                                            <i class="fa-regular fa-trash-can cursor-pointer text-red-500 hover:text-red-700"
+                                            data-id={item.id} onClick={deleteProduct}></i>
+                                            <i class="fa-solid fa-pen-to-square cursor-pointer"
+                                            onClick={() => navigate(`/add-reglement/${item.id}`)}></i>
+                                        </div>
+                                    </div>
+                                )}
+                            </For>
                         </div>
                     </div>
+                </div>
+
                     <Show when={filteredProducts().length > itemsPerPage}>
                         <div class="flex justify-between mt-4">
                             <button
