@@ -434,16 +434,35 @@ def get_reglement_by_cin(cin: str, db: Session = Depends(_services.get_db)):
     result = []
 
     for product in products:
-        # Return only basic product information
-        result.append(BasicProductInfo(
-            id=product.id,
-            cin=assure.Cin,
-            nom_assure=assure.Assure_name,
-            prime_totale=product.Prime_Totale,
-            reste=None,
-            matricule=product.Matricule,
-            reglement=None,
-            type_de_reglement=None
-        ))
+        # Fetch the reglements associated with the product
+        reglements = db.query(models.ReglementModel).filter(models.ReglementModel.Product_id == product.id).all()
+
+        if not reglements:
+            # If no reglements found, append basic product information with None values for reglement details
+            result.append(BasicProductInfo(
+                id=product.id,
+                cin=assure.Cin,
+                nom_assure=assure.Assure_name,
+                prime_totale=product.Prime_Totale,
+                reste=None,
+                matricule=product.Matricule,
+                reglement=None,
+                type_de_reglement=None
+            ))
+        else:
+            # Append product information along with reglement details
+            for reglement in reglements:
+                result.append(BasicProductInfo(
+                    id=product.id,
+                    cin=assure.Cin,
+                    nom_assure=assure.Assure_name,
+                    prime_totale=product.Prime_Totale,
+                    reste=reglement.Reste,
+                    matricule=product.Matricule,
+                    reglement=reglement.Reglement,
+                    type_de_reglement=reglement.Type_de_reglement
+                ))
+
     print(result)
     return result
+
