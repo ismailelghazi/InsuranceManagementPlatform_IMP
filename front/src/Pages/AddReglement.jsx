@@ -40,6 +40,7 @@ const AddReglement = () => {
             numero: formData.get('numero'),
             Reste: 0,
             Reglement: parseFloat(formData.get('reglement')),
+            Etat: formData.get('etat'),
             Garant: isGarant() ? formData.get('garant_input') : null
         };
 
@@ -107,6 +108,13 @@ const AddReglement = () => {
                             <div>
                                 <label for="matricule" class="block text-sm font-medium text-gray-700">Matricule</label>
                                 <input type="text" name="matricule" value={reglement().matricule} disabled class="mt-1 py-2 px-3 border border-gray-300 rounded-lg w-full" />
+                            </div>
+                            <div>
+                                <label for="etat" class="block text-sm font-medium text-gray-700">Etat</label>
+                                <select name="etat" class="mt-1 py-2 px-3 border border-gray-300 rounded-lg w-full">
+                                    <option value="solder">Solder</option>
+                                    <option value="encour">Encour</option>
+                                </select>
                             </div>
                             <div class="col-span-1 md:col-span-2">
                                 <label for="garant" class="block text-sm font-medium text-gray-700">Garant</label>
