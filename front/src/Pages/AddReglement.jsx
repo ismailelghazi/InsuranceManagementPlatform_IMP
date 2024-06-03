@@ -10,7 +10,7 @@ const AddReglement = () => {
     const [reglement, setReglement] = createSignal(null);
     const [doesRequireOperationID, setDoesRequireOperationID] = createSignal(false);
     const [isGarant, setIsGarant] = createSignal(false);
-    
+
     // Signal for the date input value
     const [currentDate, setCurrentDate] = createSignal(new Date().toISOString().split('T')[0]);
 
@@ -58,7 +58,7 @@ const AddReglement = () => {
         <div class="flex w-screen h-screen bg-gray-100 overflow-x-hidden">
             <Navbar />
             <div class="flex flex-grow justify-center items-center py-12">
-                <div class="bg-white shadow-lg rounded-lg p-8 w-full max-w-4xl">
+                <div class="bg-white shadow-lg rounded-lg p-8 w-full max-w-4xl h-full overflow-auto">
                     <h1 class="text-3xl font-bold text-blue-900 mb-8 text-center">Add Reglement</h1>
                     {reglement() && (
                         <form class="grid grid-cols-1 md:grid-cols-2 gap-6" onSubmit={submitReglement}>
