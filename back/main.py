@@ -431,11 +431,12 @@ class BasicProductInfo(_pydantic.BaseModel):
     matricule: str
     reglement: Optional[str] = None
     type_de_reglement: Optional[str] = None
-    Etat: Optional[str] = None
+    Etat: Optional[str]
 
 @app.get("/api/reglements/assure/{cin}", response_model=List[BasicProductInfo])
 def get_reglement_by_cin(cin: str, db: Session = Depends(_services.get_db)):
     # Fetch the assure by CIN
+    global reglement
     assure = db.query(models.AssureModel).filter(models.AssureModel.Cin == cin).first()
 
     if not assure:
@@ -472,7 +473,7 @@ def get_reglement_by_cin(cin: str, db: Session = Depends(_services.get_db)):
             reglement=None,
             type_de_reglement=None,
             Garant=None,
-            Etat=None
+            Etat= reglement.Etat
         ))
 
     return result
