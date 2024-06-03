@@ -16,6 +16,9 @@ from fastapi import HTTPException
 from typing import List
 from sqlalchemy.orm import Session
 from fastapi import Depends
+from fastapi import HTTPException, Depends, APIRouter
+from sqlalchemy.orm import Session
+import models, schemas, services
 app = _fastapi.FastAPI()
 
 
@@ -477,3 +480,32 @@ def get_reglement_by_cin(cin: str, db: Session = Depends(_services.get_db)):
         ))
 
     return result
+
+
+@app.delete("/api/reglements/{reglement_id}", response_model=schemas.ReglementBase)
+def delete_reglement(reglement_id: int, db: Session = Depends(services.get_db)):
+    reglement = db.query(models.ReglementModel).filter(models.ReglementModel.id == reglement_id).first()
+    if not reglement:
+        raise HTTPException(status_code=404, detail="Reglement not found")
+
+    assure_id = reglement.product.assure_id  # Corrected line
+    product_id = reglement.product.id         # Corrected line
+
+    db.delete(reglement)
+    db.commit()
+
+    db_history = models.HistoryModel(
+        assure_id=assure_id,  # Updated to use corrected variables
+        product_id=product_id,
+        reglement_id=reglement.id,
+        action="delete",
+        description=f"Deleted reglement with Reglement: {reglement.Reglement} and Reste: {reglement.Reste}",
+        reste_amount=reglement.Reste,
+        numero=reglement.numero,
+        reglement_amount=reglement.Reglement
+    )
+    db.add(db_history)
+    db.commit()
+    db.refresh(db_history)
+
+    return reglement
