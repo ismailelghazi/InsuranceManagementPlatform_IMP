@@ -8,22 +8,21 @@ const AddReglement = () => {
     const params = useParams();
     const navigate = useNavigate();
     const [reglement, setReglement] = createSignal(null);
-    const [doesRequireOperationID,setDoesRequireOperationID]=createSignal(false);
+    const [doesRequireOperationID, setDoesRequireOperationID] = createSignal(false);
+    const [isGarant, setIsGarant] = createSignal(false);
 
-    // what i'll do is that i'll check if the on change event on the select element if it does require the OperationID ()
     createEffect(() => {
         fetcher(`/reglements/product/${params.id}`, true, 'GET', null, {}, navigate)
-          .then((res) => { setReglement(res[res.length - 1]) })
-          .catch((err) => Swal.fire('Error', err.message, 'error'));
+            .then((res) => { setReglement(res[res.length - 1]) })
+            .catch((err) => Swal.fire('Error', err.message, 'error'));
     });
 
-    const readReglement=function(ev){
-
-        const values=['cheque','lettre_de_change','virement','banque','credit']
-        if(values.includes(ev.target.value)){
-            setDoesRequireOperationID(true)
-        }else{
-            setDoesRequireOperationID(false)
+    const readReglement = function (ev) {
+        const values = ['cheque', 'lettre_de_change', 'virement', 'banque', 'credit'];
+        if (values.includes(ev.target.value)) {
+            setDoesRequireOperationID(true);
+        } else {
+            setDoesRequireOperationID(false);
         }
     }
 
@@ -32,23 +31,21 @@ const AddReglement = () => {
         const formData = new FormData(ev.target);
 
         const reglementData = {
-            Product_id: parseInt(params.id), // Ensure the ID is an integer
-            Date_de_reglement: formData.get('date_reglement'), // Ensure this date is in the correct format
+            Product_id: parseInt(params.id),
+            Date_de_reglement: formData.get('date_reglement'),
             Type_de_reglement: formData.get('type_reglement'),
-            numero:formData.get('numero'),
-            Reste:0,
-            Reglement: parseFloat(formData.get('reglement')) // Convert to float if it's a numeric field
+            numero: formData.get('numero'),
+            Reste: 0,
+            Reglement: parseFloat(formData.get('reglement')),
+            Garant: isGarant() // Adding the Garant status to the data being submitted
         };
-
 
         fetcher('/reglements/', true, 'POST', JSON.stringify(reglementData), { 'Content-Type': 'application/json' }, navigate)
             .then(() => {
                 Swal.fire('Success', 'Reglement added successfully', 'success');
-
-                navigate(`/product`); // Redirect to the desired path after success
+                navigate(`/product`);
             })
             .catch((err) => {
-                
                 Swal.fire('Error', err.message, 'error');
             });
     };
@@ -79,7 +76,7 @@ const AddReglement = () => {
                             </div>
                             <div>
                                 <label for="type_de_reglement" class="block text-sm font-medium text-gray-700">Type de reglement</label>
-                                <select name="type_reglement" on:change={readReglement}  class="mt-1 py-2 px-3 border border-gray-300 rounded-lg w-full">
+                                <select name="type_reglement" on:change={readReglement} class="mt-1 py-2 px-3 border border-gray-300 rounded-lg w-full">
                                     <option value="null">Veuillez selectionner</option>
                                     <option value="cheque">Cheque</option>
                                     <option value="espece">Espece</option>
@@ -95,19 +92,22 @@ const AddReglement = () => {
                                 <input type="text" name="reglement" class="mt-1 py-2 px-3 border border-gray-300 rounded-lg w-full" />
                             </div>
                             <Show when={doesRequireOperationID()}>
-                             <div>
-                                <label for="numero" class="block text-sm font-medium text-gray-700">N° d'operation
-                        </label>
-                                <input type="text" name="numero" class="mt-1 py-2 px-3 border border-gray-300 rounded-lg w-full" />
-                            </div>
+                                <div>
+                                    <label for="numero" class="block text-sm font-medium text-gray-700">N° d'operation</label>
+                                    <input type="text" name="numero" class="mt-1 py-2 px-3 border border-gray-300 rounded-lg w-full" />
+                                </div>
                             </Show>
                             <div>
-                                <label for="reste" class="block text-sm font-medium text-gray-700">Rest</label>
+                                <label for="reste" class="block text-sm font-medium text-gray-700">Reste</label>
                                 <input type="text" name="reste" value={reglement().reste} disabled class="mt-1 py-2 px-3 border border-gray-300 rounded-lg w-full" />
                             </div>
                             <div>
                                 <label for="matricule" class="block text-sm font-medium text-gray-700">Matricule</label>
                                 <input type="text" name="matricule" value={reglement().matricule} disabled class="mt-1 py-2 px-3 border border-gray-300 rounded-lg w-full" />
+                            </div>
+                            <div class="col-span-1 md:col-span-2">
+                                <label for="garant" class="block text-sm font-medium text-gray-700">Garant</label>
+                                <input type="checkbox" name="garant" class="mt-1" onChange={(e) => setIsGarant(e.target.checked)} />
                             </div>
                             <div class="col-span-1 md:col-span-2 flex justify-center">
                                 <button type="submit" class="mt-4 py-2 px-4 bg-green-500 text-white rounded-lg">Ajoute</button>
