@@ -65,15 +65,9 @@ class ProductBase(_pydantic.BaseModel):
 class ProductCreate(_pydantic.BaseModel):
     Police: Optional[str] = None
     Date_effet: Optional[dt.date] = None
-    # Acte: Optional[str] = None
-    # Date_fin: Optional[dt.date] = None
     Fractionn: Optional[str] = None
-    # Contrat: Optional[str] = None
-    # Periode: Optional[str] = None
-    # Marque: Optional[str] = None
     Date_Emission: Optional[dt.date] = None
     Matricule: Optional[str] = None
-    # Attestation: Optional[str] = None
     Prime_Totale: Optional[float] = None
     assure_id: Optional[str] = None
 
@@ -82,15 +76,9 @@ class ProductWithAssureName(_pydantic.BaseModel):
     id: Optional[int] = None
     Police: Optional[str] = None
     Date_effet: Optional[dt.date] = None
-    # Acte: Optional[str] = None
-    # Date_fin: Optional[dt.date] = None
     Fractionn: Optional[str] = None
-    # Contrat: Optional[str] = None
-    # Periode: Optional[str] = None
-    # Marque: Optional[str] = None
     Date_Emission: Optional[dt.date] = None
     Matricule: Optional[str] = None
-    # Attestation: Optional[str] = None
     Prime_Totale: Optional[float] = None
     assure_id: Optional[str] = None
     Assure_name: Optional[str] = None

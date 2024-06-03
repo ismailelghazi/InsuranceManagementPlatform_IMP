@@ -12,7 +12,10 @@ import io
 from fastapi.middleware.cors import CORSMiddleware
 import models
 import services as _services, schemas as _schemas
-
+from fastapi import HTTPException
+from typing import List
+from sqlalchemy.orm import Session
+from fastapi import Depends
 app = _fastapi.FastAPI()
 
 
@@ -328,7 +331,7 @@ def create_reglement(reglement: _schemas.ReglementCreate, db: _orm.Session = _fa
     db_reglement = models.ReglementModel(
         Product_id=reglement.Product_id,
         Reste=new_reste,
-        Garant = reglement.Garant,  
+        Garant = reglement.Garant,
         numero = reglement.numero,
         Reglement=reglement.Reglement,
         Date_de_reglement=reglement.Date_de_reglement,
@@ -364,8 +367,8 @@ def get_history_by_cin(cin: str, db: _orm.Session = _fastapi.Depends(_services.g
     return history
 
 class BasicProductInfo(_schemas.ReglementDetail):
-    reste: Union[None, int] = None
-    reglement: Union[None, int] = None
+    reste: Union[None, float] = None
+    reglement: Union[None, float] = None
     type_de_reglement: Union[None, str] = None
 
 
@@ -412,10 +415,7 @@ def get_reglement_by_product_id(product_id: int, db: _orm.Session = Depends(_ser
             ))
 
     return result
-from fastapi import HTTPException
-from typing import List
-from sqlalchemy.orm import Session
-from fastapi import Depends
+
 
 @app.get("/api/reglements/assure/{cin}", response_model=List[BasicProductInfo])
 def get_reglement_by_cin(cin: str, db: Session = Depends(_services.get_db)):
@@ -445,6 +445,5 @@ def get_reglement_by_cin(cin: str, db: Session = Depends(_services.get_db)):
             reglement=None,
             type_de_reglement=None
         ))
-
+    print(result)
     return result
-
