@@ -2,6 +2,7 @@ import { A, useNavigate } from "@solidjs/router";
 import { store, setStore } from '../../Helpers/Stores';
 import { Uploader } from "../../Helpers/Uploader";
 import { createSignal } from "solid-js";
+import { fetcher } from '../../Helpers/FetchHelper';
 
 function Navbar() {
   const [uploaded, setUploaded] = createSignal(false);

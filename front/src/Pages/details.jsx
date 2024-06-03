@@ -7,6 +7,7 @@ function DetailsPage() {
     const params = useParams();
     const [details, setDetails] = createSignal(null);
     const [searchQuery, setSearchQuery] = createSignal('');
+    const [filter, setFilter] = createSignal('all'); // Initialize filter state with 'all'
     const [filteredAssures, setFilteredAssures] = createSignal([]);
 
     const navigate = useNavigate();
@@ -21,6 +22,15 @@ function DetailsPage() {
         }
     });
 
+    // Function to filter details based on the selected filter
+    const filterDetails = (details) => {
+        if (filter() === 'all') {
+            return details;
+        } else {
+            return details.filter(detail => detail.etat === filter());
+        }
+    };
+
     return (
         <div class="flex flex-col md:flex-row w-full h-full bg-gray-100">
             <Navbar />
@@ -32,7 +42,7 @@ function DetailsPage() {
                     {details() ? details()[0]['cin'] : 'Loading...'}
                 </h1>
                 <div class="bg-white shadow-md rounded-lg p-4 md:p-6 w-full md:w-11/12 mx-2 md:mr-12">
-                    <div class="flex items-center justify-end pb-4">
+                    <div class="flex items-center justify-between pb-4">
                         <input
                             type="text"
                             placeholder="Search"
@@ -41,6 +51,11 @@ function DetailsPage() {
                             onInput={(e) => setSearchQuery(e.target.value)}
                             onKeyUp={() => filteredAssures(searchQuery())}
                         />
+                        <select class="py-2 px-3 border border-gray-300 rounded-lg" value={filter()} onChange={(e) => setFilter(e.target.value)}>
+                            <option value="all">All</option>
+                            <option value="solder">Solder</option>
+                            <option value="encour">Encour</option>
+                        </select>
                     </div>
 
                     <div class="table-content-assurer">
@@ -53,18 +68,18 @@ function DetailsPage() {
                             <span class="col-span-1">Reste</span>
                         </div>
                         <div class="table-body overflow-y-scroll max-h-[550px] styled-scrollbar">
-                            <For each={details()}>
+                            <For each={filterDetails(details())}>
                                 {(detail) => (
-                                    <div class="grid grid-cols-1 md:grid-cols-6 place-content-center py-2 px-4 border-b border-gray-200">
-                                        <div class="hidden md:block col-span-1">{detail.id}</div>
-                                        <div class="col-span-1">{detail.cin}</div>
-                                        <div class="col-span-1">{detail.nom_assure}</div>
-                                        <div class="col-span-1">{detail.prime_totale}</div>
-                                        <div class="hidden md:block col-span-1">{detail.matricule}</div>
-                                        <div class="col-span-1" class:text-blue-600 ={detail.reste === 0}>
-                                            {detail.reste}
-                                            </div>
-                                    </div>
+                                     <div class="grid grid-cols-1 md:grid-cols-6 place-content-center py-2 px-4 border-b border-gray-200">
+                                     <div class="hidden md:block col-span-1">{detail.id}</div>
+                                     <div class="col-span-1">{detail.cin}</div>
+                                     <div class="col-span-1">{detail.nom_assure}</div>
+                                     <div class="col-span-1">{detail.prime_totale}</div>
+                                     <div class="hidden md:block col-span-1">{detail.matricule}</div>
+                                     <div class="col-span-1" class:text-blue-600  ={detail.reste === 0}>
+                                         {detail.reste}
+                                         </div>
+                                 </div>
                                 )}
                             </For>
                         </div>

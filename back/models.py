@@ -56,6 +56,7 @@ class ReglementModel(_database.Base):
     Garant = _sql.Column(_sql.String)
     Date_de_reglement = _sql.Column(_sql.Date)
     Type_de_reglement = _sql.Column(_sql.String)
+    Etat  = _sql.Column(_sql.String)
     history = _orm.relationship("HistoryModel", back_populates="reglement")
 
     product = _orm.relationship("ProductModel", back_populates="reglements")

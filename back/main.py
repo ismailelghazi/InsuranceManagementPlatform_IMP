@@ -331,11 +331,13 @@ def create_reglement(reglement: _schemas.ReglementCreate, db: _orm.Session = _fa
     db_reglement = models.ReglementModel(
         Product_id=reglement.Product_id,
         Reste=new_reste,
-        Garant = reglement.Garant,
-        numero = reglement.numero,
+        Garant=reglement.Garant,
+        numero=reglement.numero,
         Reglement=reglement.Reglement,
         Date_de_reglement=reglement.Date_de_reglement,
-        Type_de_reglement=reglement.Type_de_reglement
+        Type_de_reglement=reglement.Type_de_reglement,
+        Etat=reglement.Etat
+
     )
     db.add(db_reglement)
     db.commit()
@@ -429,6 +431,7 @@ class BasicProductInfo(_pydantic.BaseModel):
     reglement: Optional[float] = None
     type_de_reglement: Optional[str] = None
     Garant: Optional[str] = None
+    Etat:Optional[str] = None
 
 @app.get("/api/reglements/assure/{cin}", response_model=List[BasicProductInfo])
 def get_reglement_by_cin(cin: str, db: Session = Depends(_services.get_db)):
@@ -468,7 +471,8 @@ def get_reglement_by_cin(cin: str, db: Session = Depends(_services.get_db)):
             numero=None,
             reglement=None,
             type_de_reglement=None,
-            Garant=None
+            Garant=None,
+            Etat=None
         ))
 
     return result
