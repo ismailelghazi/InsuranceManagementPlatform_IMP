@@ -61,7 +61,7 @@ function DetailsPage() {
                                         <div class="col-span-1">{detail.nom_assure}</div>
                                         <div class="col-span-1">{detail.prime_totale}</div>
                                         <div class="hidden md:block col-span-1">{detail.matricule}</div>
-                                        <div class="col-span-1" class:text-indigo-800={detail.reste === 0}>
+                                        <div class="col-span-1" class:text-blue-600 ={detail.reste === 0}>
                                             {detail.reste}
                                             </div>
                                     </div>
