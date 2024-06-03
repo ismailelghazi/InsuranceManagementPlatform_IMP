@@ -364,7 +364,7 @@ def get_history_by_cin(cin: str, db: _orm.Session = _fastapi.Depends(_services.g
     return history
 
 class BasicProductInfo(_schemas.ReglementDetail):
-    reste: Union[None, int] = None
+    reste: Union[None, float] = None
     reglement: Union[None, int] = None
     type_de_reglement: Union[None, str] = None
 
@@ -427,24 +427,28 @@ def get_reglement_by_cin(cin: str, db: Session = Depends(_services.get_db)):
 
     # Fetch the products associated with the assure
     products = db.query(models.ProductModel).filter(models.ProductModel.assure_id == assure.Cin).all()
-
+     
     if not products:
         raise HTTPException(status_code=404, detail="No products found for the given CIN")
 
     result = []
 
     for product in products:
-        # Return only basic product information
-        result.append(BasicProductInfo(
-            id=product.id,
-            cin=assure.Cin,
-            nom_assure=assure.Assure_name,
-            prime_totale=product.Prime_Totale,
-            reste=None,
-            matricule=product.Matricule,
-            reglement=None,
-            type_de_reglement=None
-        ))
+        # Fetch the reglements associated with the product
+        reglements = db.query(models.ReglementModel).filter(models.ReglementModel.Product_id == product.id).all()
+
+        for reglement in reglements:
+            # Return only basic product information along with the reglement details
+            result.append(BasicProductInfo(
+                id=product.id,
+                cin=assure.Cin,
+                nom_assure=assure.Assure_name,
+                prime_totale=product.Prime_Totale,
+                reste=reglement.Reste,
+                matricule=product.Matricule,
+                reglement=reglement.Reglement,
+                type_de_reglement=reglement.Type_de_reglement
+            ))
 
     return result
 
