@@ -59,27 +59,33 @@ function DetailsPage() {
                     </div>
 
                     <div class="table-content-assurer">
-                        <div class="table-head grid grid-cols-1 md:grid-cols-6 place-content-center bg-gray-200 text-gray-700 font-semibold py-2 px-4 rounded-t-lg">
+                        <div class="table-head grid grid-cols-8 md:grid-cols-8 place-content-center bg-gray-200 text-gray-700 font-semibold py-2 px-4 rounded-t-lg">
                             <span class="hidden md:block col-span-1">ID</span>
                             <span class="col-span-1">CIN</span>
                             <span class="col-span-1">Nom Assurer</span>
                             <span class="col-span-1">Prime Totale</span>
                             <span class="hidden md:block col-span-1">Matricule</span>
                             <span class="col-span-1">Reste</span>
+                            <span class="col-span-1">Etat</span>
+                            <span class="col-span-1">Action</span>
                         </div>
                         <div class="table-body overflow-y-scroll max-h-[550px] styled-scrollbar">
                             <For each={filterDetails(details())}>
                                 {(detail) => (
-                                     <div class="grid grid-cols-1 md:grid-cols-6 place-content-center py-2 px-4 border-b border-gray-200">
-                                     <div class="hidden md:block col-span-1">{detail.id}</div>
-                                     <div class="col-span-1">{detail.cin}</div>
-                                     <div class="col-span-1">{detail.nom_assure}</div>
-                                     <div class="col-span-1">{detail.prime_totale}</div>
-                                     <div class="hidden md:block col-span-1">{detail.matricule}</div>
-                                     <div class="col-span-1" class:text-blue-600  ={detail.reste === 0}>
-                                         {detail.reste}
-                                         </div>
-                                 </div>
+                                    <div class="grid grid-cols-8 md:grid-cols-8 place-content-center py-2 px-4 border-b border-gray-200">
+                                    <div class="md:block col-span-1">{detail.id}</div>
+                                    <div class="col-span-1">{detail.cin}</div>
+                                    <div class="col-span-1">{detail.nom_assure}</div>
+                                    <div class="col-span-1">{detail.prime_totale}</div>
+                                    <div class="md:block col-span-1">{detail.matricule}</div>
+                                    <div class="col-span-1" class:text-blue-600  ={detail.reste === 0}>{detail.reste}</div>
+                                    <div class="col-span-1">{detail.Etat?detail.Etat:`${null}`} </div>
+                                    <div class="col-span-1 flex gap-3 text-xl">
+                                        <i class="fa-solid fa-square-plus"></i>
+                                        <i class="fa-solid fa-pen-to-square cursor-pointer"></i>
+                                        <i class="fa-regular fa-trash-can cursor-pointer text-red-500 hover:text-red-700"></i>
+                                    </div>
+                                </div>
                                 )}
                             </For>
                         </div>
