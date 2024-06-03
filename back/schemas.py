@@ -124,6 +124,7 @@ class ReglementDetail(_pydantic.BaseModel):
     reglement: Optional[float] = None
     type_de_reglement: Optional[str] = None
     Garant :Optional[str] = None
+    Etat:Optional[str] = None
 
     class Config:
         orm_mode = True

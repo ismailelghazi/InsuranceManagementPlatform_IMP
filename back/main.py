@@ -401,7 +401,8 @@ def get_reglement_by_product_id(product_id: int, db: _orm.Session = Depends(_ser
             reste=None,
             matricule=product.Matricule,
             reglement=None,
-            type_de_reglement=None
+            type_de_reglement=None,
+            Etat=None
         ))
     else:
         for reglement in reglements:
@@ -413,7 +414,8 @@ def get_reglement_by_product_id(product_id: int, db: _orm.Session = Depends(_ser
                 reste=reglement.Reste,
                 matricule=product.Matricule,
                 reglement=reglement.Reglement,
-                type_de_reglement=reglement.Type_de_reglement
+                type_de_reglement=reglement.Type_de_reglement,
+                Etat=None
             ))
 
     return result
@@ -425,13 +427,11 @@ class BasicProductInfo(_pydantic.BaseModel):
     cin: str
     nom_assure: str
     prime_totale: float
-    reste: float
+    reste: Optional[float] = None
     matricule: str
-    numero: Optional[str] = None
-    reglement: Optional[float] = None
+    reglement: Optional[str] = None
     type_de_reglement: Optional[str] = None
-    Garant: Optional[str] = None
-    Etat:Optional[str] = None
+    Etat: Optional[str] = None
 
 @app.get("/api/reglements/assure/{cin}", response_model=List[BasicProductInfo])
 def get_reglement_by_cin(cin: str, db: Session = Depends(_services.get_db)):
