@@ -10,6 +10,9 @@ const AddReglement = () => {
     const [reglement, setReglement] = createSignal(null);
     const [doesRequireOperationID, setDoesRequireOperationID] = createSignal(false);
     const [isGarant, setIsGarant] = createSignal(false);
+    
+    // Signal for the date input value
+    const [currentDate, setCurrentDate] = createSignal(new Date().toISOString().split('T')[0]);
 
     createEffect(() => {
         fetcher(`/reglements/product/${params.id}`, true, 'GET', null, {}, navigate)
@@ -37,7 +40,7 @@ const AddReglement = () => {
             numero: formData.get('numero'),
             Reste: 0,
             Reglement: parseFloat(formData.get('reglement')),
-            Garant: isGarant() // Adding the Garant status to the data being submitted
+            Garant: isGarant() ? formData.get('garant_input') : null
         };
 
         fetcher('/reglements/', true, 'POST', JSON.stringify(reglementData), { 'Content-Type': 'application/json' }, navigate)
@@ -68,7 +71,7 @@ const AddReglement = () => {
                             </div>
                             <div>
                                 <label for="date_reglement" class="block text-sm font-medium text-gray-700">Date de reglement</label>
-                                <input type="date" name="date_reglement" class="mt-1 py-2 px-3 border border-gray-300 rounded-lg w-full" />
+                                <input type="date" name="date_reglement" value={currentDate()} class="mt-1 py-2 px-3 border border-gray-300 rounded-lg w-full" />
                             </div>
                             <div>
                                 <label for="prime_totale" class="block text-sm font-medium text-gray-700">Prime Total</label>
@@ -76,7 +79,7 @@ const AddReglement = () => {
                             </div>
                             <div>
                                 <label for="type_de_reglement" class="block text-sm font-medium text-gray-700">Type de reglement</label>
-                                <select name="type_reglement" on:change={readReglement} class="mt-1 py-2 px-3 border border-gray-300 rounded-lg w-full">
+                                <select name="type_reglement" onChange={readReglement} class="mt-1 py-2 px-3 border border-gray-300 rounded-lg w-full">
                                     <option value="null">Veuillez selectionner</option>
                                     <option value="cheque">Cheque</option>
                                     <option value="espece">Espece</option>
@@ -109,6 +112,12 @@ const AddReglement = () => {
                                 <label for="garant" class="block text-sm font-medium text-gray-700">Garant</label>
                                 <input type="checkbox" name="garant" class="mt-1" onChange={(e) => setIsGarant(e.target.checked)} />
                             </div>
+                            <Show when={isGarant()}>
+                                <div class="col-span-1 md:col-span-2">
+                                    <label for="garant_input" class="block text-sm font-medium text-gray-700">Nom du Garant</label>
+                                    <input type="text" name="garant_input" class="mt-1 py-2 px-3 border border-gray-300 rounded-lg w-full" />
+                                </div>
+                            </Show>
                             <div class="col-span-1 md:col-span-2 flex justify-center">
                                 <button type="submit" class="mt-4 py-2 px-4 bg-green-500 text-white rounded-lg">Ajoute</button>
                             </div>

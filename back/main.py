@@ -328,6 +328,8 @@ def create_reglement(reglement: _schemas.ReglementCreate, db: _orm.Session = _fa
     db_reglement = models.ReglementModel(
         Product_id=reglement.Product_id,
         Reste=new_reste,
+        Garant = reglement.Garant,  
+
         numero = reglement.numero,
         Reglement=reglement.Reglement,
         Date_de_reglement=reglement.Date_de_reglement,

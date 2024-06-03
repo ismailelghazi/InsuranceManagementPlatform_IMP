@@ -107,7 +107,7 @@ class ReglementBase(_pydantic.BaseModel):
     Reglement: Optional[float] = None
     Date_de_reglement: Optional[dt.date] = None
     Type_de_reglement: Optional[str] = None
-
+    Garant :Optional[str] = None
     class Config:
         orm_mode = True
         from_attributes = True
@@ -120,6 +120,7 @@ class ReglementCreate(_pydantic.BaseModel):
     Date_de_reglement: Optional[dt.date] = None
     numero :Optional[str] = None
     Type_de_reglement: Optional[str] = None
+    Garant :Optional[str] = None
 
 
 class ReglementDetail(_pydantic.BaseModel):
@@ -132,6 +133,7 @@ class ReglementDetail(_pydantic.BaseModel):
     numero : Optional[str] = None
     reglement: Optional[float] = None
     type_de_reglement: Optional[str] = None
+    Garant :Optional[str] = None
 
     class Config:
         orm_mode = True

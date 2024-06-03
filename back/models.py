@@ -53,6 +53,7 @@ class ReglementModel(_database.Base):
     Reste=_sql.Column(_sql.Float)
     Reglement=_sql.Column(_sql.Float)
     numero = _sql.Column(_sql.String)
+    Garant = _sql.Column(_sql.String)
     Date_de_reglement = _sql.Column(_sql.Date)
     Type_de_reglement = _sql.Column(_sql.String)
     history = _orm.relationship("HistoryModel", back_populates="reglement")
