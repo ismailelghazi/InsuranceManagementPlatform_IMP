@@ -27,7 +27,7 @@ function DetailsPage() {
         if (filter() === 'all') {
             return details;
         } else {
-            return details.filter(detail => detail.etat === filter());
+            return (details.filter(detail => detail.Etat === filter()));
         }
     };
 
