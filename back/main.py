@@ -415,7 +415,20 @@ def get_reglement_by_product_id(product_id: int, db: _orm.Session = Depends(_ser
             ))
 
     return result
+import pydantic as _pydantic
+from typing import Optional
 
+class BasicProductInfo(_pydantic.BaseModel):
+    id: int
+    cin: str
+    nom_assure: str
+    prime_totale: float
+    reste: float
+    matricule: str
+    numero: Optional[str] = None
+    reglement: Optional[float] = None
+    type_de_reglement: Optional[str] = None
+    Garant: Optional[str] = None
 
 @app.get("/api/reglements/assure/{cin}", response_model=List[BasicProductInfo])
 def get_reglement_by_cin(cin: str, db: Session = Depends(_services.get_db)):
@@ -434,35 +447,28 @@ def get_reglement_by_cin(cin: str, db: Session = Depends(_services.get_db)):
     result = []
 
     for product in products:
+        # Initialize the reste with prime_totale
+        reste = product.Prime_Totale
+
         # Fetch the reglements associated with the product
         reglements = db.query(models.ReglementModel).filter(models.ReglementModel.Product_id == product.id).all()
 
-        if not reglements:
-            # If no reglements found, append basic product information with None values for reglement details
-            result.append(BasicProductInfo(
-                id=product.id,
-                cin=assure.Cin,
-                nom_assure=assure.Assure_name,
-                prime_totale=product.Prime_Totale,
-                reste=None,
-                matricule=product.Matricule,
-                reglement=None,
-                type_de_reglement=None
-            ))
-        else:
-            # Append product information along with reglement details
-            for reglement in reglements:
-                result.append(BasicProductInfo(
-                    id=product.id,
-                    cin=assure.Cin,
-                    nom_assure=assure.Assure_name,
-                    prime_totale=product.Prime_Totale,
-                    reste=reglement.Reste,
-                    matricule=product.Matricule,
-                    reglement=reglement.Reglement,
-                    type_de_reglement=reglement.Type_de_reglement
-                ))
+        # Calculate the final reste after applying all reglements
+        for reglement in reglements:
+            reste -= reglement.Reglement  # Deduct the reglement amount from reste
 
-    print(result)
+        # Append the final product information with the last reste value
+        result.append(BasicProductInfo(
+            id=product.id,
+            cin=assure.Cin,
+            nom_assure=assure.Assure_name,
+            prime_totale=product.Prime_Totale,
+            reste=reste,
+            matricule=product.Matricule,
+            numero=None,
+            reglement=None,
+            type_de_reglement=None,
+            Garant=None
+        ))
+
     return result
-
