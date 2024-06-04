@@ -13,13 +13,11 @@ function IndexReglement() {
     const navigate = useNavigate();
 
     createEffect(() => {
-        if (assures().length === 0) {
             fetcher('/Assure', true, 'GET', null, {}, navigate)
                 .then((res) => {
                     setAssures(res);
                     setFilteredAssures(res);
                 });
-        }
     });
 
     const filterAssures = (query) => {
