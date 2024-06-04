@@ -7,7 +7,7 @@ function DetailsPage() {
     const params = useParams();
     const [details, setDetails] = createSignal(null);
     const [searchQuery, setSearchQuery] = createSignal('');
-    const [filter, setFilter] = createSignal('all'); // Initialize filter state with 'all'
+    const [filter, setFilter] = createSignal('all');
     const [filteredAssures, setFilteredAssures] = createSignal([]);
 
     const navigate = useNavigate();
@@ -22,12 +22,30 @@ function DetailsPage() {
         }
     });
 
-    // Function to filter details based on the selected filter
     const filterDetails = (details) => {
         if (filter() === 'all') {
             return details;
         } else {
-            return (details.filter(detail => detail.Etat === filter()));
+            return details.filter(detail => detail.Etat === filter());
+        }
+    };
+
+    const handleDelete = (id) => {
+        const confirmation = confirm("Are you sure you want to delete this item?");
+        if (confirmation) {
+            fetcher(`/Product_delete/${id}`, true, 'DELETE', null, {}, navigate)
+                .then((res) => {
+                    if (res.ok) {
+                        setDetails(details().filter(detail => detail.id !== id));
+                        alert('Item deleted successfully');
+                        navigate('/reglements');
+                    } else {
+                        console.error('Failed to delete');
+                    }
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
         }
     };
 
@@ -73,19 +91,22 @@ function DetailsPage() {
                             <For each={filterDetails(details())}>
                                 {(detail) => (
                                     <div class="grid grid-cols-8 md:grid-cols-8 place-content-center py-2 px-4 border-b border-gray-200">
-                                    <div class="md:block col-span-1">{detail.id}</div>
-                                    <div class="col-span-1">{detail.cin}</div>
-                                    <div class="col-span-1">{detail.nom_assure}</div>
-                                    <div class="col-span-1">{detail.prime_totale}</div>
-                                    <div class="md:block col-span-1">{detail.matricule}</div>
-                                    <div class="col-span-1" class:text-blue-600  ={detail.reste === 0}>{detail.reste}</div>
-                                    <div class="col-span-1">{detail.Etat?detail.Etat:`${null}`} </div>
-                                    <div class="col-span-1 flex gap-3 text-xl">
-                                        <i class="fa-solid fa-square-plus"></i>
-                                        <i class="fa-solid fa-pen-to-square cursor-pointer"></i>
-                                        <i class="fa-regular fa-trash-can cursor-pointer text-red-500 hover:text-red-700"></i>
+                                        <div class="md:block col-span-1">{detail.id}</div>
+                                        <div class="col-span-1">{detail.cin}</div>
+                                        <div class="col-span-1">{detail.nom_assure}</div>
+                                        <div class="col-span-1">{detail.prime_totale}</div>
+                                        <div class="md:block col-span-1">{detail.matricule}</div>
+                                        <div class="col-span-1">{detail.reste === 0 ? <span class="text-blue-600">{detail.reste}</span> : detail.reste}</div>
+                                        <div class="col-span-1">{detail.Etat || 'N/A'}</div>
+                                        <div class="col-span-1 flex gap-3 text-xl">
+                                            <i class="fa-solid fa-square-plus"></i>
+                                            <i class="fa-solid fa-pen-to-square cursor-pointer"></i>
+                                            <i
+                                                class="fa-regular fa-trash-can cursor-pointer text-red-500 hover:text-red-700"
+                                                onClick={() => handleDelete(detail.id)}
+                                            ></i>
+                                        </div>
                                     </div>
-                                </div>
                                 )}
                             </For>
                         </div>

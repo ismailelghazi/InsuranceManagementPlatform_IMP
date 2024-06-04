@@ -488,14 +488,15 @@ def delete_reglement(reglement_id: int, db: Session = Depends(services.get_db)):
     if not reglement:
         raise HTTPException(status_code=404, detail="Reglement not found")
 
-    assure_id = reglement.product.assure_id  # Corrected line
-    product_id = reglement.product.id         # Corrected line
+    assure_id = reglement.product.assure_id
+    product_id = reglement.product.id
 
-    db.delete(reglement)
+    # Commit changes before deleting
     db.commit()
 
+    # Create history entry
     db_history = models.HistoryModel(
-        assure_id=assure_id,  # Updated to use corrected variables
+        assure_id=assure_id,
         product_id=product_id,
         reglement_id=reglement.id,
         action="delete",
@@ -504,8 +505,10 @@ def delete_reglement(reglement_id: int, db: Session = Depends(services.get_db)):
         numero=reglement.numero,
         reglement_amount=reglement.Reglement
     )
-    db.add(db_history)
-    db.commit()
-    db.refresh(db_history)
+    db.add(db_history)  # Add history entry to session
+    db.commit()         # Commit changes
+
+    db.delete(reglement)  # Delete reglement
+    db.commit()            # Commit changes
 
     return reglement
