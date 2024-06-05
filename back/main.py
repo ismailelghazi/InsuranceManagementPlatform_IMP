@@ -438,14 +438,11 @@ class BasicProductInfo(_pydantic.BaseModel):
 
 @app.get("/api/reglements/assure/{cin}", response_model=List[BasicProductInfo])
 def get_reglement_by_cin(cin: str, db: Session = Depends(_services.get_db)):
-    # Fetch the assure by CIN
-    global reglement
     assure = db.query(models.AssureModel).filter(models.AssureModel.Cin == cin).first()
 
     if not assure:
         raise HTTPException(status_code=404, detail="No assure found for the given CIN")
 
-    # Fetch the products associated with the assure
     products = db.query(models.ProductModel).filter(models.ProductModel.assure_id == assure.Cin).all()
 
     if not products:
@@ -454,17 +451,16 @@ def get_reglement_by_cin(cin: str, db: Session = Depends(_services.get_db)):
     result = []
 
     for product in products:
-        # Initialize the reste with prime_totale
         reste = product.Prime_Totale
-
-        # Fetch the reglements associated with the product
         reglements = db.query(models.ReglementModel).filter(models.ReglementModel.Product_id == product.id).all()
 
-        # Calculate the final reste after applying all reglements
-        for reglement in reglements:
-            reste -= reglement.Reglement  # Deduct the reglement amount from reste
+        last_etat = "default_state"  # Set a default value for last_etat
 
-        # Append the final product information with the last reste value
+        if reglements:
+            for reglement in reglements:
+                reste -= reglement.Reglement
+                last_etat = reglement.Etat  # Update last_etat to the current reglement's Etat
+
         result.append(BasicProductInfo(
             id=product.id,
             cin=assure.Cin,
@@ -476,10 +472,11 @@ def get_reglement_by_cin(cin: str, db: Session = Depends(_services.get_db)):
             reglement=None,
             type_de_reglement=None,
             Garant=None,
-            Etat= reglement.Etat
+            Etat=last_etat  # Use last_etat here
         ))
 
     return result
+
 
 
 @app.delete("/api/reglements/{reglement_id}", response_model=schemas.ReglementBase)
