@@ -10,8 +10,6 @@ const AddReglement = () => {
     const [reglement, setReglement] = createSignal(null);
     const [doesRequireOperationID, setDoesRequireOperationID] = createSignal(false);
     const [isGarant, setIsGarant] = createSignal(false);
-
-    // Signal for the date input value
     const [currentDate, setCurrentDate] = createSignal(new Date().toISOString().split('T')[0]);
 
     createEffect(() => {
@@ -138,3 +136,4 @@ const AddReglement = () => {
 };
 
 export default AddReglement;
+    
