@@ -101,11 +101,11 @@ function IndexProduct() {
     const totalPages = () => Math.ceil(filteredProducts().length / itemsPerPage);
 
     return (
-        <div class="flex w-full min-h-screen bg-gray-100 overflow-x-hidden">
+        <div class="flex w-screen h-screen bg-gray-100 overflow-x-hidden">
             <Navbar />
-            <div class="dashboard-product-container w-full h-full p-4 md:p-8">
+            <div class="dashboard-product-container w-full h-full pl-16 py-24">
                 <h1 class="text-3xl md:text-5xl text-blue-900 font-bold mb-8">Product Management</h1>
-                <div class="bg-white shadow-md w-full rounded-lg p-6 mb-8">
+                <div class="bg-white shadow-md w-11/12 rounded-lg p-6 mr-12">
                     <div class="flex flex-col md:flex-row justify-between items-center mb-4">
                         <h2 class="text-xl md:text-3xl font-semibold text-gray-800 mb-4 md:mb-0">Products List</h2>
                         <div class="flex items-center">
@@ -122,9 +122,9 @@ function IndexProduct() {
                             </button>
                         </div>
                     </div>
-                    <div class="overflow-auto max-h-[calc(100vh-300px)] styled-scrollbar">
-                        <div class="min-w-full">
-                            <div class="grid bg-gray-200 text-gray-700 font-semibold py-2 px-4 rounded-t-lg hidden md:grid"
+                    <div class="styled-scrollbar">
+                        <div class="table-content-product min-w-full">
+                            <div class="table-head grid bg-gray-200 text-gray-700 font-semibold py-2 px-4 rounded-t-lg hidden md:grid"
                                 style="grid-template-columns: repeat(9, 1fr);">
                                 <span class="col-span-1">ID</span>
                                 <span class="col-span-1">Police</span>
@@ -136,10 +136,10 @@ function IndexProduct() {
                                 <span class="col-span-1">Prime Totale</span>
                                 <span class="col-span-1">Actions</span>
                             </div>
-                            <div class="table-body">
+                            <div class="table-body overflow-y-scroll max-h-[600px] styled-scrollbar">
                                 <For each={paginatedProducts()}>
                                     {(item) => (
-                                        <div class="grid py-2 px-4 border-b border-gray-200 gap-y-4 grid-cols-1 md:grid-cols-9">
+                                        <div class="grid py-2 px-4 border-b border-gray-200 gap-y-8 grid-cols-1 md:grid-cols-9">
                                             <div class="md:hidden font-semibold">ID</div>
                                             <div class="col-span-1 truncate">{item.id}</div>
 
