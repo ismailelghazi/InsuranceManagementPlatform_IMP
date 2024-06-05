@@ -254,9 +254,12 @@ function DetailsPage() {
                                             <input type="text" name="garant_input" class="mt-1 py-2 px-3 border border-gray-300 rounded-lg w-full" />
                                         </div>
                                     </Show>
-                                    <div class="col-span-1 md:col-span-2 flex justify-center">
+                                    <div class="mt-2 flex justify-between col-span-2">
                                         <button type="submit" class="mt-4 py-2 px-4 bg-green-500 text-white rounded-lg">Ajoute</button>
+                                        <button type="button" class="mt-4 py-2 px-4 bg-red-500 text-white rounded-lg" onClick={() => setReglement(false)}>Cancel</button>
+
                                     </div>
+                                    
                                 </form>
                             )}
                         </div>
