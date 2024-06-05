@@ -11,6 +11,8 @@ function IndexProduct() {
     const [filteredProducts, setFilteredProducts] = createSignal([]);
     const [headersCount, setHeadersCount] = createSignal(0);
     const [currentPage, setCurrentPage] = createSignal(1);
+    const [startDate, setStartDate] = createSignal('');
+    const [endDate, setEndDate] = createSignal('');
     const itemsPerPage = 12;
     const navigate = useNavigate();
 
@@ -81,13 +83,22 @@ function IndexProduct() {
             });
     };
 
-    const filterProducts = (query) => {
-        const filtered = products().filter(
+    const filterProducts = (query, startDate, endDate) => {
+        let filtered = products().filter(
             (product) =>
                 product.Police.toLowerCase().includes(query.toLowerCase()) ||
                 product.Matricule.toLowerCase().includes(query.toLowerCase()) ||
                 product.assure_id.toLowerCase().includes(query.toLowerCase())
         );
+
+        if (startDate) {
+            filtered = filtered.filter(product => new Date(product.Date_effet) >= new Date(startDate));
+        }
+
+        if (endDate) {
+            filtered = filtered.filter(product => new Date(product.Date_effet) <= new Date(endDate));
+        }
+
         setFilteredProducts(filtered);
         setCurrentPage(1); // Reset to the first page on new filter
     };
@@ -115,7 +126,21 @@ function IndexProduct() {
                                 class="py-2 px-3 border border-gray-300 rounded-lg mr-4"
                                 value={searchQuery()}
                                 onInput={(e) => setSearchQuery(e.target.value)}
-                                onKeyUp={() => filterProducts(searchQuery())}
+                                onKeyUp={() => filterProducts(searchQuery(), startDate(), endDate())}
+                            />
+                            <input
+                                type="date"
+                                class="py-2 px-3 border border-gray-300 rounded-lg mr-4"
+                                value={startDate()}
+                                onInput={(e) => setStartDate(e.target.value)}
+                                onChange={() => filterProducts(searchQuery(), startDate(), endDate())}
+                            />
+                            <input
+                                type="date"
+                                class="py-2 px-3 border border-gray-300 rounded-lg mr-4"
+                                value={endDate()}
+                                onInput={(e) => setEndDate(e.target.value)}
+                                onChange={() => filterProducts(searchQuery(), startDate(), endDate())}
                             />
                             <button class="py-2 px-4 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700" onClick={() => setAddProduct(!addProduct())}>
                                 {addProduct() ? 'Cancel' : 'Add Product'}
