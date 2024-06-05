@@ -12,14 +12,20 @@ import io
 from fastapi.middleware.cors import CORSMiddleware
 import models
 import services as _services, schemas as _schemas
-
+from fastapi import HTTPException
+from typing import List
+from sqlalchemy.orm import Session
+from fastapi import Depends
+from fastapi import HTTPException, Depends, APIRouter
+from sqlalchemy.orm import Session
+import models, schemas, services
 app = _fastapi.FastAPI()
 
 
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://python-fastapi-react.vercel.app"],
+    allow_origins=["https://python-fastapi-react.vercel.app","http://127.0.0.1:3000"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -117,15 +123,9 @@ def read_Assure(Cin: str, db: _orm.Session = _fastapi.Depends(_services.get_db))
 def create_Assure(product: _schemas.ProductCreate,db: _orm.Session = _fastapi.Depends(_services.get_db)):
     Productdb = models.ProductModel(  Police=product.Police,
     Date_effet=product.Date_effet,
-    Acte=product.Acte,
-    Date_fin=product.Date_fin,
     Fractionn=product.Fractionn,
-    Contrat=product.Contrat,
-    Periode=product.Periode,
-    Marque=product.Marque,
     Date_Emission=product.Date_Emission,
     Matricule=product.Matricule,
-    Attestation=product.Attestation,
     Prime_Totale=product.Prime_Totale,
     assure_id=product.assure_id)
 
@@ -175,12 +175,10 @@ async def read_Products_with_Assure_names(db: _orm.Session = _fastapi.Depends(_s
             Date_effet=str(product.Date_effet),
             # Add other fields from ProductModel as needed
             Assure_name=assure_data.Assure_name,
-            Acte=product.Acte,
-            Date_fin=product.Date_fin,
+            # Acte=product.Acte,
+            # Date_fin=product.Date_fin,
             Fractionn=product.Fractionn,
-            Contrat=product.Contrat,
-            Periode=product.Periode,
-            Marque=product.Marque,
+            # Contrat=product.Contrat,
             Date_Emission=product.Date_Emission,
             Matricule=product.Matricule,
             Attestation=product.Attestation,
@@ -215,12 +213,12 @@ async def upload_file(file: UploadFile = File(...), db: _orm.Session = _fastapi.
 
     # Check if the required columns exist in df2
     required_columns_df2 = {
-        'Date Emission', 'Acte', 'Police', 'Date effet', 'Date Fin', 'Prime Totale', 'CIN',
-        'Fractionn', 'Contrat', 'Matricule', 'Attestation', 'Période', 'Marque'
+        'Date Emission', 'Police', 'Date effet',  'Prime Totale', 'CIN',
+        'Fractionn',  'Matricule'
     }
     if not required_columns_df2.issubset(df2.columns):
         raise HTTPException(status_code=400,
-                            detail=f"Uploaded file must contain columns: {required_columns_df2} in sheet 2")
+                            detail=f"Uploaded file must contain columns: {required_columns_df2} in sheet 1")
 
     # Insert data into AssureModel from df1
     for index, row in df1.iterrows():
@@ -240,28 +238,21 @@ async def upload_file(file: UploadFile = File(...), db: _orm.Session = _fastapi.
         # Check if product already exists to avoid duplicates
         existing_product = db.query(models.ProductModel).filter(
             models.ProductModel.Date_Emission == row['Date Emission'],
-            models.ProductModel.Acte == row['Acte'],
             models.ProductModel.Police == row['Police'],
             models.ProductModel.Date_effet == row['Date effet'],
-            models.ProductModel.Date_fin == row['Date Fin'],
             models.ProductModel.Prime_Totale == row['Prime Totale'],
             models.ProductModel.assure_id == row['CIN'],
             models.ProductModel.Fractionn == row['Fractionn'],
-            models.ProductModel.Contrat == row['Contrat'],
             models.ProductModel.Matricule == row['Matricule'],
-            models.ProductModel.Attestation == row['Attestation'],
-            models.ProductModel.Periode == row['Période'],
-            models.ProductModel.Marque == row['Marque']
         ).first()
         if existing_product:
             continue
         product_data = models.ProductModel(
             Date_Emission=row['Date Emission'],
-            Acte=row['Acte'], Police=row['Police'],
-            Date_effet=row['Date effet'], Date_fin=row['Date Fin'], Prime_Totale=row['Prime Totale'],
-            assure_id=row['CIN'], Fractionn=row['Fractionn'], Contrat=row['Contrat'],
-            Matricule=row['Matricule'], Attestation=row['Attestation'],
-            Periode=row['Période'], Marque=row['Marque'],
+            Police=row['Police'],
+            Date_effet=row['Date effet'],  Prime_Totale=row['Prime Totale'],
+            assure_id=row['CIN'], Fractionn=row['Fractionn'],
+            Matricule=row['Matricule'],
         )
         db.add(product_data)
         db.commit()
@@ -343,10 +334,13 @@ def create_reglement(reglement: _schemas.ReglementCreate, db: _orm.Session = _fa
     db_reglement = models.ReglementModel(
         Product_id=reglement.Product_id,
         Reste=new_reste,
-        numero = reglement.numero,
+        Garant=reglement.Garant,
+        numero=reglement.numero,
         Reglement=reglement.Reglement,
         Date_de_reglement=reglement.Date_de_reglement,
-        Type_de_reglement=reglement.Type_de_reglement
+        Type_de_reglement=reglement.Type_de_reglement,
+        Etat=reglement.Etat
+
     )
     db.add(db_reglement)
     db.commit()
@@ -378,8 +372,8 @@ def get_history_by_cin(cin: str, db: _orm.Session = _fastapi.Depends(_services.g
     return history
 
 class BasicProductInfo(_schemas.ReglementDetail):
-    reste: Union[None, int] = None
-    reglement: Union[None, int] = None
+    reste: Union[None, float] = None
+    reglement: Union[None, float] = None
     type_de_reglement: Union[None, str] = None
 
 
@@ -410,7 +404,8 @@ def get_reglement_by_product_id(product_id: int, db: _orm.Session = Depends(_ser
             reste=None,
             matricule=product.Matricule,
             reglement=None,
-            type_de_reglement=None
+            type_de_reglement=None,
+            Etat=None
         ))
     else:
         for reglement in reglements:
@@ -422,18 +417,29 @@ def get_reglement_by_product_id(product_id: int, db: _orm.Session = Depends(_ser
                 reste=reglement.Reste,
                 matricule=product.Matricule,
                 reglement=reglement.Reglement,
-                type_de_reglement=reglement.Type_de_reglement
+                type_de_reglement=reglement.Type_de_reglement,
+                Etat=None
             ))
 
     return result
-from fastapi import HTTPException
-from typing import List
-from sqlalchemy.orm import Session
-from fastapi import Depends
+import pydantic as _pydantic
+from typing import Optional
+
+class BasicProductInfo(_pydantic.BaseModel):
+    id: int
+    cin: str
+    nom_assure: str
+    prime_totale: float
+    reste: Optional[float] = None
+    matricule: str
+    reglement: Optional[str] = None
+    type_de_reglement: Optional[str] = None
+    Etat: Optional[str]
 
 @app.get("/api/reglements/assure/{cin}", response_model=List[BasicProductInfo])
 def get_reglement_by_cin(cin: str, db: Session = Depends(_services.get_db)):
     # Fetch the assure by CIN
+    global reglement
     assure = db.query(models.AssureModel).filter(models.AssureModel.Cin == cin).first()
 
     if not assure:
@@ -448,17 +454,61 @@ def get_reglement_by_cin(cin: str, db: Session = Depends(_services.get_db)):
     result = []
 
     for product in products:
-        # Return only basic product information
+        # Initialize the reste with prime_totale
+        reste = product.Prime_Totale
+
+        # Fetch the reglements associated with the product
+        reglements = db.query(models.ReglementModel).filter(models.ReglementModel.Product_id == product.id).all()
+
+        # Calculate the final reste after applying all reglements
+        for reglement in reglements:
+            reste -= reglement.Reglement  # Deduct the reglement amount from reste
+
+        # Append the final product information with the last reste value
         result.append(BasicProductInfo(
             id=product.id,
             cin=assure.Cin,
             nom_assure=assure.Assure_name,
             prime_totale=product.Prime_Totale,
-            reste=None,
+            reste=reste,
             matricule=product.Matricule,
+            numero=None,
             reglement=None,
-            type_de_reglement=None
+            type_de_reglement=None,
+            Garant=None,
+            Etat= reglement.Etat
         ))
 
     return result
 
+
+@app.delete("/api/reglements/{reglement_id}", response_model=schemas.ReglementBase)
+def delete_reglement(reglement_id: int, db: Session = Depends(services.get_db)):
+    reglement = db.query(models.ReglementModel).filter(models.ReglementModel.id == reglement_id).first()
+    if not reglement:
+        raise HTTPException(status_code=404, detail="Reglement not found")
+
+    assure_id = reglement.product.assure_id
+    product_id = reglement.product.id
+
+    # Commit changes before deleting
+    db.commit()
+
+    # Create history entry
+    db_history = models.HistoryModel(
+        assure_id=assure_id,
+        product_id=product_id,
+        reglement_id=reglement.id,
+        action="delete",
+        description=f"Deleted reglement with Reglement: {reglement.Reglement} and Reste: {reglement.Reste}",
+        reste_amount=reglement.Reste,
+        numero=reglement.numero,
+        reglement_amount=reglement.Reglement
+    )
+    db.add(db_history)  # Add history entry to session
+    db.commit()         # Commit changes
+
+    db.delete(reglement)  # Delete reglement
+    db.commit()            # Commit changes
+
+    return reglement

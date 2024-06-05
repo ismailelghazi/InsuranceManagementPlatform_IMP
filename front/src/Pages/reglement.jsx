@@ -6,7 +6,6 @@ import Swal from 'sweetalert2';
 
 function IndexReglement() {
     const [assures, setAssures] = createSignal([]);
-    const [addAssure, setAddAssure] = createSignal(false);
     const [searchQuery, setSearchQuery] = createSignal('');
     const [filteredAssures, setFilteredAssures] = createSignal([]);
     const [currentPage, setCurrentPage] = createSignal(1);
@@ -14,57 +13,12 @@ function IndexReglement() {
     const navigate = useNavigate();
 
     createEffect(() => {
-        if (assures().length === 0) {
             fetcher('/Assure', true, 'GET', null, {}, navigate)
                 .then((res) => {
                     setAssures(res);
                     setFilteredAssures(res);
                 });
-        }
     });
-
-    const deleteAssure = (ev) => {
-        const CIN = ev.target.attributes['data-cin'].nodeValue;
-        Swal.fire({
-            title: 'Are you sure?',
-            text: `Do you really want to delete assure with CIN: ${CIN}?`,
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#d33',
-            cancelButtonColor: '#3085d6',
-            confirmButtonText: 'Yes, delete it!'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                fetcher(`/Assure_delete/${CIN}`, true, 'DELETE', null, null, navigate)
-                    .then(() => {
-                        setAssures(assures().filter((el) => el.Cin !== CIN));
-                        setFilteredAssures(filteredAssures().filter((el) => el.Cin !== CIN));
-                        Swal.fire(
-                            'Deleted!',
-                            'The assure has been deleted.',
-                            'success'
-                        );
-                    });
-            }
-        });
-    };
-
-    const addAssureData = (ev) => {
-        ev.preventDefault();
-        const formData = Object.fromEntries(new FormData(ev.target));
-        const jsonformdata = JSON.stringify(formData);
-        fetcher('/Assure_create', true, 'POST', jsonformdata)
-            .then(() => {
-                setAssures([...assures(), formData]);
-                setFilteredAssures([...filteredAssures(), formData]);
-                setAddAssure(false);
-                Swal.fire(
-                    'Added!',
-                    'New assure has been added.',
-                    'success'
-                );
-            });
-    };
 
     const filterAssures = (query) => {
         const filtered = assures().filter(
@@ -76,7 +30,6 @@ function IndexReglement() {
         setCurrentPage(1);
     };
 
-
     const paginatedAssures = () => {
         const startIndex = (currentPage() - 1) * itemsPerPage;
         const endIndex = startIndex + itemsPerPage;
@@ -86,13 +39,13 @@ function IndexReglement() {
     const totalPages = () => Math.ceil(filteredAssures().length / itemsPerPage);
 
     return (
-        <div class="flex w-screen h-screen bg-gray-100">
+        <div class="flex w-full min-h-screen bg-gray-100 overflow-x-hidden">
             <Navbar />
-            <div class="dashboard-assurer-container w-full h-full pl-16 py-24">
-                <h1 class="text-5xl text-blue-900 font-bold mb-8">Reglement Management</h1>
-                <div class="bg-white shadow-md rounded-lg p-6 w-11/12 mr-12">
-                    <div class="flex justify-between items-center mb-4">
-                        <h2 class="text-3xl font-semibold text-gray-800">Reglement List</h2>
+            <div class="dashboard-assurer-container w-full h-full p-4 md:p-8">
+                <h1 class="text-3xl md:text-5xl text-blue-900 font-bold mb-8">Reglement Management</h1>
+                <div class="bg-white shadow-md w-full rounded-lg p-6 mb-8">
+                    <div class="flex flex-col md:flex-row justify-between items-center mb-4">
+                        <h2 class="text-xl md:text-3xl font-semibold text-gray-800 mb-4 md:mb-0">Reglement List</h2>
                         <div class="flex items-center">
                             <input
                                 type="text"
@@ -104,20 +57,27 @@ function IndexReglement() {
                             />
                         </div>
                     </div>
-                    <div class="table-content-assurer">
-                        <div class="table-head grid grid-cols-2 place-content-center bg-gray-200 text-gray-700 font-semibold py-2 px-4 rounded-t-lg">
-                            <span class="col-span-1">CIN</span>
-                            <span class="col-span-1">Nom Assurer</span>
-                        </div>
-                        <div class="table-body overflow-y-scroll max-h-[550px] styled-scrollbar">
-                            <For each={paginatedAssures()}>
-                                {(item) => (
-                                    <div class="grid grid-cols-2 place-content-center py-2 px-4 border-b border-gray-200 cursor-pointer" onClick={() => navigate(`/details/${item.Cin}`)}>
-                                        <div class="col-span-1">{item.Cin}</div>
-                                        <div class="col-span-1">{item.Assure_name}</div>
-                                    </div>
-                                )}
-                            </For>
+                    <div class="overflow-auto max-h-[calc(100vh-300px)] styled-scrollbar">
+                        <div class="min-w-full">
+                            <div class="grid bg-gray-200 text-gray-700 font-semibold py-2 px-4 rounded-t-lg hidden md:grid"
+                                style="grid-template-columns: repeat(2, 1fr);">
+                                <span class="col-span-1">CIN</span>
+                                <span class="col-span-1">Nom Assurer</span>
+                            </div>
+                            <div class="table-body">
+                                <For each={paginatedAssures()}>
+                                    {(item) => (
+                                        <div class="grid py-2 px-4 border-b border-gray-200 gap-y-4 grid-cols-1 md:grid-cols-2 cursor-pointer"
+                                             onClick={() => navigate(`/details/${item.Cin}`)}>
+                                            <div class="md:hidden font-semibold">CIN</div>
+                                            <div class="col-span-1 truncate">{item.Cin}</div>
+
+                                            <div class="md:hidden font-semibold">Nom Assurer</div>
+                                            <div class="col-span-1 truncate">{item.Assure_name}</div>
+                                        </div>
+                                    )}
+                                </For>
+                            </div>
                         </div>
                     </div>
                     <Show when={filteredAssures().length > itemsPerPage}>

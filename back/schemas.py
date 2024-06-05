@@ -45,15 +45,15 @@ class ProductBase(_pydantic.BaseModel):
     id: Optional[int] = None
     Police: Optional[str] = None
     Date_effet: Optional[dt.date] = None
-    Acte: Optional[str] = None
-    Date_fin: Optional[dt.date] = None
+    # Acte: Optional[str] = None
+    # Date_fin: Optional[dt.date] = None
     Fractionn: Optional[str] = None
-    Contrat: Optional[str] = None
-    Periode: Optional[str] = None
-    Marque: Optional[str] = None
-    Date_Emission: Optional[dt.datetime] = None
+    # Contrat: Optional[str] = None
+    # Periode: Optional[str] = None
+    # Marque: Optional[str] = None
+    Date_Emission: Optional[dt.date] = None
     Matricule: Optional[str] = None
-    Attestation: Optional[str] = None
+    # Attestation: Optional[str] = None
     Prime_Totale: Optional[float] = None
     assure_id: Optional[str] = None
 
@@ -65,15 +65,9 @@ class ProductBase(_pydantic.BaseModel):
 class ProductCreate(_pydantic.BaseModel):
     Police: Optional[str] = None
     Date_effet: Optional[dt.date] = None
-    Acte: Optional[str] = None
-    Date_fin: Optional[dt.date] = None
     Fractionn: Optional[str] = None
-    Contrat: Optional[str] = None
-    Periode: Optional[str] = None
-    Marque: Optional[str] = None
-    Date_Emission: Optional[dt.datetime] = None
+    Date_Emission: Optional[dt.date] = None
     Matricule: Optional[str] = None
-    Attestation: Optional[str] = None
     Prime_Totale: Optional[float] = None
     assure_id: Optional[str] = None
 
@@ -82,15 +76,9 @@ class ProductWithAssureName(_pydantic.BaseModel):
     id: Optional[int] = None
     Police: Optional[str] = None
     Date_effet: Optional[dt.date] = None
-    Acte: Optional[str] = None
-    Date_fin: Optional[dt.date] = None
     Fractionn: Optional[str] = None
-    Contrat: Optional[str] = None
-    Periode: Optional[str] = None
-    Marque: Optional[str] = None
-    Date_Emission: Optional[dt.datetime] = None
+    Date_Emission: Optional[dt.date] = None
     Matricule: Optional[str] = None
-    Attestation: Optional[str] = None
     Prime_Totale: Optional[float] = None
     assure_id: Optional[str] = None
     Assure_name: Optional[str] = None
@@ -107,7 +95,8 @@ class ReglementBase(_pydantic.BaseModel):
     Reglement: Optional[float] = None
     Date_de_reglement: Optional[dt.date] = None
     Type_de_reglement: Optional[str] = None
-
+    Garant :Optional[str] = None
+    Etat:Optional[str] = None
     class Config:
         orm_mode = True
         from_attributes = True
@@ -120,6 +109,8 @@ class ReglementCreate(_pydantic.BaseModel):
     Date_de_reglement: Optional[dt.date] = None
     numero :Optional[str] = None
     Type_de_reglement: Optional[str] = None
+    Garant :Optional[str] = None
+    Etat:Optional[str] = None
 
 
 class ReglementDetail(_pydantic.BaseModel):
@@ -132,6 +123,8 @@ class ReglementDetail(_pydantic.BaseModel):
     numero : Optional[str] = None
     reglement: Optional[float] = None
     type_de_reglement: Optional[str] = None
+    Garant :Optional[str] = None
+    Etat:Optional[str] = None
 
     class Config:
         orm_mode = True
