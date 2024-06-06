@@ -284,7 +284,7 @@ function DetailsPage() {
                             <div class="grid grid-cols-8 gap-4 mb-4">
                                 <span class="col-span-1">ID</span>
                                 <span class="col-span-2">Action</span>
-                                <span class="col-span-2">Description</span>
+                                <span class="col-span-2">Date</span>
                                 <span class="col-span-1">Reste Amount</span>
                                 <span class="col-span-1">Reglement Amount</span>
                                 <span class="col-span-1">Numero</span>
