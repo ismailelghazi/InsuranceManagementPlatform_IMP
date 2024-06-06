@@ -294,7 +294,7 @@ function DetailsPage() {
                                     <div class="grid grid-cols-8 gap-4 mb-2">
                                         <span class="col-span-1">{item.id}</span>
                                         <span class="col-span-2">{item.action}</span>
-                                        <span class="col-span-2">{null}</span>
+                                        <span class="col-span-2">{item.date_reglement}</span>
                                         <span class="col-span-1">{parseFloat(item.reste_amount).toFixed(2)}</span>
                                         <span class="col-span-1">{parseFloat(item.reglement_amount).toFixed(2)}</span>
                                         <span class="col-span-1">{item.numero}</span>
