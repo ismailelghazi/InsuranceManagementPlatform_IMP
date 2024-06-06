@@ -19,6 +19,9 @@ function DetailsPage() {
     const [isGarant, setIsGarant] = createSignal(false);
     const [currentDate, setCurrentDate] = createSignal(new Date().toISOString().split('T')[0]);
 
+    const [history, setHistory] = createSignal([]);
+    const [showHistoryModal, setShowHistoryModal] = createSignal(false);
+
     createEffect(() => {
         if (params.cin) {
             fetcher(`/reglements/assure/${params.cin}`, true, 'GET', null, {}, navigate)
@@ -121,6 +124,15 @@ function DetailsPage() {
         // Implement your edit functionality here
     };
 
+    const handleShowHistory = (cin) => {
+        fetcher(`/history/${cin}`, true, 'GET', null, {}, navigate)
+            .then((res) => {
+                setHistory(res);
+                setShowHistoryModal(true);
+            })
+            .catch((err) => Swal.fire('Error', err.message, 'error'));
+    };
+
     return (
         <div class="flex w-full h-full bg-gray-100">
             <Navbar />
@@ -164,7 +176,7 @@ function DetailsPage() {
                                 {(detail) => (
                                     <div class="grid grid-cols-8 md:grid-cols-8 place-content-center py-2 px-4 border-b border-gray-200">
                                         <div class="md:block col-span-1">{detail.id}</div>
-                                        <div class="col-span-1">{detail.cin}</div>
+                                        <div class="col-span-1 cursor-pointer text-blue-600" onClick={() => handleShowHistory(detail.cin)}>{detail.cin}</div>
                                         <div class="col-span-1">{detail.nom_assure}</div>
                                         <div class="col-span-1">{detail.prime_totale}</div>
                                         <div class="md:block col-span-1">{detail.matricule}</div>
@@ -265,10 +277,42 @@ function DetailsPage() {
                         </div>
                     </div>
                 </Show>
+                <Show when={showHistoryModal()}>
+                    <div class="absolute top-0 left-0 w-full h-full bg-gray-900/50 flex justify-center items-start pt-12">
+                        <div class="bg-white shadow-lg rounded-lg p-8 w-full max-w-4xl overflow-auto">
+                            <h1 class="text-3xl font-bold text-blue-900 mb-8 text-center">History</h1>
+                            <div class="grid grid-cols-8 gap-4 mb-4">
+                                <span class="col-span-1">ID</span>
+                                <span class="col-span-2">Action</span>
+                                <span class="col-span-2">Description</span>
+                                <span class="col-span-1">Reste Amount</span>
+                                <span class="col-span-1">Reglement Amount</span>
+                                <span class="col-span-1">Numero</span>
+                            </div>
+                            <For each={history()}>
+                                {(item) => (
+                                    <div class="grid grid-cols-8 gap-4 mb-2">
+                                        <span class="col-span-1">{item.id}</span>
+                                        <span class="col-span-2">{item.action}</span>
+                                        <span class="col-span-2">{item.description}</span>
+                                        <span class="col-span-1">{item.reste_amount}</span>
+                                        <span class="col-span-1">{item.reglement_amount}</span>
+                                        <span class="col-span-1">{item.numero}</span>
+                                    </div>
+                                )}
+                            </For>
+                            <button
+                                class="mt-4 py-2 px-4 bg-red-500 text-white rounded-lg"
+                                onClick={() => setShowHistoryModal(false)}
+                            >
+                                Close
+                            </button>
+                        </div>
+                    </div>
+                </Show>
             </div>
         </div>
     );
 }
 
 export default DetailsPage;
-

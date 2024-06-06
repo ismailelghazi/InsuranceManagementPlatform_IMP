@@ -363,7 +363,7 @@ def create_reglement(reglement: _schemas.ReglementCreate, db: _orm.Session = _fa
     return db_reglement
 
 
-@app.get("/history/{cin}", response_model=List[_schemas.HistoryBase])
+@app.get("/api/history/{cin}", response_model=List[_schemas.HistoryBase])
 def get_history_by_cin(cin: str, db: _orm.Session = _fastapi.Depends(_services.get_db)):
     history = db.query(models.HistoryModel).join(models.AssureModel).filter(models.AssureModel.Cin == cin).all()
 
