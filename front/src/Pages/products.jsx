@@ -128,6 +128,7 @@ function IndexProduct() {
                                 onInput={(e) => setSearchQuery(e.target.value)}
                                 onKeyUp={() => filterProducts(searchQuery(), startDate(), endDate())}
                             />
+                            <label>Start Date</label>
                             <input
                                 type="date"
                                 class="py-2 px-3 border border-gray-300 rounded-lg mr-4"

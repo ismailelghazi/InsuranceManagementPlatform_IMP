@@ -180,7 +180,7 @@ function DetailsPage() {
                                         <div class="col-span-1">{detail.nom_assure}</div>
                                         <div class="col-span-1">{detail.prime_totale}</div>
                                         <div class="md:block col-span-1">{detail.matricule}</div>
-                                        <div class="col-span-1">{detail.reste === 0 ? <span class="text-blue-600">{detail.reste}</span> : detail.reste}</div>
+                                        <div class="col-span-1">{detail.reste === 0 ? <span class="text-blue-600">{parseFloat(detail.reste).toFixed(2)}</span> : parseFloat(detail.reste).toFixed(2)}</div>
                                         <div class="col-span-1">{detail.Etat || 'N/A'}</div>
                                         <div class="col-span-1 flex gap-3 text-xl">
                                             <i class="fa-solid fa-square-plus" onClick={() => { handleAdd(detail.id); setReglementAction(true); }}></i>
@@ -294,9 +294,9 @@ function DetailsPage() {
                                     <div class="grid grid-cols-8 gap-4 mb-2">
                                         <span class="col-span-1">{item.id}</span>
                                         <span class="col-span-2">{item.action}</span>
-                                        <span class="col-span-2">{item.description}</span>
-                                        <span class="col-span-1">{item.reste_amount}</span>
-                                        <span class="col-span-1">{item.reglement_amount}</span>
+                                        <span class="col-span-2">{null}</span>
+                                        <span class="col-span-1">{parseFloat(item.reste_amount).toFixed(2)}</span>
+                                        <span class="col-span-1">{parseFloat(item.reglement_amount).toFixed(2)}</span>
                                         <span class="col-span-1">{item.numero}</span>
                                     </div>
                                 )}
