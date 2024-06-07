@@ -354,7 +354,7 @@ def create_reglement(reglement: _schemas.ReglementCreate, db: _orm.Session = _fa
         description=f"Created reglement with Reglement: {reglement.Reglement} and Reste: {new_reste}",
         reste_amount=new_reste,        
         numero = reglement.numero,
-        date_reglement=reglement.Date_de_reglement
+        date_reglement=reglement.Date_de_reglement,
         reglement_amount=reglement.Reglement
     )
     print(models.HistoryModel.numero)
@@ -370,7 +370,6 @@ def get_history_by_cin(cin: str, db: _orm.Session = _fastapi.Depends(_services.g
 
     if not history:
         raise HTTPException(status_code=404, detail="No history found for the given CIN")
-    response=
     return history
 
 class BasicProductInfo(_schemas.ReglementDetail):
