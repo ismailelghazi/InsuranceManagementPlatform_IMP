@@ -58,6 +58,14 @@ function Navbar() {
           <i class="fas fa-file-invoice"></i>
           <span>Reglement</span>
         </A>
+        <A
+            href="/etat"
+             class={`justify-center py-3 flex items-center gap-4 hover:bg-blue-800 w-full transition-colors duration-300 ${store.activeLink === 'Etat' ? 'bg-blue-700' : ''}`}
+          onClick={() => setStore('activeLink', "Etat")}
+          >
+            <i class="fa-solid fa-bullseye"></i>
+            <span>Etat</span>
+        </A>
         <div class="py-3 bg-blue-600 flex gap-4 text-white font-bold w-full items-center justify-center cursor-pointer hover:bg-blue-700 transition duration-300">
           <i class="fa-solid fa-arrow-up-from-bracket"></i>
           <label for="participation-file">  Choose a File
