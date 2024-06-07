@@ -6,7 +6,9 @@ import { fetcher } from '../../Helpers/FetchHelper';
 
 function Navbar() {
   const [uploaded, setUploaded] = createSignal(false);
+  const [dropdownOpen, setDropdownOpen] = createSignal(false);
   const navigate = useNavigate();
+
   const excelUploader = (ev) => {
     if (ev.target.files[0] !== null) {
       const file = ev.target.files.item(0);
@@ -29,7 +31,6 @@ function Navbar() {
       });
     }
   };
-
 
   return (
     <div class="bg-blue-600 text-white h-screen w-64 flex flex-col items-center py-8">
@@ -58,17 +59,44 @@ function Navbar() {
           <i class="fas fa-file-invoice"></i>
           <span>Reglement</span>
         </A>
-        <A
-            href="/etat"
-             class={`justify-center py-3 flex items-center gap-4 hover:bg-blue-800 w-full transition-colors duration-300 ${store.activeLink === 'Etat' ? 'bg-blue-700' : ''}`}
-          onClick={() => setStore('activeLink', "Etat")}
+        <div class="relative w-full">
+          <div
+            class={`justify-center py-3 flex items-center gap-4 hover:bg-blue-800 w-full transition-colors duration-300 cursor-pointer ${store.activeLink === 'Etat' ? 'bg-blue-700' : ''}`}
+            onClick={() => setDropdownOpen(!dropdownOpen())}
           >
             <i class="fa-solid fa-bullseye"></i>
             <span>Etat</span>
-        </A>
+            <i class={`fas fa-chevron-down transition-transform duration-300 ${dropdownOpen() ? 'transform rotate-180' : ''}`}></i>
+          </div>
+          {dropdownOpen() && (
+            <div class="absolute left-0 w-full bg-blue-700">
+              <A
+                href="/etat/caisse"
+                class="block py-3 pl-12 hover:bg-blue-800 transition-colors duration-300"
+                onClick={() => {
+                  setStore('activeLink', "Etat");
+                  setDropdownOpen(false);
+                }}
+              >
+                Etat caisse
+              </A>
+              <A
+                href="/etat/credit"
+                class="block py-3 pl-12 hover:bg-blue-800 transition-colors duration-300"
+                onClick={() => {
+                  setStore('activeLink', "Etat");
+                  setDropdownOpen(false);
+                }}
+              >
+                Etat credit
+              </A>
+            </div>
+          )}
+        </div>
         <div class="py-3 bg-blue-600 flex gap-4 text-white font-bold w-full items-center justify-center cursor-pointer hover:bg-blue-700 transition duration-300">
           <i class="fa-solid fa-arrow-up-from-bracket"></i>
-          <label for="participation-file">  Choose a File
+          <label for="participation-file">
+            Choose a File
             <input type="file" id="participation-file" name="file" class="hidden" onChange={excelUploader} />
           </label>
         </div>
