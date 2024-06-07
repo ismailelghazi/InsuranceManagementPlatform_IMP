@@ -66,6 +66,7 @@ class HistoryModel(_database.Base):
     numero = _sql.Column(_sql.String)
     reste_amount = _sql.Column(_sql.Float)  # Renamed this column
     reglement_amount = _sql.Column(_sql.Float)  # Renamed this column
+    date_reglement = _sql.Column(_sql.Date)
 
     assure = _orm.relationship("AssureModel", back_populates="history")
     product = _orm.relationship("ProductModel", back_populates="history")

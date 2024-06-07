@@ -136,7 +136,7 @@ class HistoryBase(_pydantic.BaseModel):
     description: Optional[str] = None  # A detailed description of the change
     reste_amount: Optional[float] = None
     numero : Optional[str] = None
-    date_reglement: Optional[str]=None
+    date_reglement: Optional[dt.date]=None
     # The remaining amount after the change, renamed
     reglement_amount: Optional[float] = None  # The amount of the current reglement, renamed
 

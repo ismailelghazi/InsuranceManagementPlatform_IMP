@@ -92,11 +92,11 @@ function IndexProduct() {
         );
 
         if (startDate) {
-            filtered = filtered.filter(product => new Date(product.Date_effet) >= new Date(startDate));
+            filtered = filtered.filter(product => new Date(product.Date_Emission) >= new Date(startDate));
         }
 
         if (endDate) {
-            filtered = filtered.filter(product => new Date(product.Date_effet) <= new Date(endDate));
+            filtered = filtered.filter(product => new Date(product.Date_Emission) <= new Date(endDate));
         }
 
         setFilteredProducts(filtered);
