@@ -33,11 +33,11 @@ class ProductModel(_database.Base):
     Date_Emission= _sql.Column(_sql.Date)
     Matricule = _sql.Column(_sql.String)
     Prime_Totale = _sql.Column(_sql.Float)
+    # Compagnieassurance = _sql.Column(_sql.String)
     assure_id = _sql.Column(_sql.String, _sql.ForeignKey('Assure.Cin'))
     assure = _orm.relationship("AssureModel", back_populates="products")
     reglements = _orm.relationship("ReglementModel", back_populates="product")
     history = _orm.relationship("HistoryModel", back_populates="product")
-
 
 
 class ReglementModel(_database.Base):
