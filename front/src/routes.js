@@ -40,6 +40,12 @@ let routes = [
     {
         path:"/logout",
         component:lazy(()=>import('./Pages/Logout'))
+    },  {
+        path:"/etat/caisse",
+        component:lazy(()=>import('./Pages/Logout'))
+    },  {
+        path:"/etat/credit",
+        component:lazy(()=>import('./Pages/Logout'))
     },
 ];
 
