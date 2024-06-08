@@ -42,10 +42,10 @@ let routes = [
         component:lazy(()=>import('./Pages/Logout'))
     },  {
         path:"/etat/caisse",
-        component:lazy(()=>import('./Pages/Logout'))
+        component:lazy(()=>import('./Pages/caisse'))
     },  {
         path:"/etat/credit",
-        component:lazy(()=>import('./Pages/Logout'))
+        component:lazy(()=>import('./Pages/credit'))
     },
 ];
 

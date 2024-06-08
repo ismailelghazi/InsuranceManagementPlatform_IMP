@@ -19,6 +19,9 @@ from fastapi import Depends
 from fastapi import HTTPException, Depends, APIRouter
 from sqlalchemy.orm import Session
 import models, schemas, services
+import database as _database
+
+
 app = _fastapi.FastAPI()
 
 
@@ -511,3 +514,25 @@ def delete_reglement(reglement_id: int, db: Session = Depends(services.get_db)):
     db.commit()            # Commit changes
 
     return reglement
+
+
+@app.get("/reglements/", response_model=List[schemas.ReglementDetails])
+def read_reglements( db: Session = Depends(services.get_db)):
+    reglements = db.query(models.ReglementModel).all()
+    reglement_details = []
+
+    for reglement in reglements:
+        product = db.query(models.ProductModel).filter(models.ProductModel.id == reglement.Product_id).first()
+        assure = db.query(models.AssureModel).filter(models.AssureModel.Cin == product.assure_id).first()
+
+        reglement_detail = schemas.ReglementDetails(
+            date_de_reglement=reglement.Date_de_reglement,
+            police=product.Police,
+            nom_assure=assure.Assure_name,
+            montant_reglement=reglement.Reglement,
+            type_reglement=reglement.Type_de_reglement
+        )
+
+        reglement_details.append(reglement_detail)
+
+    return reglement_details
