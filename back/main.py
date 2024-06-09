@@ -516,7 +516,7 @@ def delete_reglement(reglement_id: int, db: Session = Depends(services.get_db)):
     return reglement
 
 
-@app.get("/reglements/", response_model=List[schemas.ReglementDetails])
+@app.get("/api/reglements- caisse/", response_model=List[schemas.ReglementDetails])
 def read_reglements( db: Session = Depends(services.get_db)):
     reglements = db.query(models.ReglementModel).all()
     reglement_details = []
@@ -537,7 +537,7 @@ def read_reglements( db: Session = Depends(services.get_db)):
 
     return reglement_details
 
-@app.get("/reglements-credit/", response_model=List[schemas.ReglementCreditDetails])
+@app.get("/api/reglements-credit/", response_model=List[schemas.ReglementCreditDetails])
 def read_reglements_credit(db: Session = Depends(services.get_db)):
     reglements = db.query(models.ReglementModel).all()
     reglement_credit_details = []
