@@ -517,7 +517,7 @@ def delete_reglement(reglement_id: int, db: Session = Depends(services.get_db)):
 
 
 
-@app.get("/api/reglements- caisse/", response_model=List[schemas.ReglementDetails])
+@app.get("/api/reglements-caisse/", response_model=List[schemas.ReglementDetails])
 def read_reglements( db: Session = Depends(services.get_db)):
     reglements = db.query(models.ReglementModel).all()
     reglement_details = []

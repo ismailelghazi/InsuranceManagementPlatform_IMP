@@ -30,8 +30,12 @@ let routes = [
         component:lazy(()=> import('./Pages/reglement'))
     },
     {
-        path:"/etat",
-        component:lazy(()=>import('./Pages/etat'))
+        path:"/etat/caisse",
+        component:lazy(()=>import('./Pages/caisse'))
+    },
+    {
+        path:"/etat/credit",
+        component:lazy(()=>import('./Pages/credit'))
     },
     {
         path:"/details/:cin",
@@ -40,14 +44,6 @@ let routes = [
     {
         path:"/logout",
         component:lazy(()=>import('./Pages/Logout'))
-    },
-    {
-        path:"/etat/caisse",
-        component:lazy(()=>import('./Pages/caisse'))
-    },
-    {
-        path:"/etat/credit",
-        component:lazy(()=>import('./Pages/credit'))
     },
 ];
 
