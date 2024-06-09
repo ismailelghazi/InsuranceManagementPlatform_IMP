@@ -536,3 +536,32 @@ def read_reglements( db: Session = Depends(services.get_db)):
         reglement_details.append(reglement_detail)
 
     return reglement_details
+
+@app.get("/reglements-credit/", response_model=List[schemas.ReglementCreditDetails])
+def read_reglements_credit(db: Session = Depends(services.get_db)):
+    reglements = db.query(models.ReglementModel).all()
+    reglement_credit_details = []
+
+    assure_primes = {}
+    for product in db.query(models.ProductModel).all():
+        if product.assure_id not in assure_primes:
+            assure_primes[product.assure_id] = 0
+        assure_primes[product.assure_id] += product.Prime_Totale
+
+    for reglement in reglements:
+        product = db.query(models.ProductModel).filter(models.ProductModel.id == reglement.Product_id).first()
+        assure = db.query(models.AssureModel).filter(models.AssureModel.Cin == product.assure_id).first()
+
+        if product and assure:
+            reglement_credit_detail = schemas.ReglementCreditDetails(
+                etat_credit=reglement.Etat,
+                date_emission=product.Date_Emission,
+                police=product.Police,
+                nom_assure=assure.Assure_name,
+                total_prime_totale=assure_primes[assure.Cin],
+                montant_reglement=reglement.Reglement,
+                reste=reglement.Reste
+            )
+            reglement_credit_details.append(reglement_credit_detail)
+
+    return reglement_credit_details
