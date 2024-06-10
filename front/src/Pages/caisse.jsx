@@ -10,6 +10,7 @@ function EtatCaisse() {
    const [currentPage, setCurrentPage] = createSignal(1);
    const [startDate, setStartDate] = createSignal('');
    const [endDate, setEndDate] = createSignal('');
+   const [filter, setFilter] = createSignal('all');
    const itemsPerPage = 12;
 
    createEffect(() => {
