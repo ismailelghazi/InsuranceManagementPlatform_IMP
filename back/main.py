@@ -28,7 +28,7 @@ app = _fastapi.FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://python-fastapi-react.vercel.app","http://127.0.0.1:3000","*","https://python-fastapi-react-p5sicidex-ismailelghs-projects.vercel.app"],
+    allow_origins=["https://python-fastapi-react.vercel.app","http://127.0.0.1:3000"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
