@@ -430,15 +430,15 @@ import pydantic as _pydantic
 from typing import Optional
 
 class BasicProductInfo(_pydantic.BaseModel):
-    id: int
-    cin: str
-    nom_assure: str
-    prime_totale: float
+    id: int=None
+    cin: str=None
+    nom_assure: str=None
+    prime_totale: float=None
     reste: Optional[float] = None
-    matricule: str
+    matricule: str=None
     reglement: Optional[str] = None
     type_de_reglement: Optional[str] = None
-    Etat: Optional[str]
+    Etat: Optional[str]=None
 
 @app.get("/api/reglements/assure/{cin}", response_model=List[BasicProductInfo])
 def get_reglement_by_cin(cin: str, db: Session = Depends(_services.get_db)):
@@ -516,15 +516,19 @@ def delete_reglement(reglement_id: int, db: Session = Depends(services.get_db)):
     return reglement
 
 
-
 @app.get("/api/reglements-caisse/", response_model=List[schemas.ReglementDetails])
-def read_reglements( db: Session = Depends(services.get_db)):
+def read_reglements(db: Session = Depends(services.get_db)):
     reglements = db.query(models.ReglementModel).all()
     reglement_details = []
 
     for reglement in reglements:
         product = db.query(models.ProductModel).filter(models.ProductModel.id == reglement.Product_id).first()
+        if product is None:
+            raise HTTPException(status_code=404, detail=f"Product with ID {reglement.Product_id} not found")
+
         assure = db.query(models.AssureModel).filter(models.AssureModel.Cin == product.assure_id).first()
+        if assure is None:
+            raise HTTPException(status_code=404, detail=f"Assure with CIN {product.assure_id} not found")
 
         reglement_detail = schemas.ReglementDetails(
             date_de_reglement=reglement.Date_de_reglement,
@@ -539,31 +543,30 @@ def read_reglements( db: Session = Depends(services.get_db)):
     return reglement_details
 
 
-@app.get("/api/reglements-credit/", response_model=List[schemas.ReglementCreditDetails])
+@app.get("/api/reglements-credit/", response_model=List[schemas.ReglementDetails])
 def read_reglements_credit(db: Session = Depends(services.get_db)):
     reglements = db.query(models.ReglementModel).all()
-    reglement_credit_details = []
-
-    assure_primes = {}
-    for product in db.query(models.ProductModel).all():
-        if product.assure_id not in assure_primes:
-            assure_primes[product.assure_id] = 0
-        assure_primes[product.assure_id] += product.Prime_Totale
+    reglement_details = []
 
     for reglement in reglements:
         product = db.query(models.ProductModel).filter(models.ProductModel.id == reglement.Product_id).first()
+        if product is None:
+            # Log the error if necessary, and skip to the next reglement
+            continue
+
         assure = db.query(models.AssureModel).filter(models.AssureModel.Cin == product.assure_id).first()
+        if assure is None:
+            # Log the error if necessary, and skip to the next reglement
+            continue
 
-        if product and assure:
-            reglement_credit_detail = schemas.ReglementCreditDetails(
-                etat_credit=reglement.Etat,
-                date_emission=product.Date_Emission,
-                police=product.Police,
-                nom_assure=assure.Assure_name,
-                total_prime_totale=assure_primes[assure.Cin],
-                montant_reglement=reglement.Reglement,
-                reste=reglement.Reste
-            )
-            reglement_credit_details.append(reglement_credit_detail)
+        reglement_detail = schemas.ReglementDetails(
+            date_de_reglement=reglement.Date_de_reglement,
+            police=product.Police,
+            nom_assure=assure.Assure_name,
+            montant_reglement=reglement.Reglement,
+            type_reglement=reglement.Type_de_reglement
+        )
 
-    return reglement_credit_details
+        reglement_details.append(reglement_detail)
+
+    return reglement_details

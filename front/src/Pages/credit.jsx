@@ -56,14 +56,39 @@ function EtatCredit() {
     const generatePDF = () => {
         const doc = new jsPDF();
         doc.setFontSize(12);
-        doc.text("Credits List", 14, 15);
 
+        // Add logo
+        const imgData = 'data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg=='; // Placeholder base64 string
+        doc.addImage(imgData, 'PNG', 10, 10, 30, 30); // Position and size of the logo
+
+        // Add title
+        doc.setFontSize(20);
+        doc.text("Credits List", 50, 20);
+
+        // Add subtitle
+        doc.setFontSize(12);
+        doc.text("Detailed credit report", 50, 28);
+
+        // Add some space before the table
+        doc.setFontSize(12);
+        doc.text("Generated on: " + new Date().toLocaleString(), 50, 36);
+
+        // Add table
         const headers = ["Etat Credit", "Date Emission", "Police", "Nom Assure", "Total Prime Totale", "Montant Reglement", "Reste"];
-        const data = paginatedCredits().map(item => [item.etat_credit, item.date_emission, item.police, item.nom_assure, item.total_prime_totale, item.montant_reglement, item.reste]);
+        const data = paginatedCredits().map(item => [
+            item.etat_credit,
+            item.date_emission,
+            item.police,
+            item.nom_assure,
+            item.total_prime_totale.toFixed(2), // Format to 2 decimal places
+            item.montant_reglement,
+            item.reste
+        ]);
+
         doc.autoTable({
             head: [headers],
             body: data,
-            startY: 20,
+            startY: 50, // Adjusted to account for logo and title
             theme: 'grid',
             styles: { textColor: [44, 62, 80], font: 'helvetica', fontStyle: 'bold' },
             columnStyles: { 0: { cellWidth: 'auto' } }
@@ -108,7 +133,7 @@ function EtatCredit() {
                             <button onClick={generatePDF}>Generate PDF</button>
                         </div>
                     </div>
-                    
+
                     <For each={paginatedCredits()}>
                         {(item) => (
                             <div class="grid py-2 px-4 border-b border-gray-200 gap-y-8 grid-cols-1 md:grid-cols-7">
