@@ -108,7 +108,7 @@ function EtatCredit() {
                             <button onClick={generatePDF}>Generate PDF</button>
                         </div>
                     </div>
-
+                    
                     <For each={paginatedCredits()}>
                         {(item) => (
                             <div class="grid py-2 px-4 border-b border-gray-200 gap-y-8 grid-cols-1 md:grid-cols-7">
