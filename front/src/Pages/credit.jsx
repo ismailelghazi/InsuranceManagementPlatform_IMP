@@ -8,6 +8,7 @@ function EtatCredit() {
     const [credits, setCredits] = createSignal(null);
     const [searchQuery, setSearchQuery] = createSignal('');
     const [filteredCredits, setFilteredCredits] = createSignal([]);
+    const [filter, setFilter] = createSignal('all');
     const [headersCount, setHeadersCount] = createSignal(0);
     const [currentPage, setCurrentPage] = createSignal(1);
     const [startDate, setStartDate] = createSignal('');
@@ -58,9 +59,7 @@ function EtatCredit() {
         doc.setFontSize(12);
 
         // Add logo
-        const imgData = 'data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg=='; // Placeholder base64 string
-        doc.addImage(imgData, 'PNG', 10, 10, 30, 30); // Position and size of the logo
-
+       
         // Add title
         doc.setFontSize(20);
         doc.text("Credits List", 50, 20);
@@ -80,7 +79,7 @@ function EtatCredit() {
             item.date_emission,
             item.police,
             item.nom_assure,
-            item.total_prime_totale.toFixed(2), // Format to 2 decimal places
+            //item.total_prime_totale.toFixed(2), // Format to 2 decimal places
             item.montant_reglement,
             item.reste
         ]);
@@ -96,7 +95,22 @@ function EtatCredit() {
 
         doc.save("credits_list.pdf");
     };
+    const filterDetails = (val) => {
+        let filtered = credits() ;
+        console.log(filtered,filteredCredits())
+       if (val !== 'all') {
+            filtered = filtered.filter(credit => credit.etat === val);
+       }
+       if (searchQuery()) {
+           filtered = filtered.filter(credit =>
+               credit.nom_assure.toLowerCase().includes(searchQuery().toLowerCase()) ||
+               credit.cin.toLowerCase().includes(searchQuery().toLowerCase())
+           );
+       }
+       setFilteredCredits(filtered);
+    };
 
+   
     return (
         <div class="flex w-screen h-screen bg-gray-100 overflow-x-hidden">
             <Navbar />
@@ -105,7 +119,7 @@ function EtatCredit() {
                 <div class="bg-white shadow-md w-11/12 rounded-lg p-6 mr-12">
                     <div class="flex flex-col md:flex-row justify-between items-center mb-4">
                         <h2 class="text-xl md:text-3xl font-semibold text-gray-800 mb-4 md:mb-0">Credits List</h2>
-                        <div class="flex items-center">
+                        <div class="flex items-center gap-2">
                             <input
                                 type="text"
                                 placeholder="Search"
@@ -130,37 +144,49 @@ function EtatCredit() {
                                 onInput={(e) => setEndDate(e.target.value)}
                                 onChange={() => filterCredits(searchQuery(), startDate(), endDate())}
                             />
-                            <button onClick={generatePDF}>Generate PDF</button>
+                            <select class="py-2 px-3 border border-gray-300 rounded-lg" value={filter()} onChange={(e) => filterDetails(e.target.value)}>
+                                <option value="all">All</option>
+                                <option value="solder">Solder</option>
+                                <option value="encour">Encour</option>
+                            </select>
+                            <i onClick={generatePDF} class="fa-solid fa-file-arrow-down fa-2xl"></i>
                         </div>
                     </div>
+            <div class="table-content-product min-w-full">
+                           <div class="table-head grid bg-gray-200 text-gray-700 font-semibold py-2 px-4 rounded-t-lg hidden md:grid"
+                               style="grid-template-columns: repeat(6, 1fr);">
+                               <span class="col-span-1">Date de Reglement</span>
+                               <span class="col-span-1">Police</span>
+                               <span class="col-span-1">Nom Assure</span>
+                               <span class="col-span-1">Montant Reglement</span>
+                               <span class="col-span-1">Type Reglement</span>
+                               <span class="col-span-1">Etat</span>
+                           </div>
+                           <div class="table-body overflow-y-scroll max-h-[600px] styled-scrollbar">
+                               <For each={paginatedCredits()}>
+                                   {(item) => (
+                                       <div class="grid py-2 px-4 border-b border-gray-200 gap-y-8 grid-cols-1 md:grid-cols-6">
+                                           <div class="md:hidden font-semibold">Date de Reglement</div>
+                                           <div class="col-span-1 truncate">{item.date_de_reglement}</div>
 
-                    <For each={paginatedCredits()}>
-                        {(item) => (
-                            <div class="grid py-2 px-4 border-b border-gray-200 gap-y-8 grid-cols-1 md:grid-cols-7">
-                                <div class="md:hidden font-semibold">Etat Credit</div>
-                                <div class="col-span-1 truncate">{item.etat_credit}</div>
+                                           <div class="md:hidden font-semibold">Police</div>
+                                           <div class="col-span-1 truncate">{item.police}</div>
 
-                                <div class="md:hidden font-semibold">Date Emission</div>
-                                <div class="col-span-1 truncate">{item.date_emission}</div>
+                                           <div class="md:hidden font-semibold">Nom Assure</div>
+                                           <div class="col-span-1 truncate">{item.nom_assure}</div>
 
-                                <div class="md:hidden font-semibold">Police</div>
-                                <div class="col-span-1 truncate">{item.police}</div>
+                                           <div class="md:hidden font-semibold">Montant Reglement</div>
+                                           <div class="col-span-1 truncate">{item.montant_reglement}</div>
 
-                                <div class="md:hidden font-semibold">Nom Assure</div>
-                                <div class="col-span-1 truncate">{item.nom_assure}</div>
+                                           <div class="md:hidden font-semibold">Type Reglement</div>
+                                           <div class="col-span-1 truncate">{item.type_reglement}</div>
 
-                                <div class="md:hidden font-semibold">Total Prime Totale</div>
-                                <div class="col-span-1 truncate">{item.total_prime_totale}</div>
-
-                                <div class="md:hidden font-semibold">Montant Reglement</div>
-                                <div class="col-span-1 truncate">{item.montant_reglement}</div>
-
-                                <div class="md:hidden font-semibold">Reste</div>
-                                <div class="col-span-1 truncate">{item.reste}</div>
-                            </div>
-                        )}
-                    </For>
-
+                                           <div class="col-span-1 truncate">{item.etat}</div>
+                                       </div>
+                                   )}
+                               </For>
+                           </div>
+                       </div>
                     <Show when={filteredCredits().length > itemsPerPage}>
                         <div class="flex justify-between mt-4">
                             <button

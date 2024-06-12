@@ -23,7 +23,7 @@
     "@solidjs/router": "^0.13.3",
     "dotenv": "^16.4.5",
     "framer-motion": "^11.2.9",
-    "jspdf": "^2.3.1",
+    "jspdf": "^2.5.1",
     "jspdf-autotable": "^3.8.2",
     "solid-js": "^1.8.11",
     "sweetalert2": "^11.11.0"

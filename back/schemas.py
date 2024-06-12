@@ -154,23 +154,24 @@ class HistoryCreate(_pydantic.BaseModel):
 
 
 class ReglementDetails(_pydantic.BaseModel):
-    date_de_reglement: Optional[dt.date]=None
-    police: str=None
-    nom_assure: str=None
-    montant_reglement: float=None
-    type_reglement: str=None
+    date_de_reglement : Optional[dt.date]=None
+    police : Optional[str]=None
+    nom_assure : Optional[str]=None
+    montant_reglement : Optional[float]=None
+    type_reglement : Optional[str]=None
+    etat : Optional[str]=None
 
     class Config:
         orm_mode = True
 
 class ReglementCreditDetails(_pydantic.BaseModel):
-    etat_credit: str=None
+    etat_credit: Optional[str]=None
     date_emission: Optional[dt.date]=None
-    police: str=None
-    nom_assure: str=None
-    total_prime_totale: float=None
-    montant_reglement: float=None
-    reste: float=None
+    police: Optional[str]=None
+    nom_assure: Optional[str]=None
+    total_prime_totale: Optional[float]=None
+    montant_reglement: Optional[float]=None
+    reste: Optional[float]=None
 
     class Config:
         orm_mode = True

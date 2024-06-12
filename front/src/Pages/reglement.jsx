@@ -41,9 +41,9 @@ function IndexReglement() {
     return (
         <div class="flex w-full min-h-screen bg-gray-100 overflow-x-hidden">
             <Navbar />
-            <div class="dashboard-assurer-container w-full h-full p-4 md:p-8">
+            <div class="dashboard-assurer-container w-full h-full  pl-16 py-24">
                 <h1 class="text-3xl md:text-5xl text-blue-900 font-bold mb-8">Reglement Management</h1>
-                <div class="bg-white shadow-md w-full rounded-lg p-6 mb-8">
+                <div class="bg-white shadow-md w-11/12 rounded-lg p-6 mb-8">
                     <div class="flex flex-col md:flex-row justify-between items-center mb-4">
                         <h2 class="text-xl md:text-3xl font-semibold text-gray-800 mb-4 md:mb-0">Reglement List</h2>
                         <div class="flex items-center">
@@ -64,7 +64,7 @@ function IndexReglement() {
                                 <span class="col-span-1">CIN</span>
                                 <span class="col-span-1">Nom Assurer</span>
                             </div>
-                            <div class="table-body">
+                            <div class="table-body max-h-[600px]">
                                 <For each={paginatedAssures()}>
                                     {(item) => (
                                         <div class="grid py-2 px-4 border-b border-gray-200 gap-y-4 grid-cols-1 md:grid-cols-2 cursor-pointer"
