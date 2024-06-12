@@ -73,15 +73,15 @@ function EtatCredit() {
         doc.text("Generated on: " + new Date().toLocaleString(), 50, 36);
 
         // Add table
-        const headers = ["Etat Credit", "Date Emission", "Police", "Nom Assure", "Total Prime Totale", "Montant Reglement", "Reste"];
+        const headers = ["Etat Credit", "Date Reglement", "Police", "Nom Assure","Type Reglement","Montant Reglement"];
         const data = paginatedCredits().map(item => [
-            item.etat_credit,
-            item.date_emission,
+            item.etat,
+            item.date_de_reglement,
             item.police,
             item.nom_assure,
+            item.type_reglement,
             //item.total_prime_totale.toFixed(2), // Format to 2 decimal places
-            item.montant_reglement,
-            item.reste
+            item.montant_reglement
         ]);
 
         doc.autoTable({
