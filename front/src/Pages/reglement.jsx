@@ -39,7 +39,7 @@ function IndexReglement() {
     const totalPages = () => Math.ceil(filteredAssures().length / itemsPerPage);
 
     return (
-        <div class="flex w-full min-h-screen bg-gray-100 overflow-x-hidden">
+        <div class="flex w-screen h-screen bg-gray-100 overflow-hidden">
             <Navbar />
             <div class="dashboard-assurer-container w-full h-full  pl-16 py-24">
                 <h1 class="text-3xl md:text-5xl text-blue-900 font-bold mb-8">Reglement Management</h1>

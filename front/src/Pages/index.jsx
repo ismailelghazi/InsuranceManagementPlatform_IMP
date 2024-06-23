@@ -74,7 +74,7 @@ function IndexAssure() {
     };
 
     return (
-        <div class="flex flex-col md:flex-row w-full min-h-screen bg-gray-100 overflow-x-hidden">
+        <div class="flex w-screen h-screen bg-gray-100 overflow-hidden">
             <Navbar />
             <div class="dashboard-assurer-container w-full h-full px-4 py-8 md:py-24 md:pl-16">
                 <h1 class="text-3xl md:text-5xl text-blue-900 font-bold mb-8">Assure Management</h1>
