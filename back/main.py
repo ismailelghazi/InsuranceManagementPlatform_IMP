@@ -525,12 +525,10 @@ def read_reglements(db: Session = Depends(services.get_db)):
         product = db.query(models.ProductModel).filter(models.ProductModel.id == reglement.Product_id).first()
         if product is None:
             continue
-            # raise HTTPException(status_code=404, detail=f"Product with ID {reglement.Product_id} not found")
 
         assure = db.query(models.AssureModel).filter(models.AssureModel.Cin == product.assure_id).first()
         if assure is None:
             continue
-            # raise HTTPException(status_code=404, detail=f"Assure with CIN {product.assure_id} not found")
 
         reglement_detail = schemas.ReglementDetails(
             date_de_reglement=reglement.Date_de_reglement,
@@ -538,7 +536,6 @@ def read_reglements(db: Session = Depends(services.get_db)):
             nom_assure=assure.Assure_name,
             montant_reglement=reglement.Reglement,
             type_reglement=reglement.Type_de_reglement,
-            #etat=reglement.Etat
         )
 
         reglement_details.append(reglement_detail)

@@ -74,18 +74,18 @@ function IndexAssure() {
     };
 
     return (
-        <div class="flex w-full min-h-screen bg-gray-100 overflow-x-hidden">
+        <div class="flex flex-col md:flex-row w-full min-h-screen bg-gray-100 overflow-x-hidden">
             <Navbar />
-            <div class="dashboard-assurer-container w-full h-full pl-16 py-24">
+            <div class="dashboard-assurer-container w-full h-full px-4 py-8 md:py-24 md:pl-16">
                 <h1 class="text-3xl md:text-5xl text-blue-900 font-bold mb-8">Assure Management</h1>
-                <div class="bg-white shadow-md w-11/12 rounded-lg p-6 mb-8">
+                <div class="bg-white shadow-md w-full rounded-lg p-4 md:p-6 mb-8">
                     <div class="flex flex-col md:flex-row justify-between items-center mb-4">
                         <h2 class="text-xl md:text-3xl font-semibold text-gray-800 mb-4 md:mb-0">Assures List</h2>
-                        <div class="flex items-center">
+                        <div class="flex items-center space-x-2 md:space-x-4">
                             <input
                                 type="text"
                                 placeholder="Search"
-                                class="py-2 px-3 border border-gray-300 rounded-lg mr-4"
+                                class="py-2 px-3 border border-gray-300 rounded-lg w-full md:w-auto"
                                 value={searchQuery()}
                                 onInput={(e) => setSearchQuery(e.target.value)}
                                 onKeyUp={() => filterAssures(searchQuery())}
@@ -97,24 +97,23 @@ function IndexAssure() {
                     </div>
                     <div class="overflow-auto max-h-[calc(100vh-300px)] styled-scrollbar">
                         <div class="min-w-full">
-                            <div class="grid bg-gray-200 text-gray-700 font-semibold py-2 px-4 rounded-t-lg hidden md:grid"
-                                style="grid-template-columns: repeat(3, 1fr);">
-                                <span class="col-span-1">CIN</span>
-                                <span class="col-span-1">Nom Assurer</span>
-                                <span class="col-span-1 text-center">Actions</span>
+                            <div class="hidden md:grid grid-cols-3 bg-gray-200 text-gray-700 font-semibold py-2 px-4 rounded-t-lg">
+                                <span>CIN</span>
+                                <span>Nom Assurer</span>
+                                <span class="text-center">Actions</span>
                             </div>
                             <div class="table-body max-h-[600px]">
                                 <For each={filteredAssures()}>
                                     {(item) => (
-                                        <div class="grid py-2 px-4 border-b border-gray-200 gap-y-4 grid-cols-1 md:grid-cols-3 cursor-pointer">
+                                        <div class="grid grid-cols-1 md:grid-cols-3 py-2 px-4 border-b border-gray-200 gap-y-4 md:gap-y-0 cursor-pointer">
                                             <div class="md:hidden font-semibold">CIN</div>
-                                            <div class="col-span-1 truncate">{item.Cin}</div>
+                                            <div class="truncate">{item.Cin}</div>
 
                                             <div class="md:hidden font-semibold">Nom Assurer</div>
-                                            <div class="col-span-1 truncate">{item.Assure_name}</div>
+                                            <div class="truncate">{item.Assure_name}</div>
 
                                             <div class="md:hidden font-semibold">Actions</div>
-                                            <div class="col-span-1 text-center">
+                                            <div class="text-center">
                                                 <i class="fa-regular fa-trash-can cursor-pointer text-red-500 hover:text-red-700" data-cin={item.Cin} onClick={deleteAssure}></i>
                                             </div>
                                         </div>
@@ -127,7 +126,7 @@ function IndexAssure() {
                         <div class="absolute inset-0 flex flex-col items-center justify-center bg-gray-900 bg-opacity-50">
                             <div class="p-4 bg-gray-50 rounded-lg shadow-inner w-full max-w-lg">
                                 <form onSubmit={addAssureData}>
-                                    <div class="grid grid-cols-2 gap-4">
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                         <div class="flex flex-col">
                                             <label for="Cin" class="mb-1 font-medium text-gray-700">CIN</label>
                                             <input type="text" name="Cin" class="py-2 px-3 border border-gray-300 rounded-lg" required />
