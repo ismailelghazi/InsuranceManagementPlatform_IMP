@@ -176,12 +176,8 @@ async def read_Products_with_Assure_names(db: _orm.Session = _fastapi.Depends(_s
             id=product.id,
             Police=product.Police,
             Date_effet=str(product.Date_effet),
-            # Add other fields from ProductModel as needed
             Assure_name=assure_data.Assure_name,
-            # Acte=product.Acte,
-            # Date_fin=product.Date_fin,
             Fractionn=product.Fractionn,
-            # Contrat=product.Contrat,
             Date_Emission=product.Date_Emission,
             Matricule=product.Matricule,
             Attestation=product.Attestation,
@@ -195,9 +191,6 @@ async def read_Products_with_Assure_names(db: _orm.Session = _fastapi.Depends(_s
 async def create_upload_file(file: UploadFile):
     contents = await file.read()
     return contents  # Return the file contents
-##################################################################################################################################################################################################################
-
-
 
 @app.post("/upload", status_code=status.HTTP_201_CREATED)
 async def upload_file(file: UploadFile = File(...), db: _orm.Session = _fastapi.Depends(_services.get_db)):
