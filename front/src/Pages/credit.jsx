@@ -17,7 +17,7 @@ function EtatCredit() {
 
     createEffect(() => {
         if (credits() === null) {
-            fetcher('/reglements-credit', true, 'GET', null, {}, null)
+            fetcher('/reglements-credit', true, 'GET', null, null)
                 .then((res) => {
                     setCredits(res);
                     setFilteredCredits(res);

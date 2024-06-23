@@ -11,7 +11,7 @@ export async function fetcher(url,is_api,method,body=null,headers=null,navigate)
     return fetch(full_url,{
         method:method,
         body:body,
-        headers: body instanceof FormData? headers : headers ?? { "Content-Type": "application/json" },
+        headers: body instanceof FormData ? headers : headers ?? { "Content-Type": "application/json" },
         credentials:'include'
     }).then((response)=>{
         if(errStatuses.includes(response.status)){
