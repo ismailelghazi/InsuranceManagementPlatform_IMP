@@ -158,7 +158,7 @@ def delete_Assure(id: int, db: _orm.Session = _fastapi.Depends(_services.get_db)
     # Delete the Product object
     db.delete(Productdb)
     db.commit()
-@app.get("/Assure/{Cin}/Product/")
+@app.get("/Assure/{Cin}/Product")
 def get_Assure_Product(Cin: str, db: _orm.Session = _fastapi.Depends(_services.get_db)):
     Assure = db.query(models.AssureModel).filter(models.AssureModel.Cin == Cin).first()
     if Assure is None:
@@ -315,7 +315,7 @@ def read_reglement_by_cin(id: int, db: _orm.Session = _fastapi.Depends(_services
     return result
 
 
-@app.post("/api/reglements/", response_model=_schemas.ReglementBase)
+@app.post("/api/reglements", response_model=_schemas.ReglementBase)
 def create_reglement(reglement: _schemas.ReglementCreate, db: _orm.Session = _fastapi.Depends(_services.get_db)):
     product = db.query(models.ProductModel).filter(models.ProductModel.id == reglement.Product_id).first()
     if not product:
@@ -509,7 +509,7 @@ def delete_reglement(reglement_id: int, db: Session = Depends(services.get_db)):
     return reglement
 
 
-@app.get("/api/reglements-caisse/", response_model=List[schemas.ReglementDetails])
+@app.get("/api/reglements-caisse", response_model=List[schemas.ReglementDetails])
 def read_reglements(db: Session = Depends(services.get_db)):
     reglements = db.query(models.ReglementModel).all()
     reglement_details = []
@@ -536,7 +536,7 @@ def read_reglements(db: Session = Depends(services.get_db)):
     return reglement_details
 
 
-@app.get("/api/reglements-credit/", response_model=List[schemas.ReglementDetails])
+@app.get("/api/reglements-credit", response_model=List[schemas.ReglementDetails])
 def read_reglements_credit(db: Session = Depends(services.get_db)):
     reglements = db.query(models.ReglementModel).all()
     reglement_details = []

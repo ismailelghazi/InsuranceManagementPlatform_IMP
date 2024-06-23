@@ -42,7 +42,7 @@ const AddReglement = () => {
             Garant: isGarant() ? formData.get('garant_input') : null
         };
 
-        fetcher('/reglements/', true, 'POST', JSON.stringify(reglementData), { 'Content-Type': 'application/json' }, navigate)
+        fetcher('/reglements', true, 'POST', JSON.stringify(reglementData), { 'Content-Type': 'application/json' }, navigate)
             .then(() => {
                 Swal.fire('Success', 'Reglement added successfully', 'success');
                 navigate(`/product`);
