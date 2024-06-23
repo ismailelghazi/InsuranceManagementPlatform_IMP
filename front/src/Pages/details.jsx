@@ -232,9 +232,10 @@ function DetailsPage() {
                                         </select>
                                     </div>
                                     <div>
-                                        <label for="reglement" class="block text-sm font-medium text-gray-700">Reglement</label>
-                                        <input type="text" name="reglement" class="mt-1 py-2 px-3 border border-gray-300 rounded-lg w-full" />
+                                        <label for="matricule" class="block text-sm font-medium text-gray-700">Matricule</label>
+                                        <input type="text" name="matricule" value={reglement().matricule} disabled class="mt-1 py-2 px-3 border border-gray-300 rounded-lg w-full" />
                                     </div>
+                                    
                                     <Show when={doesRequireOperationID()}>
                                         <div>
                                             <label for="numero" class="block text-sm font-medium text-gray-700">N° d'operation</label>
@@ -242,12 +243,12 @@ function DetailsPage() {
                                         </div>
                                     </Show>
                                     <div>
-                                        <label for="reste" class="block text-sm font-medium text-gray-700">Reste</label>
-                                        <input type="text" name="reste" value={reglement().reste} disabled class="mt-1 py-2 px-3 border border-gray-300 rounded-lg w-full" />
+                                        <label for="reglement" class="block text-sm font-medium text-gray-700">Reglement</label>
+                                        <input type="text" name="reglement" class="mt-1 py-2 px-3 border border-gray-300 rounded-lg w-full" />
                                     </div>
                                     <div>
-                                        <label for="matricule" class="block text-sm font-medium text-gray-700">Matricule</label>
-                                        <input type="text" name="matricule" value={reglement().matricule} disabled class="mt-1 py-2 px-3 border border-gray-300 rounded-lg w-full" />
+                                        <label for="reste" class="block text-sm font-medium text-gray-700">Reste</label>
+                                        <input type="text" name="reste" value={reglement().reste} disabled class="mt-1 py-2 px-3 border border-gray-300 rounded-lg w-full" />
                                     </div>
                                     <div>
                                         <label for="etat" class="block text-sm font-medium text-gray-700">Etat</label>
