@@ -348,7 +348,7 @@ def create_reglement(reglement: _schemas.ReglementCreate, db: _orm.Session = _fa
         reglement_id=db_reglement.id,
         action="create",
         description=f"Created reglement with Reglement: {reglement.Reglement} and Reste: {new_reste}",
-        reste_amount=new_reste,        
+        reste_amount=new_reste,
         numero = reglement.numero,
         date_reglement=reglement.Date_de_reglement,
         reglement_amount=reglement.Reglement
@@ -357,6 +357,54 @@ def create_reglement(reglement: _schemas.ReglementCreate, db: _orm.Session = _fa
     db.add(db_history)
     db.commit()
     db.refresh(db_history)
+    return db_reglement
+
+@app.put("/api/reglements/{reglement_id}", response_model=_schemas.ReglementBase)
+def update_reglement(reglement_id: int, reglement_update: _schemas.ReglementUpdate, db: _orm.Session = _fastapi.Depends(_services.get_db)):
+    # Fetch the existing reglement
+    db_reglement = db.query(models.ReglementModel).filter(models.ReglementModel.id == reglement_id).first()
+    if not db_reglement:
+        raise HTTPException(status_code=404, detail="Reglement not found")
+
+    # Fetch the product related to the reglement
+    product = db.query(models.ProductModel).filter(models.ProductModel.id == db_reglement.Product_id).first()
+    if not product:
+        raise HTTPException(status_code=404, detail="Product not found")
+
+    # Fetch the last reglement for the product
+    last_reglement = db.query(models.ReglementModel).filter(
+        models.ReglementModel.Product_id == db_reglement.Product_id).order_by(models.ReglementModel.id.desc()).first()
+    last_reste = last_reglement.Reste if last_reglement else product.Prime_Totale
+    new_reste = last_reste - reglement_update.Reglement
+
+    # Update the existing reglement
+    db_reglement.Reste = new_reste
+    db_reglement.Garant = reglement_update.Garant
+    db_reglement.numero = reglement_update.numero
+    db_reglement.Reglement = reglement_update.Reglement
+    db_reglement.Date_de_reglement = reglement_update.Date_de_reglement
+    db_reglement.Type_de_reglement = reglement_update.Type_de_reglement
+    db_reglement.Etat = reglement_update.Etat
+
+    db.commit()
+    db.refresh(db_reglement)
+
+    # Create a new history record for the update action
+    db_history = models.HistoryModel(
+        assure_id=product.assure_id,
+        product_id=product.id,
+        reglement_id=db_reglement.id,
+        action="update",
+        description=f"Updated reglement with Reglement: {reglement_update.Reglement} and Reste: {new_reste}",
+        reste_amount=new_reste,
+        numero=reglement_update.numero,
+        date_reglement=reglement_update.Date_de_reglement,
+        reglement_amount=reglement_update.Reglement
+    )
+    db.add(db_history)
+    db.commit()
+    db.refresh(db_history)
+
     return db_reglement
 
 

@@ -175,3 +175,14 @@ class ReglementCreditDetails(_pydantic.BaseModel):
 
     class Config:
         orm_mode = True
+
+class ReglementUpdate(_pydantic.BaseModel):
+    Garant: Optional[str]
+    numero: Optional[str]
+    Reglement: Optional[float]
+    Date_de_reglement: Optional[dt.date]
+    Type_de_reglement: Optional[str]
+    Etat: Optional[str]
+
+    class Config:
+        from_attributes = True  # Updated configuration for Pydantic v2
