@@ -2,7 +2,7 @@ import { createEffect, createSignal } from "solid-js";
 import Navbar from "./Components/Navbar";
 import { fetcher } from "../Helpers/FetchHelper";
 import { useNavigate } from "@solidjs/router";
-import { AiOutlineDollarCircle,AiOutlineFileText,AiOutlineTeam  } from 'solid-icons/ai'; 
+import { AiOutlineDollarCircle, AiOutlineFileText, AiOutlineTeam } from 'solid-icons/ai'; 
 
 function Dashboard() {
     const [total, setTotal] = createSignal(null);
@@ -11,49 +11,45 @@ function Dashboard() {
     createEffect(() => {
         fetcher('/total', true, 'GET', null, null, navigate)
             .then((result) => setTotal(result))
-            .finally(() => console.log(total()));
+            .catch((error) => console.error('Error fetching data:', error));
     });
 
     return (
-        <div class="flex w-screen h-screen bg-gray-100">
+        <div class="flex flex-col md:flex-row w-screen h-screen bg-gray-100">
             <Navbar />
-            <div class="w-full h-full pt-16 bg-gray-50">
-                <div class="w-11/12 mx-auto">
-                    <h1 class="text-3xl font-bold text-gray-700 mb-8">Dashboard</h1>
+            <main class="w-full h-full pt-16 md:pt-0 bg-gray-50 overflow-y-auto">
+                <div class="w-11/12 mx-auto pt-24 ">
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                        {total() && (
+                        {total() ? (
                             <>
-                                <div class="bg-white shadow-lg rounded-lg p-6 hover:shadow-xl transition-shadow duration-300">
-                                    <div class="flex items-center mb-4">                                        
-                                        <AiOutlineTeam className="h-10 w-10 text-red-600" />
-
-                                        <div class="ml-4">
-                                            <span class="text-lg font-semibold text-gray-600">Total d'Assure</span>
-                                            <p class="text-2xl font-bold text-gray-800">{total().total_assures}</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="bg-white shadow-lg rounded-lg p-6 hover:shadow-xl transition-shadow duration-300">
-                                    <div class="flex items-center mb-4">
-                                        <AiOutlineFileText className="h-10 w-10 text-green-600" />
-                                        <div class="ml-4">
-                                            <span class="text-lg font-semibold text-gray-600">Total de Produit Issuée</span>
-                                            <p class="text-2xl font-bold text-gray-800">{total().total_products}</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="bg-white shadow-lg rounded-lg p-6 hover:shadow-xl transition-shadow duration-300">
-                                    <div class="flex items-center mb-4">
-                                        <div class="ml-4">                                        
-                                            <AiOutlineDollarCircle className="h-10 w-10 text-blue-600" />
-                                            <span class="text-lg font-semibold text-gray-600">Total Reglements</span>
-                                            <p class="text-2xl font-bold text-gray-800">{total().total_montant}</p>
-                                        </div>
-                                    </div>
-                                </div>
+                                <DashboardCard icon={<AiOutlineTeam className="h-10 w-10 text-red-600" />}
+                                    title="Total d'Assure"
+                                    value={total().total_assures} />
+                                <DashboardCard icon={<AiOutlineFileText className="h-10 w-10 text-green-600" />}
+                                    title="Total de Produit Issuée"
+                                    value={total().total_products} />
+                                <DashboardCard icon={<AiOutlineDollarCircle className="h-10 w-10 text-blue-600" />}
+                                    title="Total Reglements"
+                                    value={`${total().total_montant} DH`} />
                             </>
+                        ) : (
+                            <p class="text-gray-600 text-center">Loading...</p>
                         )}
                     </div>
+                </div>
+            </main>
+        </div>
+    );
+}
+
+function DashboardCard({ icon, title, value }) {
+    return (
+        <div class="bg-white shadow-lg rounded-lg p-6 hover:shadow-xl transition-shadow duration-300">
+            <div class="flex items-center mb-4">
+                {icon}
+                <div class="ml-4">
+                    <span class="text-lg font-semibold text-gray-600">{title}</span>
+                    <p class="text-2xl font-bold text-gray-800">{value}</p>
                 </div>
             </div>
         </div>
