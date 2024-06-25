@@ -3,6 +3,7 @@ import datetime
 import datetime as _dt
 from typing import Optional
 import datetime as dt
+from typing import List
 
 import pydantic as _pydantic
 
@@ -40,6 +41,9 @@ class AssureBase(_pydantic.BaseModel):
         orm_mode = True
         from_attributes = True
 
+class AssureList(_pydantic.BaseModel):
+    total_count: int
+    assures: List[AssureBase]
 
 class ProductBase(_pydantic.BaseModel):
     id: Optional[int] = None
@@ -56,7 +60,9 @@ class ProductBase(_pydantic.BaseModel):
     class Config:
         orm_mode = True
         from_attributes = True
-
+class ProductList(_pydantic.BaseModel):
+    total_count: int
+    products: List[ProductBase]
 
 class ProductCreate(_pydantic.BaseModel):
     Police: Optional[str] = None
