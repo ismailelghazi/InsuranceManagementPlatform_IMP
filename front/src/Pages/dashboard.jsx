@@ -25,8 +25,8 @@ function Dashboard() {
                             <>
                                 <div class="bg-white shadow-lg rounded-lg p-6 hover:shadow-xl transition-shadow duration-300">
                                     <div class="flex items-center mb-4">
-                                        <AiOutlineDollarCircle className="h-10 w-10 text-blue-600" />
                                         <div class="ml-4">
+                                            <AiOutlineTeam className="h-10 w-10 text-red-600" />
                                             <span class="text-lg font-semibold text-gray-600">Total d'Assure</span>
                                             <p class="text-2xl font-bold text-gray-800">{total().total_assures}</p>
                                         </div>
@@ -43,7 +43,7 @@ function Dashboard() {
                                 </div>
                                 <div class="bg-white shadow-lg rounded-lg p-6 hover:shadow-xl transition-shadow duration-300">
                                     <div class="flex items-center mb-4">
-                                        <AiOutlineTeam className="h-10 w-10 text-red-600" />
+                                        <AiOutlineDollarCircle className="h-10 w-10 text-blue-600" />
                                         <div class="ml-4">
                                             <span class="text-lg font-semibold text-gray-600">Total Reglements (Crédit/Caisse)</span>
                                             <p class="text-2xl font-bold text-gray-800">{total().total_montant}</p>

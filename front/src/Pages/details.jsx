@@ -28,7 +28,6 @@ function DetailsPage() {
                 .then((res) => {
                     setDetails(res);
                     setFilteredAssures(res); // Initialize filtered assures with the fetched details
-                    console.log(res);
                 })
                 .catch((err) => Swal.fire('Error', err.message, 'error'));
         }
@@ -109,7 +108,7 @@ function DetailsPage() {
         fetcher(`/reglements/product/${id}`, true, 'GET', null, {}, navigate)
             .then((res) => {
                 if (res.length > 0) {
-                    setReglement(res[0]);
+                    setReglement(res[res.length -1]);
                     setReglementId(id);
                     setReglementAction(true);
                 } else {
