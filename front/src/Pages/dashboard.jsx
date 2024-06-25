@@ -2,7 +2,7 @@ import { createEffect, createSignal } from "solid-js";
 import Navbar from "./Components/Navbar";
 import { fetcher } from "../Helpers/FetchHelper";
 import { useNavigate } from "@solidjs/router";
-import { AiOutlineDollarCircle, AiOutlineFileText, AiOutlineTeam } from 'react-icons/ai'; // Example icons from react-icons
+import { AiOutlineDollarCircle,AiOutlineFileText,AiOutlineTeam  } from 'solid-icons/ai'; // Example icons from react-icons
 
 function Dashboard() {
     const [total, setTotal] = createSignal(null);
