@@ -20,16 +20,16 @@ function Dashboard(){
                     <div class="flex w-full gap-8 rounded">
                         {total() && (
                             <>
-                                <div class="bg-gray-400 w-full rounded">
+                                <div class="bg-gray-400 w-1/2 rounded">
                                     <span class="text-3xl bold">Total d'Assure</span>
                                     <p>{total().total_assures}</p>
                                 </div>
-                                <div class="bg-gray-400 w-full rounded">
+                                <div class="bg-gray-400 w-1/2 rounded">
                                     <span class="text-3xl bold">Total de Produit Issuée</span>
                                     <p>{total().total_products}</p>
                                 </div>
 
-                                <div class="bg-gray-400 w-full rounded">
+                                <div class="bg-gray-400 w-1/2 rounded">
                                     <span class="text-3xl bold">Total Reglements (Credit/Caisse)</span>
                                     <p>{total().total_montant}</p>
                                 </div>
