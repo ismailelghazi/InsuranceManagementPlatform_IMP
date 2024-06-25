@@ -14,7 +14,10 @@ const AddReglement = () => {
 
     createEffect(() => {
         fetcher(`/reglements/product/${params.id}`, true, 'GET', null, {}, navigate)
-            .then((res) => { setReglement(res[res.length - 1]) })
+            .then((res) => {
+                setReglement(res[res.length - 1])
+                console.log(res)
+            })
             .catch((err) => Swal.fire('Error', err.message, 'error'));
     });
 
@@ -108,7 +111,7 @@ const AddReglement = () => {
                             </div> 
                             <div>
                                 <label for="reste" class="block text-sm font-medium text-gray-700">Reste</label>
-                                <input type="text" name="reste" value={reglement().reste} disabled class="mt-1 py-2 px-3 border border-gray-300 rounded-lg w-full" />
+                                <input type="text" name="reste" value={reglement().reste.toFixed(2)} disabled class="mt-1 py-2 px-3 border border-gray-300 rounded-lg w-full" />
                             </div>
                             <div>
                                 <label for="etat" class="block text-sm font-medium text-gray-700">Etat</label>
