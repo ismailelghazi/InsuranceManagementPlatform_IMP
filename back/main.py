@@ -623,12 +623,13 @@ async def get_total_counts(db: Session = Depends(services.get_db)):
     total_product_count = db.query(models.ProductModel).count()
     total_assure_count = db.query(models.AssureModel).count()
     total_montant_reglement = db.query(func.sum(models.ReglementModel.Reglement)).scalar() or 0
-
+    total_Prime_Totale = db.query(func.sum(models.ProductModel.Prime_Totale)).scalar() or 0
     # Round the total_montant_reglement to 2 decimal places
     total_montant = round(float(total_montant_reglement), 2)
-
+    total_Prime_ =round(float(total_Prime_Totale), 2)
     return schemas.TotalCounts(
         total_products=total_product_count,
         total_assures=total_assure_count,
-        total_montant=total_montant
+        total_montant=total_montant,
+        total_Prime_Totale=total_Prime_
     )
