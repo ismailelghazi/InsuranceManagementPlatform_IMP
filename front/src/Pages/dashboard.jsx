@@ -2,7 +2,7 @@ import { createEffect, createSignal } from "solid-js";
 import Navbar from "./Components/Navbar";
 import { fetcher } from "../Helpers/FetchHelper";
 import { useNavigate } from "@solidjs/router";
-import { AiOutlineDollarCircle,AiOutlineFileText,AiOutlineTeam  } from 'solid-icons/ai'; // Example icons from react-icons
+import { AiOutlineDollarCircle,AiOutlineFileText,AiOutlineTeam  } from 'solid-icons/ai'; 
 
 function Dashboard() {
     const [total, setTotal] = createSignal(null);
@@ -24,8 +24,9 @@ function Dashboard() {
                         {total() && (
                             <>
                                 <div class="bg-white shadow-lg rounded-lg p-6 hover:shadow-xl transition-shadow duration-300">
-                                    <div class="flex items-center mb-4">
-                                        <AiOutlineDollarCircle className="h-10 w-10 text-blue-600" />
+                                    <div class="flex items-center mb-4">                                        
+                                        <AiOutlineTeam className="h-10 w-10 text-red-600" />
+
                                         <div class="ml-4">
                                             <span class="text-lg font-semibold text-gray-600">Total d'Assure</span>
                                             <p class="text-2xl font-bold text-gray-800">{total().total_assures}</p>
@@ -43,9 +44,9 @@ function Dashboard() {
                                 </div>
                                 <div class="bg-white shadow-lg rounded-lg p-6 hover:shadow-xl transition-shadow duration-300">
                                     <div class="flex items-center mb-4">
-                                        <AiOutlineTeam className="h-10 w-10 text-red-600" />
-                                        <div class="ml-4">
-                                            <span class="text-lg font-semibold text-gray-600">Total Reglements (Crédit/Caisse)</span>
+                                        <div class="ml-4">                                        
+                                            <AiOutlineDollarCircle className="h-10 w-10 text-blue-600" />
+                                            <span class="text-lg font-semibold text-gray-600">Total Reglements</span>
                                             <p class="text-2xl font-bold text-gray-800">{total().total_montant}</p>
                                         </div>
                                     </div>
