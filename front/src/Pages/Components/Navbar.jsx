@@ -35,6 +35,14 @@ function Navbar() {
   return (
     <div class="bg-blue-600 text-white h-screen w-64 flex flex-col items-center py-8">
       <div class="flex flex-col items-center justify-center w-full h-full gap-4">
+        <A 
+        href="/dashboard"
+        class={`justify-center py-3 flex items-center gap-4 hover:bg-blue-800 w-full transition-colors duration-300 ${store.activeLink === 'Dashboard' ? 'bg-blue-700' : ''}`}
+        onClick={() => setStore('activeLink', "Dashboard")}
+        >
+            <i class="fa-solid fa-chart-line"></i>
+            <span>Dashboard</span>
+        </A>
         <A
           href="/assurer"
           class={`justify-center py-3 flex items-center gap-4 hover:bg-blue-800 w-full transition-colors duration-300 ${store.activeLink === 'Assure' ? 'bg-blue-700' : ''}`}

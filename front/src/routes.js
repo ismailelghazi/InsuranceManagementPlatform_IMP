@@ -10,6 +10,10 @@ let routes = [
         component: lazy(() => import('./Pages/Intro'))
     },
     {
+        path: "/dashboard",
+        component: lazy(() => import('./Pages/dashboard'))
+    },
+    {
         path: "/uploadExcel",
         component: lazy(() => import('./Pages/UploadExcel'))
     },
@@ -39,7 +43,7 @@ let routes = [
     },
     {
         path:"/details/:cin",
-        component:lazy(()=>import('./Pages/details.jsx'))
+        component:lazy(()=>import('./Pages/details'))
     },
     {
         path:"/logout",
