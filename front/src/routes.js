@@ -30,6 +30,10 @@ let routes = [
         component: lazy(() => import('./Pages/AddReglement'))
     },
     {
+        path: "/edit-reglement/:id",
+        component: lazy(() => import('./Pages/EditReglement'))
+    },
+    {
         path:"/reglement",
         component:lazy(()=> import('./Pages/reglement'))
     },

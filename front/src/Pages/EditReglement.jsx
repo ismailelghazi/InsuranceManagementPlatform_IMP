@@ -1,10 +1,11 @@
+
 import { Show, createEffect, createSignal } from "solid-js";
 import { useParams, useNavigate } from "@solidjs/router";
 import { fetcher } from '../Helpers/FetchHelper';
 import Swal from 'sweetalert2';
 import Navbar from "./Components/Navbar";
 
-const AddReglement = () => {
+const EditReglement = () => {
     const params = useParams();
     const navigate = useNavigate();
     const [reglement, setReglement] = createSignal(null);
@@ -59,7 +60,7 @@ const AddReglement = () => {
             <Navbar />
             <div class="flex flex-grow justify-center items-center py-12">
                 <div class="bg-white shadow-lg rounded-lg p-8 w-full max-w-4xl h-full overflow-auto">
-                    <h1 class="text-3xl font-bold text-blue-900 mb-8 text-center">Add Reglement</h1>
+                    <h1 class="text-3xl font-bold text-blue-900 mb-8 text-center">Edit Reglement</h1>
                     {reglement() && (
                         <form class="grid grid-cols-1 md:grid-cols-2 gap-6" onSubmit={submitReglement}>
                             <div>
@@ -140,5 +141,4 @@ const AddReglement = () => {
     );
 };
 
-export default AddReglement;
-    
+export default EditReglement;
