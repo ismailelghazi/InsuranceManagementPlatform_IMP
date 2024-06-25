@@ -135,6 +135,7 @@ class ReglementDetail(_pydantic.BaseModel):
 class TotalCounts(_pydantic.BaseModel):
     total_products: int
     total_assures: int
+    total_montant: float
 class HistoryBase(_pydantic.BaseModel):
     id: Optional[int] = None
     assure_id: Optional[str] = None  # The CIN of the Assure associated with the change

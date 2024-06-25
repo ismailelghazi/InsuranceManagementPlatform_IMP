@@ -9,6 +9,8 @@ from fastapi import FastAPI, UploadFile, File
 import pandas as pd
 import numpy as np
 import io
+from sqlalchemy import func  # Import func from sqlalchemy
+
 from fastapi.middleware.cors import CORSMiddleware
 import models
 import services as _services, schemas as _schemas
@@ -146,11 +148,7 @@ async def read_Product_list(Product : _schemas.ProductBase = _fastapi.Depends(_s
     Product_list = Product.query(models.ProductModel).all()  # get all
     return Product_list
 
-@app.get("/api/total", response_model=_schemas.TotalCounts)
-async def get_total_counts(db: Session = Depends(_services.get_db)):
-    total_product_count = db.query(models.ProductModel).count()
-    total_assure_count = db.query(models.AssureModel).count()
-    return _schemas.TotalCounts(total_products=total_product_count, total_assures=total_assure_count)
+
 
 @app.delete("/api/Product_delete/{id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_Assure(id: int, db: _orm.Session = _fastapi.Depends(_services.get_db)):
@@ -619,3 +617,18 @@ def read_reglements_credit(db: Session = Depends(services.get_db)):
 
     return reglement_details
 
+
+@app.get("/api/total", response_model=schemas.TotalCounts)
+async def get_total_counts(db: Session = Depends(services.get_db)):
+    total_product_count = db.query(models.ProductModel).count()
+    total_assure_count = db.query(models.AssureModel).count()
+    total_montant_reglement = db.query(func.sum(models.ReglementModel.Reglement)).scalar() or 0
+
+    # Round the total_montant_reglement to 2 decimal places
+    total_montant = round(float(total_montant_reglement), 2)
+
+    return schemas.TotalCounts(
+        total_products=total_product_count,
+        total_assures=total_assure_count,
+        total_montant=total_montant
+    )
