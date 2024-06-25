@@ -70,10 +70,7 @@ async def read_Assure_list(Assure : _schemas.AssureBase = _fastapi.Depends(_serv
     Assure_list = Assure.query(models.AssureModel).all()  # get all Assure
     return Assure_list
 
-@app.get("/api/Assure/total", response_model=int)
-async def get_total_assures(db: Session = Depends(_services.get_db)):
-    total_assure_count = db.query(models.AssureModel).count()
-    return total_assure_count
+
 
 @app.post("/api/Assure_create",response_model=_schemas.AssureBase,status_code=status.HTTP_201_CREATED)
 def create_Assure(Assure:_schemas.AssureCreat,db: _orm.Session = _fastapi.Depends(_services.get_db)):
@@ -149,10 +146,11 @@ async def read_Product_list(Product : _schemas.ProductBase = _fastapi.Depends(_s
     Product_list = Product.query(models.ProductModel).all()  # get all
     return Product_list
 
-@app.get("/api/Product/total", response_model=int)
-async def get_total_products(db: Session = Depends(_services.get_db)):
-    total_product_count = db.query(models.ProductModel).count()  # Count the total number of products
-    return total_product_count
+@app.get("/api/total", response_model=_schemas.TotalCounts)
+async def get_total_counts(db: Session = Depends(_services.get_db)):
+    total_product_count = db.query(models.ProductModel).count()
+    total_assure_count = db.query(models.AssureModel).count()
+    return _schemas.TotalCounts(total_products=total_product_count, total_assures=total_assure_count)
 
 @app.delete("/api/Product_delete/{id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_Assure(id: int, db: _orm.Session = _fastapi.Depends(_services.get_db)):
