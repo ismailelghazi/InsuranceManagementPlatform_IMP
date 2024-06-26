@@ -105,24 +105,19 @@ function DetailsPage() {
 
     const handleAdd = (id) => {
         navigate(`/add-reglement/${id}`)
-       // fetcher(`/reglements/product/${id}`, true, 'GET', null, {}, navigate)
-       //     .then((res) => {
-       //         if (res.length > 0) {
-       //             setReglement(res[res.length -1]);
-       //             setReglementId(id);
-       //             setReglementAction(true);
-       //         } else {
-       //             Swal.fire('Error', 'No reglement found for the product', 'error');
-       //         }
-       //     })
-       //     .catch((err) => Swal.fire('Error', err.message, 'error'));
     };
 
-    const handleEdit = (id) => {
-        if(history().length<1){
-            return Swal.fire('Error',"il y'ont a aucun reglement pour ce produit concernant cet assure", 'error');
-        }
-        return navigate(`/edit-reglement/${id}`)
+    const handleEdit = (id,cin) => {
+        fetcher(`/history/${cin}`, true, 'GET', null, {}, navigate)
+            .then((res)=>{
+                if(res.detail){
+                    return Swal.fire('Error',"il y'ont a aucun reglement pour ce produit concernant cet assure", 'error');
+                }else{
+                    return navigate(`/edit-reglement/${id}`)
+                }
+            })
+
+
         //console.log(id);
         // Implement your edit functionality here
     };

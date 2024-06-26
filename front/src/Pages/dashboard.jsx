@@ -33,8 +33,8 @@ function Dashboard() {
                                     title="Total Reglements"
                                     value={`${total().total_montant} DH`} />
                                 <DashboardCard icon={<FaSolidHandHoldingDollar className="h-10 w-10 text-blue-600" />}
-                                    title="Total Reglements"
-                                    value={`${total().total_montant} DH`} />
+                                    title="Total Primes"
+                                    value={`${total().total_Prime_Totale} DH`} />
                             </>
                         )}
                     </div>
