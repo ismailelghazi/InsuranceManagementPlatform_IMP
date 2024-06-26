@@ -19,8 +19,8 @@ function Dashboard() {
         <div class="flex flex-col md:flex-row w-screen h-screen bg-gray-100">
             <Navbar />
             <main class="w-full h-full pt-16 md:pt-0 bg-gray-50 overflow-y-auto">
-                <div class="mx-auto pt-24 ">
-                    <div class="flex w-11/12 mx-auto gap-8">
+                <div class="flex justify-center items-center h-full">
+                    <div class="grid grid-cols-2 w-8/12 mx-auto gap-8">
                         {total() &&(
                             <>
                                 <DashboardCard icon={<AiOutlineTeam className="h-10 w-10 text-red-600" />}
