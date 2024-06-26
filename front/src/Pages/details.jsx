@@ -105,7 +105,6 @@ function DetailsPage() {
 
     const handleAdd = (id) => {
         navigate(`/add-reglement/${id}`)
-<<<<<<< HEAD
        // fetcher(`/reglements/product/${id}`, true, 'GET', null, {}, navigate)
        //     .then((res) => {
        //         if (res.length > 0) {
@@ -119,13 +118,6 @@ function DetailsPage() {
        //     .catch((err) => Swal.fire('Error', err.message, 'error'));
     };
 
-    const handleEdit = (id) => {
-        if(history().length<1){
-            return Swal.fire('Error',"il y'ont a aucun reglement pour ce produit concernant cet assure", 'error');
-        }
-        return navigate(`/edit-reglement/${id}`)
-=======
-    };
 
     const handleEdit = (id,cin) => {
         fetcher(`/history/${cin}`, true, 'GET', null, {}, navigate)
@@ -136,11 +128,6 @@ function DetailsPage() {
                     return navigate(`/edit-reglement/${id}`)
                 }
             })
-
-
->>>>>>> 75620eb1425627d4de440053b68517f2498f324e
-        //console.log(id);
-        // Implement your edit functionality here
     };
 
     const handleShowHistory = (cin) => {
