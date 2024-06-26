@@ -3,6 +3,7 @@ import Navbar from "./Components/Navbar";
 import { fetcher } from "../Helpers/FetchHelper";
 import { useNavigate } from "@solidjs/router";
 import { AiOutlineDollarCircle, AiOutlineFileText, AiOutlineTeam } from 'solid-icons/ai'; 
+import { FaSolidHandHoldingDollar } from 'solid-icons/fa';
 
 function Dashboard() {
     const [total, setTotal] = createSignal(null);
@@ -18,8 +19,8 @@ function Dashboard() {
         <div class="flex flex-col md:flex-row w-screen h-screen bg-gray-100">
             <Navbar />
             <main class="w-full h-full pt-16 md:pt-0 bg-gray-50 overflow-y-auto">
-                <div class="w-11/12 mx-auto pt-24 ">
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="mx-auto pt-24 ">
+                    <div class="flex w-11/12 mx-auto gap-8">
                         {total() &&(
                             <>
                                 <DashboardCard icon={<AiOutlineTeam className="h-10 w-10 text-red-600" />}
@@ -29,6 +30,9 @@ function Dashboard() {
                                     title="Total de Produit Issuée"
                                     value={total().total_products} />
                                 <DashboardCard icon={<AiOutlineDollarCircle className="h-10 w-10 text-blue-600" />}
+                                    title="Total Reglements"
+                                    value={`${total().total_montant} DH`} />
+                                <DashboardCard icon={<FaSolidHandHoldingDollar className="h-10 w-10 text-blue-600" />}
                                     title="Total Reglements"
                                     value={`${total().total_montant} DH`} />
                             </>
@@ -42,7 +46,7 @@ function Dashboard() {
 
 function DashboardCard({ icon, title, value }) {
     return (
-        <div class="bg-white shadow-lg rounded-lg p-6 hover:shadow-xl transition-shadow duration-300">
+        <div class="bg-white shadow-lg w-full rounded-lg p-6 hover:shadow-xl transition-shadow duration-300">
             <div class="flex items-center mb-4">
                 {icon}
                 <div class="ml-4">

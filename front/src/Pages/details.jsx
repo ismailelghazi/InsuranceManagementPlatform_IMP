@@ -12,7 +12,6 @@ function DetailsPage() {
     const [searchQuery, setSearchQuery] = createSignal('');
     const [filter, setFilter] = createSignal('all');
     const [filteredAssures, setFilteredAssures] = createSignal([]);
-    const [reglementAction, setReglementAction] = createSignal(false);
     const [reglementId, setReglementId] = createSignal(null);
     const [reglement, setReglement] = createSignal(false);
     const [doesRequireOperationID, setDoesRequireOperationID] = createSignal(false);
@@ -105,21 +104,26 @@ function DetailsPage() {
     };
 
     const handleAdd = (id) => {
-        fetcher(`/reglements/product/${id}`, true, 'GET', null, {}, navigate)
-            .then((res) => {
-                if (res.length > 0) {
-                    setReglement(res[res.length -1]);
-                    setReglementId(id);
-                    setReglementAction(true);
-                } else {
-                    Swal.fire('Error', 'No reglement found for the product', 'error');
-                }
-            })
-            .catch((err) => Swal.fire('Error', err.message, 'error'));
+        navigate(`/add-reglement/${id}`)
+       // fetcher(`/reglements/product/${id}`, true, 'GET', null, {}, navigate)
+       //     .then((res) => {
+       //         if (res.length > 0) {
+       //             setReglement(res[res.length -1]);
+       //             setReglementId(id);
+       //             setReglementAction(true);
+       //         } else {
+       //             Swal.fire('Error', 'No reglement found for the product', 'error');
+       //         }
+       //     })
+       //     .catch((err) => Swal.fire('Error', err.message, 'error'));
     };
 
     const handleEdit = (id) => {
-        console.log(id);
+        if(history().length<1){
+            return Swal.fire('Error',"il y'ont a aucun reglement pour ce produit concernant cet assure", 'error');
+        }
+        return navigate(`/edit-reglement/${id}`)
+        //console.log(id);
         // Implement your edit functionality here
     };
 
@@ -182,8 +186,8 @@ function DetailsPage() {
                                         <div class="col-span-1">{detail.reste === 0 ? <span class="text-blue-600">{parseFloat(detail.reste).toFixed(2)}</span> : parseFloat(detail.reste).toFixed(2)}</div>
                                         <div class="col-span-1">{detail.Etat || 'N/A'}</div>
                                         <div class="col-span-1 flex gap-3 text-xl">
-                                            <i class="fa-solid fa-square-plus" onClick={() => { handleAdd(detail.id); setReglementAction(true); }}></i>
-                                            <i class="fa-solid fa-pen-to-square cursor-pointer" onClick={() => { handleEdit(detail.id); setReglementAction(true) }}></i>
+                                            <i class="fa-solid fa-square-plus" onClick={() => { handleAdd(detail.id);}}></i>
+                                            <i class="fa-solid fa-pen-to-square cursor-pointer" onClick={() => { handleEdit(detail.id,detail.cin); }}></i>
                                             <i
                                                 class="fa-regular fa-trash-can cursor-pointer text-red-500 hover:text-red-700"
                                                 onClick={() => handleDelete(detail.id)}
@@ -195,88 +199,6 @@ function DetailsPage() {
                         </div>
                     </div>
                 </div>
-                <Show when={reglement()}>
-                    <div class="absolute top-0 left-0 w-full h-full bg-blue-900/50 flex justify-center items-start pt-12">
-                        <div class="bg-white shadow-lg rounded-lg p-8 w-full max-w-4xl overflow-auto">
-                            <h1 class="text-3xl font-bold text-blue-900 mb-8 text-center">Add Reglement</h1>
-                            {reglement() && (
-                                <form class="grid grid-cols-1 md:grid-cols-2 gap-6" onSubmit={submitReglement}>
-                                    <div>
-                                        <label for="cin" class="block text-sm font-medium text-gray-700">CIN</label>
-                                        <input type="text" name="cin" value={reglement().cin} disabled class="mt-1 py-2 px-3 border border-gray-300 rounded-lg w-full" />
-                                    </div>
-                                    <div>
-                                        <label for="nom_assure" class="block text-sm font-medium text-gray-700">Nom Assure</label>
-                                        <input type="text" name="nom_assure" value={reglement().nom_assure} disabled class="mt-1 py-2 px-3 border border-gray-300 rounded-lg w-full" />
-                                    </div>
-                                    <div>
-                                        <label for="date_reglement" class="block text-sm font-medium text-gray-700">Date de reglement</label>
-                                        <input type="date" name="date_reglement" value={currentDate()} class="mt-1 py-2 px-3 border border-gray-300 rounded-lg w-full" />
-                                    </div>
-                                    <div>
-                                        <label for="prime_totale" class="block text-sm font-medium text-gray-700">Prime Total</label>
-                                        <input type="text" name="prime_totale" value={reglement().prime_totale} disabled class="mt-1 py-2 px-3 border border-gray-300 rounded-lg w-full" />
-                                    </div>
-                                    <div>
-                                        <label for="type_de_reglement" class="block text-sm font-medium text-gray-700">Type de reglement</label>
-                                        <select name="type_reglement" onChange={readReglement} class="mt-1 py-2 px-3 border border-gray-300 rounded-lg w-full">
-                                            <option value="null">Veuillez selectionner</option>
-                                            <option value="cheque">Cheque</option>
-                                            <option value="espece">Espece</option>
-                                            <option value="lettre_de_change">Lettre De Change</option>
-                                            <option value="virement">Virement</option>
-                                            <option value="banque">Banque</option>
-                                            <option value="credit">Credit</option>
-                                            <option value="autres">Autres</option>
-                                        </select>
-                                    </div>
-                                    <div>
-                                        <label for="matricule" class="block text-sm font-medium text-gray-700">Matricule</label>
-                                        <input type="text" name="matricule" value={reglement().matricule} disabled class="mt-1 py-2 px-3 border border-gray-300 rounded-lg w-full" />
-                                    </div>
-                                    
-                                    <Show when={doesRequireOperationID()}>
-                                        <div>
-                                            <label for="numero" class="block text-sm font-medium text-gray-700">N° d'operation</label>
-                                            <input type="text" name="numero" class="mt-1 py-2 px-3 border border-gray-300 rounded-lg w-full" />
-                                        </div>
-                                    </Show>
-                                    <div>
-                                        <label for="reglement" class="block text-sm font-medium text-gray-700">Reglement</label>
-                                        <input type="text" name="reglement" class="mt-1 py-2 px-3 border border-gray-300 rounded-lg w-full" />
-                                    </div>
-                                    <div>
-                                        <label for="reste" class="block text-sm font-medium text-gray-700">Reste</label>
-                                        <input type="text" name="reste" value={reglement().reste} disabled class="mt-1 py-2 px-3 border border-gray-300 rounded-lg w-full" />
-                                    </div>
-                                    <div>
-                                        <label for="etat" class="block text-sm font-medium text-gray-700">Etat</label>
-                                        <select name="etat" class="mt-1 py-2 px-3 border border-gray-300 rounded-lg w-full">
-                                            <option value="solder">Solder</option>
-                                            <option value="encour">Encour</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-span-1 md:col-span-2">
-                                        <label for="garant" class="block text-sm font-medium text-gray-700">Garant</label>
-                                        <input type="checkbox" name="garant" class="mt-1" onChange={(e) => setIsGarant(e.target.checked)} />
-                                    </div>
-                                    <Show when={isGarant()}>
-                                        <div class="col-span-1 md:col-span-2">
-                                            <label for="garant_input" class="block text-sm font-medium text-gray-700">Nom du Garant</label>
-                                            <input type="text" name="garant_input" class="mt-1 py-2 px-3 border border-gray-300 rounded-lg w-full" />
-                                        </div>
-                                    </Show>
-                                    <div class="mt-2 flex justify-between col-span-2">
-                                        <button type="submit" class="mt-4 py-2 px-4 bg-green-500 text-white rounded-lg">Ajoute</button>
-                                        <button type="button" class="mt-4 py-2 px-4 bg-red-500 text-white rounded-lg" onClick={() => setReglement(false)}>Cancel</button>
-
-                                    </div>
-                                    
-                                </form>
-                            )}
-                        </div>
-                    </div>
-                </Show>
                 <Show when={showHistoryModal()}>
                     <div class="absolute top-0 left-0 w-full h-full bg-gray-900/50 flex justify-center items-start pt-12">
                         <div class="bg-white shadow-lg rounded-lg p-8 w-full max-w-4xl overflow-auto">
