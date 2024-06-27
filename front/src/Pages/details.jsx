@@ -203,38 +203,47 @@ function DetailsPage() {
                     </div>
                 </div>
                 <Show when={showHistoryModal()}>
-                    <div class="absolute top-0 left-0 w-full h-full bg-gray-900/50 flex justify-center items-start pt-12">
-                        <div class="bg-white shadow-lg rounded-lg p-8 w-full max-w-4xl overflow-auto">
-                            <h1 class="text-3xl font-bold text-blue-900 mb-8 text-center">History</h1>
-                            <div class="grid grid-cols-8 gap-4 mb-4">
-                                <span class="col-span-1">ID</span>
-                                <span class="col-span-2">Action</span>
-                                <span class="col-span-2">Date</span>
-                                <span class="col-span-1">Reste Amount</span>
-                                <span class="col-span-1">Reglement Amount</span>
-                                <span class="col-span-1">Numero</span>
-                            </div>
-                            <For each={history()}>
-                                {(item) => (
-                                    <div class="grid grid-cols-8 gap-4 mb-2">
-                                        <span class="col-span-1">{item.id}</span>
-                                        <span class="col-span-2">{item.action}</span>
-                                        <span class="col-span-2">{item.date_reglement}</span>
-                                        <span class="col-span-1">{parseFloat(item.reste_amount).toFixed(2)}</span>
-                                        <span class="col-span-1">{parseFloat(item.reglement_amount).toFixed(2)}</span>
-                                        <span class="col-span-1">{item.numero}</span>
-                                    </div>
-                                )}
-                            </For>
-                            <button
-                                class="mt-4 py-2 px-4 bg-red-500 text-white rounded-lg"
-                                onClick={() => setShowHistoryModal(false)}
-                            >
-                                Close
-                            </button>
-                        </div>
-                    </div>
-                </Show>
+    <div className="fixed top-0 left-0 w-full h-full bg-gray-900/50 flex justify-center items-center">
+        <div className="bg-white shadow-lg rounded-lg p-8 w-full max-w-4xl overflow-auto">
+            <h1 className="text-3xl font-bold text-blue-900 mb-8 text-center">History</h1>
+            <div className="overflow-x-auto">
+                <table className="min-w-full divide-y divide-gray-200">
+                    <thead className="bg-gray-100">
+                        <tr className="text-sm font-bold text-gray-700">
+                            <th className="py-2 px-4">ID</th>
+                            <th className="py-2 px-4">Action</th>
+                            <th className="py-2 px-4">Date</th>
+                            <th className="py-2 px-4">Reste Amount</th>
+                            <th className="py-2 px-4">Reglement Amount</th>
+                            <th className="py-2 px-4">Numero</th>
+                        </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-200">
+                        {history().map((item, index) => (
+                            <tr key={index} className="text-sm text-gray-900">
+                                <td className="py-2 px-4">{item.id}</td>
+                                <td className="py-2 px-4">{item.action}</td>
+                                <td className="py-2 px-4">{item.date_reglement}</td>
+                                <td className="py-2 px-4">{parseFloat(item.reste_amount).toFixed(2)}</td>
+                                <td className="py-2 px-4">{parseFloat(item.reglement_amount).toFixed(2)}</td>
+                                <td className="py-2 px-4">{item.numero}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+            <div className="flex justify-center mt-8">
+                <button
+                    className="py-2 px-4 bg-red-500 text-white rounded-lg"
+                    onClick={() => setShowHistoryModal(false)}
+                >
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+</Show>
+
             </div>
         </div>
     );

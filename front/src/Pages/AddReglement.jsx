@@ -85,7 +85,7 @@ const AddReglement = () => {
                                     <option value="cheque">Cheque</option>
                                     <option value="espece">Espece</option>
                                     <option value="lettre_de_change">Lettre De Change</option>
-                                    <option value="lettre_de_change">Prélèvement</option>  
+                                    <option value="Prélèvement">Prélèvement</option>  
                                     <option value="virement">Virement</option>
                                     <option value="banque">Banque</option>
                                     <option value="credit">Credit</option>
