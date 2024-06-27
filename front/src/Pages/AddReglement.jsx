@@ -115,8 +115,9 @@ const AddReglement = () => {
                             <div>
                                 <label for="etat" class="block text-sm font-medium text-gray-700">Etat</label>
                                 <select name="etat" class="mt-1 py-2 px-3 border border-gray-300 rounded-lg w-full">
-                                    <option value="solder">Solder</option>
-                                    <option value="encour">Encour</option>
+                                    <option value="encour">Encour</option><
+                                        option value="solder">Solder</option>
+                                    
                                 </select>
                             </div>
                             <div class="col-span-1 md:col-span-2">

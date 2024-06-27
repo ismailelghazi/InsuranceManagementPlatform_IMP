@@ -172,6 +172,8 @@ class ReglementDetails(_pydantic.BaseModel):
     montant_reglement : Optional[float]=None
     type_reglement : Optional[str]=None
     etat : Optional[str]=None
+    reste_amount: Optional[float] = None
+
 
     class Config:
         orm_mode = True

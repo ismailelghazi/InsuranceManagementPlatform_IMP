@@ -1,4 +1,4 @@
-import { For, createEffect, createSignal } from "solid-js";
+import { For, createEffect, createSignal, Show } from "solid-js";
 import { fetcher } from '../Helpers/FetchHelper';
 import Navbar from "./Components/Navbar";
 import jsPDF from 'jspdf';
@@ -58,8 +58,6 @@ function EtatCredit() {
         const doc = new jsPDF();
         doc.setFontSize(12);
 
-        // Add logo
-       
         // Add title
         doc.setFontSize(20);
         doc.text("Credits List", 50, 20);
@@ -68,26 +66,25 @@ function EtatCredit() {
         doc.setFontSize(12);
         doc.text("Detailed credit report", 50, 28);
 
-        // Add some space before the table
+        // Add generated date
         doc.setFontSize(12);
         doc.text("Generated on: " + new Date().toLocaleString(), 50, 36);
 
         // Add table
-        const headers = ["Etat Credit", "Date Reglement", "Police", "Nom Assure","Type Reglement","Montant Reglement"];
+        const headers = ["Etat Credit", "Date Reglement", "Police", "Nom Assure", "Type Reglement", "Montant Reglement"];
         const data = paginatedCredits().map(item => [
             item.etat,
             item.date_de_reglement,
             item.police,
             item.nom_assure,
             item.type_reglement,
-            //item.total_prime_totale.toFixed(2), // Format to 2 decimal places
             item.montant_reglement
         ]);
 
         doc.autoTable({
             head: [headers],
             body: data,
-            startY: 50, // Adjusted to account for logo and title
+            startY: 50,
             theme: 'grid',
             styles: { textColor: [44, 62, 80], font: 'helvetica', fontStyle: 'bold' },
             columnStyles: { 0: { cellWidth: 'auto' } }
@@ -95,22 +92,20 @@ function EtatCredit() {
 
         doc.save("credits_list.pdf");
     };
+
     const filterDetails = (val) => {
-        let filtered = credits() ;
-        console.log(filtered,filteredCredits())
-       if (val !== 'all') {
+        let filtered = credits();
+        if (val !== 'all') {
             filtered = filtered.filter(credit => credit.etat === val);
-       }
-       if (searchQuery()) {
-           filtered = filtered.filter(credit =>
-               credit.nom_assure.toLowerCase().includes(searchQuery().toLowerCase()) ||
-               credit.cin.toLowerCase().includes(searchQuery().toLowerCase())
-           );
-       }
-       setFilteredCredits(filtered);
+        }
+        if (searchQuery()) {
+            filtered = filtered.filter(credit =>
+                credit.nom_assure.toLowerCase().includes(searchQuery().toLowerCase())
+            );
+        }
+        setFilteredCredits(filtered);
     };
 
-   
     return (
         <div class="flex w-screen h-screen bg-gray-100 overflow-hidden">
             <Navbar />
@@ -149,44 +144,49 @@ function EtatCredit() {
                                 <option value="solder">Solder</option>
                                 <option value="encour">Encour</option>
                             </select>
-                            <i onClick={generatePDF} class="fa-solid fa-file-arrow-down fa-2xl"></i>
+                            <button
+                                onClick={generatePDF}
+                                class="py-2 px-4 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+                            >
+                                Print
+                            </button>
                         </div>
                     </div>
-            <div class="table-content-product min-w-full">
-                           <div class="table-head grid bg-gray-200 text-gray-700 font-semibold py-2 px-4 rounded-t-lg hidden md:grid"
-                               style="grid-template-columns: repeat(6, 1fr);">
-                               <span class="col-span-1">Date de Reglement</span>
-                               <span class="col-span-1">Police</span>
-                               <span class="col-span-1">Nom Assure</span>
-                               <span class="col-span-1">Montant Reglement</span>
-                               <span class="col-span-1">Type Reglement</span>
-                               <span class="col-span-1">Etat</span>
-                           </div>
-                           <div class="table-body overflow-y-scroll max-h-[600px] styled-scrollbar">
-                               <For each={paginatedCredits()}>
-                                   {(item) => (
-                                       <div class="grid py-2 px-4 border-b border-gray-200 gap-y-8 grid-cols-1 md:grid-cols-6">
-                                           <div class="md:hidden font-semibold">Date de Reglement</div>
-                                           <div class="col-span-1 truncate">{item.date_de_reglement}</div>
+                    <div class="table-content-product min-w-full">
+                        <div class="table-head grid bg-gray-200 text-gray-700 font-semibold py-2 px-4 rounded-t-lg hidden md:grid"
+                             style="grid-template-columns: repeat(6, 1fr);">
+                            <span class="col-span-1">Date de Reglement</span>
+                            <span class="col-span-1">Police</span>
+                            <span class="col-span-1">Nom Assure</span>
+                            <span class="col-span-1">Montant Reglement</span>
+                            <span class="col-span-1">Type Reglement</span>
+                            <span class="col-span-1">Etat</span>
+                        </div>
+                        <div class="table-body overflow-y-scroll max-h-[600px] styled-scrollbar">
+                            <For each={paginatedCredits()}>
+                                {(item) => (
+                                    <div class="grid py-2 px-4 border-b border-gray-200 gap-y-8 grid-cols-1 md:grid-cols-6">
+                                        <div class="md:hidden font-semibold">Date de Reglement</div>
+                                        <div class="col-span-1 truncate">{item.date_de_reglement}</div>
 
-                                           <div class="md:hidden font-semibold">Police</div>
-                                           <div class="col-span-1 truncate">{item.police}</div>
+                                        <div class="md:hidden font-semibold">Police</div>
+                                        <div class="col-span-1 truncate">{item.police}</div>
 
-                                           <div class="md:hidden font-semibold">Nom Assure</div>
-                                           <div class="col-span-1 truncate">{item.nom_assure}</div>
+                                        <div class="md:hidden font-semibold">Nom Assure</div>
+                                        <div class="col-span-1 truncate">{item.nom_assure}</div>
 
-                                           <div class="md:hidden font-semibold">Montant Reglement</div>
-                                           <div class="col-span-1 truncate">{item.montant_reglement}</div>
+                                        <div class="md:hidden font-semibold">Montant Reglement</div>
+                                        <div class="col-span-1 truncate">{item.montant_reglement}</div>
 
-                                           <div class="md:hidden font-semibold">Type Reglement</div>
-                                           <div class="col-span-1 truncate">{item.type_reglement}</div>
+                                        <div class="md:hidden font-semibold">Type Reglement</div>
+                                        <div class="col-span-1 truncate">{item.type_reglement}</div>
 
-                                           <div class="col-span-1 truncate">{item.etat}</div>
-                                       </div>
-                                   )}
-                               </For>
-                           </div>
-                       </div>
+                                        <div class="col-span-1 truncate">{item.etat}</div>
+                                    </div>
+                                )}
+                            </For>
+                        </div>
+                    </div>
                     <Show when={filteredCredits().length > itemsPerPage}>
                         <div class="flex justify-between mt-4">
                             <button
