@@ -33,7 +33,6 @@ const EditReglement = () => {
     const submitReglement = (ev) => {
         ev.preventDefault();
         const formData = new FormData(ev.target);
-
         const reglementData = {
             Product_id: parseInt(params.id),
             Date_de_reglement: formData.get('date_reglement'),
@@ -44,8 +43,8 @@ const EditReglement = () => {
             Etat: formData.get('etat'),
             Garant: isGarant() ? formData.get('garant_input') : null
         };
-
-        fetcher('/reglements', true, 'POST', JSON.stringify(reglementData), { 'Content-Type': 'application/json' }, navigate)
+        console.log(params.id,reglementData)
+        fetcher( `/reglements/product/${params.id}`, true, 'PUT', JSON.stringify(reglementData), { 'Content-Type': 'application/json' }, navigate)
             .then(() => {
                 Swal.fire('Success', 'Reglement added successfully', 'success');
                 navigate(`/product`);
