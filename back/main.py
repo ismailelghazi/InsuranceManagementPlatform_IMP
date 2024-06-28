@@ -380,7 +380,7 @@ def update_reglement_by_product_id(product_id: int, reglement_update: schemas.Re
         raise HTTPException(status_code=404, detail="Product not found")
 
     last_reste = last_reglement.Reste if last_reglement else product.Prime_Totale
-    new_reste = last_reste - reglement_update.Reglement
+    new_reste = reglement_update.Reglement
 
     # Update the existing reglement
     last_reglement.Reste = new_reste
@@ -588,36 +588,45 @@ def read_reglements(db: Session = Depends(services.get_db)):
     return reglement_details
 
 
-@app.get("/api/reglements-credit", response_model=List[schemas.ReglementDetails])
+
+
+@app.get("/api/reglements-credit", response_model=schemas.ReglementCreditSummary)
 def read_reglements_credit(db: Session = Depends(services.get_db)):
     reglements = db.query(models.ReglementModel).all()
     reglement_details = []
 
+    total_prime_totale = 0.0
+    total_reste = 0.0
+
     for reglement in reglements:
         product = db.query(models.ProductModel).filter(models.ProductModel.id == reglement.Product_id).first()
         if product is None:
-            # Log the error if necessary, and skip to the next reglement
             continue
 
         assure = db.query(models.AssureModel).filter(models.AssureModel.Cin == product.assure_id).first()
         if assure is None:
-            # Log the error if necessary, and skip to the next reglement
             continue
 
-        reglement_detail = schemas.ReglementDetails(
-            date_de_reglement=reglement.Date_de_reglement,
+        total_prime_totale += product.Prime_Totale if product.Prime_Totale else 0.0
+        total_reste += reglement.Reste if reglement.Reste else 0.0
+
+        reglement_detail = schemas.ReglementCreditDetails(
+            date_emission=product.Date_Emission,
             police=product.Police,
             nom_assure=assure.Assure_name,
+            total_prime_totale=product.Prime_Totale,
             montant_reglement=reglement.Reglement,
-            type_reglement=reglement.Type_de_reglement,
-            etat=reglement.Etat,
-            reste_amoun=reglement.Reste
-
+            reste=reglement.Reste,
+            etat_credit=reglement.Etat
         )
 
         reglement_details.append(reglement_detail)
 
-    return reglement_details
+    return schemas.ReglementCreditSummary(
+        reglements=reglement_details,
+        total_prime_totale=total_prime_totale,
+        total_reste=total_reste
+    )
 
 
 @app.get("/api/total", response_model=schemas.TotalCounts)

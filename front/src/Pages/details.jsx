@@ -20,6 +20,8 @@ function DetailsPage() {
 
     const [history, setHistory] = createSignal([]);
     const [showHistoryModal, setShowHistoryModal] = createSignal(false);
+    const [currentPage, setCurrentPage] = createSignal(0);
+    const itemsPerPage = 8;
 
     createEffect(() => {
         if (params.cin) {
@@ -104,30 +106,18 @@ function DetailsPage() {
     };
 
     const handleAdd = (id) => {
-        navigate(`/add-reglement/${id}`)
-       // fetcher(`/reglements/product/${id}`, true, 'GET', null, {}, navigate)
-       //     .then((res) => {
-       //         if (res.length > 0) {
-       //             setReglement(res[res.length -1]);
-       //             setReglementId(id);
-       //             setReglementAction(true);
-       //         } else {
-       //             Swal.fire('Error', 'No reglement found for the product', 'error');
-       //         }
-       //     })
-       //     .catch((err) => Swal.fire('Error', err.message, 'error'));
+        navigate(`/add-reglement/${id}`);
     };
 
-
-    const handleEdit = (id,cin) => {
+    const handleEdit = (id, cin) => {
         fetcher(`/history/${cin}`, true, 'GET', null, {}, navigate)
-            .then((res)=>{
-                if(res.detail){
-                    return Swal.fire('Error',"il y'ont a aucun reglement pour ce produit concernant cet assure", 'error');
-                }else{
-                    return navigate(`/edit-reglement/${id}`)
+            .then((res) => {
+                if (res.detail) {
+                    return Swal.fire('Error', "il y'ont a aucun reglement pour ce produit concernant cet assure", 'error');
+                } else {
+                    return navigate(`/edit-reglement/${id}`);
                 }
-            })
+            });
     };
 
     const handleShowHistory = (cin) => {
@@ -137,6 +127,14 @@ function DetailsPage() {
                 setShowHistoryModal(true);
             })
             .catch((err) => Swal.fire('Error', err.message, 'error'));
+    };
+
+    const totalPages = Math.ceil(history().length / itemsPerPage);
+
+    const currentHistory = () => {
+        const start = currentPage() * itemsPerPage;
+        const end = start + itemsPerPage;
+        return history().slice(start, end);
     };
 
     return (
@@ -189,12 +187,9 @@ function DetailsPage() {
                                         <div class="col-span-1">{detail.reste === 0 ? <span class="text-blue-600">{parseFloat(detail.reste).toFixed(2)}</span> : parseFloat(detail.reste).toFixed(2)}</div>
                                         <div class="col-span-1">{detail.Etat || 'N/A'}</div>
                                         <div class="col-span-1 flex gap-3 text-xl">
-                                            <i class="fa-solid fa-square-plus" onClick={() => { handleAdd(detail.id);}}></i>
-                                            <i class="fa-solid fa-pen-to-square cursor-pointer" onClick={() => { handleEdit(detail.id,detail.cin); }}></i>
-                                            <i
-                                                class="fa-regular fa-trash-can cursor-pointer text-red-500 hover:text-red-700"
-                                                onClick={() => handleDelete(detail.id)}
-                                            ></i>
+                                            <i class="fa-solid fa-square-plus" onClick={() => handleAdd(detail.id)}></i>
+                                            <i class="fa-solid fa-pen-to-square text-yellow-500" onClick={() => handleEdit(detail.id, detail.cin)}></i>
+                                            <i class="fa-solid fa-square-minus cursor-pointer text-red-500 hover:text-red-700" onClick={() => handleDelete(detail.id)}></i>
                                         </div>
                                     </div>
                                 )}
@@ -203,50 +198,67 @@ function DetailsPage() {
                     </div>
                 </div>
                 <Show when={showHistoryModal()}>
-    <div className="fixed top-0 left-0 w-full h-full bg-gray-900/50 flex justify-center items-center">
-        <div className="bg-white shadow-lg rounded-lg p-8 w-full max-w-4xl overflow-auto">
-            <h1 className="text-3xl font-bold text-blue-900 mb-8 text-center">History</h1>
-            <div className="overflow-x-auto">
-                <table className="min-w-full divide-y divide-gray-200">
-                    <thead className="bg-gray-100">
-                        <tr className="text-sm font-bold text-gray-700">
-                            <th className="py-2 px-4">ID</th>
-                            <th className="py-2 px-4">Action</th>
-                            <th className="py-2 px-4">Date</th>
-                            <th className="py-2 px-4">Reste Amount</th>
-                            <th className="py-2 px-4">Reglement Amount</th>
-                            <th className="py-2 px-4">Numero</th>
-                        </tr>
-                    </thead>
-                    <tbody className="divide-y divide-gray-200">
-                        {history().map((item, index) => (
-                            <tr key={index} className="text-sm text-gray-900">
-                                <td className="py-2 px-4">{item.id}</td>
-                                <td className="py-2 px-4">{item.action}</td>
-                                <td className="py-2 px-4">{item.date_reglement}</td>
-                                <td className="py-2 px-4">{parseFloat(item.reste_amount).toFixed(2)}</td>
-                                <td className="py-2 px-4">{parseFloat(item.reglement_amount).toFixed(2)}</td>
-                                <td className="py-2 px-4">{item.numero}</td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            </div>
-            <div className="flex justify-center mt-8">
-                <button
-                    className="py-2 px-4 bg-red-500 text-white rounded-lg"
-                    onClick={() => setShowHistoryModal(false)}
-                >
-                    Close
-                </button>
-            </div>
-        </div>
-    </div>
-</Show>
-
+                    <div class="fixed inset-0 bg-gray-900/50 flex justify-center items-center p-4 sm:p-6 md:p-8">
+                        <div class="bg-white shadow-lg rounded-lg p-4 sm:p-6 md:p-8 w-full max-w-4xl overflow-auto">
+                            <h1 class="text-2xl sm:text-3xl font-bold text-blue-900 mb-4 sm:mb-6 md:mb-8 text-center">History</h1>
+                            <div class="overflow-x-auto">
+                                <table class="min-w-full divide-y divide-gray-200">
+                                    <thead class="bg-gray-100">
+                                        <tr class="text-xs sm:text-sm font-bold text-gray-700">
+                                            <th class="py-2 px-2 sm:px-4">ID</th>
+                                            <th class="py-2 px-2 sm:px-4">Action</th>
+                                            <th class="py-2 px-2 sm:px-4">Date</th>
+                                            <th class="py-2 px-2 sm:px-4">Reste Amount</th>
+                                            <th class="py-2 px-2 sm:px-4">Reglement Amount</th>
+                                            <th class="py-2 px-2 sm:px-4">Numero</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="divide-y divide-gray-200">
+                                        <For each={currentHistory()}>
+                                            {(item, index) => (
+                                                <tr key={index} class="text-xs sm:text-sm text-gray-900">
+                                                    <td class="py-2 px-2 sm:px-4">{item.id}</td>
+                                                    <td class="py-2 px-2 sm:px-4">{item.action}</td>
+                                                    <td class="py-2 px-2 sm:px-4">{item.date_reglement}</td>
+                                                    <td class="py-2 px-2 sm:px-4">{parseFloat(item.reste_amount).toFixed(2)}</td>
+                                                    <td class="py-2 px-2 sm:px-4">{parseFloat(item.reglement_amount).toFixed(2)}</td>
+                                                    <td class="py-2 px-2 sm:px-4">{item.numero}</td>
+                                                </tr>
+                                            )}
+                                        </For>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="flex justify-between mt-4 sm:mt-6 md:mt-8">
+                                <button
+                                    class="py-2 px-4 bg-gray-300 text-gray-700 rounded-lg"
+                                    disabled={currentPage() === 0}
+                                    onClick={() => setCurrentPage(currentPage() - 1)}
+                                >
+                                    Previous
+                                </button>
+                                <button
+                                    class="py-2 px-4 bg-gray-300 text-gray-700 rounded-lg"
+                                    disabled={currentPage() >= totalPages - 1}
+                                    onClick={() => setCurrentPage(currentPage() + 1)}
+                                >
+                                    Next
+                                </button>
+                            </div>
+                            <div class="flex justify-center mt-4 sm:mt-6 md:mt-8">
+                                <button
+                                    class="py-2 px-4 bg-red-500 text-white rounded-lg"
+                                    onClick={() => setShowHistoryModal(false)}
+                                >
+                                    Close
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </Show>
             </div>
         </div>
     );
 }
 
-export default DetailsPage; 
+export default DetailsPage;
