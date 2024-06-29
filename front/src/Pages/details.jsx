@@ -129,7 +129,7 @@ function DetailsPage() {
             .catch((err) => Swal.fire('Error', err.message, 'error'));
     };
 
-    const totalPages = Math.ceil(history().length / itemsPerPage);
+    const totalPages = () => Math.ceil(history().length / itemsPerPage);
 
     const currentHistory = () => {
         const start = currentPage() * itemsPerPage;
@@ -239,14 +239,14 @@ function DetailsPage() {
                                 </button>
                                 <button
                                     class="py-2 px-4 bg-gray-300 text-gray-700 rounded-lg"
-                                    disabled={currentPage() >= totalPages - 1}
+                                    disabled={currentPage() >= totalPages() - 1}
                                     onClick={() => setCurrentPage(currentPage() + 1)}
                                 >
                                     Next
                                 </button>
                             </div>
                             <div class="flex justify-center mt-4 sm:mt-6 md:mt-8">
-                                <button
+                                <button 
                                     class="py-2 px-4 bg-red-500 text-white rounded-lg"
                                     onClick={() => setShowHistoryModal(false)}
                                 >
