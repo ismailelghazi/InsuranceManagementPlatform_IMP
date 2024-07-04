@@ -419,7 +419,17 @@ def get_history_by_cin(cin: str, db: _orm.Session = _fastapi.Depends(_services.g
     if not history:
         raise HTTPException(status_code=404, detail="No history found for the given CIN")
     return history
+@app.delete("/api/history/{history_id}", response_model=_schemas.HistoryBase)
+def delete_history_by_id(history_id: int, db: _orm.Session = _fastapi.Depends(_services.get_db)):
+    history_entry = db.query(models.HistoryModel).filter(models.HistoryModel.id == history_id).first()
 
+    if not history_entry:
+        raise HTTPException(status_code=404, detail="History entry not found")
+
+    db.delete(history_entry)
+    db.commit()
+
+    return history_entry
 class BasicProductInfo(_schemas.ReglementDetail):
     reste: Union[None, float] = None
     reglement: Union[None, float] = None

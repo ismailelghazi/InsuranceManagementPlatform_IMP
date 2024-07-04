@@ -129,6 +129,23 @@ function DetailsPage() {
             .catch((err) => Swal.fire('Error', err.message, 'error'));
     };
 
+    const deleteHistory = async (historyId) => {
+        try {
+            const response = await fetcher(`/history/${historyId}`,true,'DELETE',null,{}, navigate);
+            console.log(response)
+            if (!response.detail) {
+                // Remove the deleted history from the state
+                setHistory(history().filter(historyItem => historyItem.id !== historyId));
+                Swal.fire('Success', 'History entry deleted successfully', 'success');
+            } else {
+                Swal.fire('Error', 'Failed to delete history entry', 'error');
+            }
+        } catch (error) {
+            console.error('Error deleting history entry:', error);
+            Swal.fire('Error', 'An error occurred while deleting the history entry', 'error');
+        }
+    };
+
     const totalPages = () => Math.ceil(history().length / itemsPerPage);
 
     const currentHistory = () => {
@@ -211,6 +228,7 @@ function DetailsPage() {
                                             <th class="py-2 px-2 sm:px-4">Reste Amount</th>
                                             <th class="py-2 px-2 sm:px-4">Reglement Amount</th>
                                             <th class="py-2 px-2 sm:px-4">Numero</th>
+                                            <th class="py-2 px-2 sm:px-4">Delete</th>
                                         </tr>
                                     </thead>
                                     <tbody class="divide-y divide-gray-200">
@@ -223,6 +241,14 @@ function DetailsPage() {
                                                     <td class="py-2 px-2 sm:px-4">{parseFloat(item.reste_amount).toFixed(2)}</td>
                                                     <td class="py-2 px-2 sm:px-4">{parseFloat(item.reglement_amount).toFixed(2)}</td>
                                                     <td class="py-2 px-2 sm:px-4">{item.numero}</td>
+                                                    <td class="py-2 px-2 sm:px-4">
+                                                        <button 
+                                                            class="py-1 px-2 bg-red-500 text-white rounded-lg"
+                                                            onClick={() => deleteHistory(item.id)}
+                                                        >
+                                                            Delete
+                                                        </button>
+                                                    </td>
                                                 </tr>
                                             )}
                                         </For>
