@@ -294,10 +294,13 @@ async def create_upload_file(file: UploadFile):
     contents = await file.read()
     return contents  # Return the file contents
 
-
+import logging
 @app.get("/api/reglements/{id}", response_model=List[_schemas.ReglementDetail])
-def read_reglement_by_cin(id: int, db: _orm.Session = _fastapi.Depends(_services.get_db)):
+def read_reglement_by_cin(id: int, db: _orm.Session = Depends(_services.get_db)):
+    logging.info(f"Received id: {id}")
     reglements = db.query(models.ReglementModel).join(models.ProductModel).join(models.AssureModel).filter(models.ProductModel.id == id).all()
+
+    logging.info(f"Queried reglements: {reglements}")
 
     if not reglements:
         raise HTTPException(status_code=404, detail="No reglements found for the given id")
@@ -306,16 +309,20 @@ def read_reglement_by_cin(id: int, db: _orm.Session = _fastapi.Depends(_services
     for reglement in reglements:
         product = reglement.product
         assure = product.assure
+        logging.info(f"Processing reglement: {reglement}")
         result.append(_schemas.ReglementDetail(
+            id=reglement.id,
             cin=assure.Cin,
             nom_assure=assure.Assure_name,
             prime_totale=product.Prime_Totale,
             reste=reglement.Reste,
             matricule=product.Matricule,
             reglement=reglement.Reglement,
-            type_de_reglement=reglement.Type_de_reglement
+            type_de_reglement=reglement.Type_de_reglement,
+            numero=reglement.numero
         ))
 
+    logging.info(f"Final result: {result}")
     return result
 
 
