@@ -10,6 +10,7 @@ function DetailsPage() {
 
     const [details, setDetails] = createSignal([]);
     const [searchQuery, setSearchQuery] = createSignal('');
+    const [idRegl,setIdRegl]=createSignal(0);
     const [filter, setFilter] = createSignal('all');
     const [filteredAssures, setFilteredAssures] = createSignal([]);
     const [reglementId, setReglementId] = createSignal(null);
@@ -25,12 +26,20 @@ function DetailsPage() {
 
     createEffect(() => {
         if (params.cin) {
-            fetcher(`/reglements/assure/${params.cin}`, true, 'GET', null, {}, navigate)
+            fetcher(`/reglements/assure/${params.cin}`, true, 'GET', null, {}, navigate).then((res)=>{
+                console.log(res[0].id)
+                setIdRegl(res[0].id);
+                return res[0].id
+            }).then((id)=>{
+                return fetcher(`/reglements/${id}`,true,'GET',null,{},navigate)
+            })
                 .then((res) => {
+                    console.log(res)
                     setDetails(res);
-                    setFilteredAssures(res); // Initialize filtered assures with the fetched details
+                    setFilteredAssures(res);
+                    // Initialize filtered assures with the fetched details
                 })
-                .catch((err) => Swal.fire('Error', err.message, 'error'));
+                //.catch((err) => Swal.fire('Error', err.message, 'error'))
         }
     });
 
@@ -86,36 +95,36 @@ function DetailsPage() {
         filterDetails();
     });
 
-    const handleDelete = (id) => {
-        const confirmation = confirm("Are you sure you want to delete this item?");
-        if (confirmation) {
-            fetcher(`/Product_delete/${id}`, true, 'DELETE', null, {}, navigate)
-                .then((res) => {
-                    if (res.ok) {
-                        setDetails(details().filter(detail => detail.id !== id));
-                        alert('Item deleted successfully');
-                        navigate('/reglements');
-                    } else {
-                        console.error('Failed to delete');
-                    }
-                })
-                .catch((error) => {
-                    console.error('Error:', error);
-                });
-        }
+    const handleDelete = () => {
+        //const confirmation = confirm("Are you sure you want to delete this item?");
+        //if (confirmation) {
+        //    fetcher(`/Product_delete/${idRegl()}`, true, 'DELETE', null, {}, navigate)
+        //        .then((res) => {
+        //            if (res.ok) {
+        //                setDetails(details().filter(detail => detail.id !== id));
+        //                alert('Item deleted successfully');
+        //                navigate('/reglements');
+        //            } else {
+        //                console.error('Failed to delete');
+        //            }
+        //        })
+        //        .catch((error) => {
+        //            console.error('Error:', error);
+        //        });
+        //}
     };
 
-    const handleAdd = (id) => {
-        navigate(`/add-reglement/${id}`);
+    const handleAdd = () => {
+        navigate(`/add-reglement/${idRegl()}`);
     };
 
-    const handleEdit = (id, cin) => {
+    const handleEdit = (id,cin) => {
         fetcher(`/history/${cin}`, true, 'GET', null, {}, navigate)
             .then((res) => {
                 if (res.detail) {
                     return Swal.fire('Error', "il y'ont a aucun reglement pour ce produit concernant cet assure", 'error');
                 } else {
-                    return navigate(`/edit-reglement/${id}`);
+                    return navigate(`/edit-reglement/${idRegl()}`);
                 }
             });
     };
