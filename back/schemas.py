@@ -180,7 +180,22 @@ class ReglementDetails(_pydantic.BaseModel):
 
     class Config:
         orm_mode = True
+class ReglementDetailss(_pydantic.BaseModel):
+    id: int
+    cin: str
+    nom_assure: str
+    prime_totale: float
+    reste: float
+    matricule: str
+    reglement: float
+    type_de_reglement: str
+    date_de_reglement: str
+    police: str
+    montant_reglement: float
+    type_reglement: str
 
+    class Config:
+        orm_mode = True
 class ReglementCreditDetails(_pydantic.BaseModel):
     etat_credit: Optional[str] = None
     date_emission: Optional[dt.date] = None

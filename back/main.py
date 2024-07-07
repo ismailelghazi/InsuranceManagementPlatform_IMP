@@ -10,6 +10,7 @@ import pandas as pd
 import numpy as np
 import io
 from sqlalchemy import func  # Import func from sqlalchemy
+import logging
 
 from fastapi.middleware.cors import CORSMiddleware
 import models
@@ -294,7 +295,6 @@ async def create_upload_file(file: UploadFile):
     contents = await file.read()
     return contents  # Return the file contents
 
-import logging
 @app.get("/api/reglements/{id}", response_model=List[_schemas.ReglementDetail])
 def read_reglement_by_cin(id: int, db: _orm.Session = Depends(_services.get_db)):
     logging.info(f"Received id: {id}")
@@ -579,7 +579,7 @@ def delete_reglement(reglement_id: int, db: Session = Depends(services.get_db)):
     return reglement
 
 
-@app.get("/api/reglements-caisse", response_model=List[schemas.ReglementDetails])
+@app.get("/api/reglements-caisse", response_model=List[schemas.ReglementDetailss])
 def read_reglements(db: Session = Depends(services.get_db)):
     reglements = db.query(models.ReglementModel).all()
     reglement_details = []
@@ -593,12 +593,19 @@ def read_reglements(db: Session = Depends(services.get_db)):
         if assure is None:
             continue
 
-        reglement_detail = schemas.ReglementDetails(
-            date_de_reglement=reglement.Date_de_reglement,
-            police=product.Police,
+        reglement_detail = schemas.ReglementDetailss(
+            id=reglement.id,
+            cin=assure.Cin,
             nom_assure=assure.Assure_name,
-            montant_reglement=reglement.Reglement,
-            type_reglement=reglement.Type_de_reglement,
+            prime_totale=product.Prime_Totale,
+            reste=reglement.Reste,
+            matricule=product.Matricule,
+            reglement=reglement.Reglement,
+            type_de_reglement=reglement.Type_de_reglement,
+            date_de_reglement=reglement.Date_de_reglement.strftime('%Y-%m-%d'),  # Convert to string
+            police=product.Police,
+            montant_reglement=reglement.Reglement,  # Assuming this is the correct field for montant_reglement
+            type_reglement=reglement.Type_de_reglement  # Assuming this is the correct field for type_reglement
         )
 
         reglement_details.append(reglement_detail)
