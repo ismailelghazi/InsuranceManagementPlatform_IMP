@@ -319,7 +319,8 @@ def read_reglement_by_cin(id: int, db: _orm.Session = Depends(_services.get_db))
             matricule=product.Matricule,
             reglement=reglement.Reglement,
             type_de_reglement=reglement.Type_de_reglement,
-            numero=reglement.numero
+            numero=reglement.numero,
+            Etat=reglement.Etat
         ))
 
     logging.info(f"Final result: {result}")
