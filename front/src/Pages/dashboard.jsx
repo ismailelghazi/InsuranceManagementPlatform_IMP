@@ -23,11 +23,12 @@ function Dashboard() {
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 w-full max-w-6xl">
                         {total() && (
                             <>
+                                <DashboardCard icon={<AiOutlineFileText class="h-10 w-10 text-green-600" />}
+
+                                    title="Total de Produit Issuée"
+                                    value={total().total_assures} />
                                 <DashboardCard icon={<AiOutlineTeam class="h-10 w-10 text-red-600" />}
                                     title="Total d'Assure"
-                                    value={total().total_assures} />
-                                <DashboardCard icon={<AiOutlineFileText class="h-10 w-10 text-green-600" />}
-                                    title="Total de Produit Issuée"
                                     value={total().total_products} />
                                 <DashboardCard icon={<AiOutlineDollarCircle class="h-10 w-10 text-blue-600" />}
                                     title="Total Reglements"
