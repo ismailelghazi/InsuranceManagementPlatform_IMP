@@ -14,11 +14,9 @@ const EditReglement = () => {
     const [currentDate, setCurrentDate] = createSignal(new Date().toISOString().split('T')[0]);
 
     createEffect(() => {
-        fetcher(`/reglements/product/${params.id}`, true, 'GET', null, {}, navigate)
-            .then((res) => {
-                setReglement(res[res.length - 1])
-            })
-            .catch((err) => Swal.fire('Error', err.message, 'error'));
+        const detail=JSON.parse(localStorage.getItem('detail'))
+        console.log(detail)
+        setReglement(detail)
     });
 
     const readReglement = function (ev) {

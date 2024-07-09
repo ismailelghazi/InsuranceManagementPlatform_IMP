@@ -39,7 +39,7 @@ function DetailsPage() {
                     setFilteredAssures(res);
                     // Initialize filtered assures with the fetched details
                 })
-                //.catch((err) => Swal.fire('Error', err.message, 'error'))
+                .catch((err) => Swal.fire('Error', err.message, 'error'))
         }
     });
 
@@ -95,35 +95,32 @@ function DetailsPage() {
         filterDetails();
     });
 
-    const handleDelete = () => {
-        //const confirmation = confirm("Are you sure you want to delete this item?");
-        //if (confirmation) {
-        //    fetcher(`/Product_delete/${idRegl()}`, true, 'DELETE', null, {}, navigate)
-        //        .then((res) => {
-        //            if (res.ok) {
-        //                setDetails(details().filter(detail => detail.id !== id));
-        //                alert('Item deleted successfully');
-        //                navigate('/reglements');
-        //            } else {
-        //                console.error('Failed to delete');
-        //            }
-        //        })
-        //        .catch((error) => {
-        //            console.error('Error:', error);
-        //        });
-        //}
+    const handleDelete = (id) => {
+        const confirmation = confirm("Are you sure you want to delete this item?");
+        if (confirmation) {
+            fetcher(`/reglements/${id}`, true, 'DELETE', null, {}, navigate)
+                .then(() => {
+                    setDetails(details().filter(detail => detail.id !== id));
+                    alert('Item deleted successfully');
+                    navigate('/reglement');
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
+        }
     };
 
     const handleAdd = () => {
         navigate(`/add-reglement/${idRegl()}`);
     };
 
-    const handleEdit = (id,cin) => {
+    const handleEdit = (id,cin,detail) => {
         fetcher(`/history/${cin}`, true, 'GET', null, {}, navigate)
             .then((res) => {
                 if (res.detail) {
                     return Swal.fire('Error', "il y'ont a aucun reglement pour ce produit concernant cet assure", 'error');
                 } else {
+                    localStorage.setItem('detail',JSON.stringify(detail));
                     return navigate(`/edit-reglement/${idRegl()}`);
                 }
             });
@@ -214,7 +211,7 @@ function DetailsPage() {
                                         <div class="col-span-1">{detail.Etat || 'N/A'}</div>
                                         <div class="col-span-1 flex gap-3 text-xl">
                                             <i class="fa-solid fa-square-plus" onClick={() => handleAdd(detail.id)}></i>
-                                            <i class="fa-solid fa-pen-to-square text-yellow-500" onClick={() => handleEdit(detail.id, detail.cin)}></i>
+                                            <i class="fa-solid fa-pen-to-square text-yellow-500" onClick={() => handleEdit(detail.id, detail.cin,detail)}></i>
                                             <i class="fa-solid fa-square-minus cursor-pointer text-red-500 hover:text-red-700" onClick={() => handleDelete(detail.id)}></i>
                                         </div>
                                     </div>
