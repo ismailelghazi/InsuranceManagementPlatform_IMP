@@ -32,7 +32,7 @@ function UploadExcel() {
 
             Uploader(file).then((response) => {
                 formData.append('file', new Blob([response]), file.name);
-                fetcher('upload', false, 'POST', formData, {}, navigate)
+                fetcher('/upload', false, 'POST', formData, {}, navigate)
                     .then(() => setUploaded(true))
                     .catch(() => {
                         // Revert optimistic update on failure
