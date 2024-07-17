@@ -33,12 +33,12 @@ function Navbar() {
   };
 
   return (
-    <div class="bg-blue-600 text-white h-screen w-64 flex flex-col items-center py-8">
+    <div class="bg-blue-600 text-white min-h-screen w-64 flex flex-col items-center py-8">
       <div class="flex flex-col items-center justify-center w-full h-full gap-4">
         <A 
-        href="/dashboard"
-        class={`justify-center py-3 flex items-center gap-4 hover:bg-blue-800 w-full transition-colors duration-300 ${store.activeLink === 'Dashboard' ? 'bg-blue-700' : ''}`}
-        onClick={() => setStore('activeLink', "Dashboard")}
+          href="/dashboard"
+          class={`justify-center py-3 flex items-center gap-4 hover:bg-blue-800 w-full transition-colors duration-300 ${store.activeLink === 'Dashboard' ? 'bg-blue-700' : ''}`}
+          onClick={() => setStore('activeLink', "Dashboard")}
         >
             <i class="fa-solid fa-chart-line"></i>
             <span>Dashboard</span>
@@ -77,7 +77,7 @@ function Navbar() {
             <i class={`fas fa-chevron-down transition-transform duration-300 ${dropdownOpen() ? 'transform rotate-180' : ''}`}></i>
           </div>
           {dropdownOpen() && (
-            <div class="absolute left-0 w-full bg-blue-700">
+            <div class="absolute left-0 w-full bg-blue-700 z-10">
               <A
                 href="/etat/caisse"
                 class="block py-3 pl-12 hover:bg-blue-800 transition-colors duration-300"
