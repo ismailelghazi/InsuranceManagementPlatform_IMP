@@ -88,7 +88,8 @@ function IndexProduct() {
             (product) =>
                 product.Police.toLowerCase().includes(query.toLowerCase()) ||
                 product.Matricule.toLowerCase().includes(query.toLowerCase()) ||
-                product.assure_id.toLowerCase().includes(query.toLowerCase())
+                product.assure_id.toLowerCase().includes(query.toLowerCase()) ||
+                product.Assure_name.toLowerCase().includes(query.toLowerCase()) // Include Assure_name in filter
         );
 
         if (startDate) {
@@ -151,13 +152,14 @@ function IndexProduct() {
                     <div class="styled-scrollbar">
                         <div class="table-content-product min-w-full">
                             <div class="table-head grid bg-gray-200 text-gray-700 font-semibold py-2 px-4 rounded-t-lg hidden md:grid"
-                                style="grid-template-columns: repeat(9, 1fr);">
+                                style="grid-template-columns: repeat(10, 1fr);"> {/* Adjusted column count */}
                                 <span class="col-span-1">ID</span>
                                 <span class="col-span-1">Police</span>
                                 <span class="col-span-1">Date Effet</span>
                                 <span class="col-span-1">Date Emission</span>
                                 <span class="col-span-1">Matricule</span>
                                 <span class="col-span-1">Assure ID</span>
+                                <span class="col-span-1">Assure Name</span> {/* New column for Assure_name */}
                                 <span class="col-span-1">Fractionn</span>
                                 <span class="col-span-1">Prime Totale</span>
                                 <span class="col-span-1">Actions</span>
@@ -165,7 +167,7 @@ function IndexProduct() {
                             <div class="table-body overflow-y-scroll max-h-[600px] styled-scrollbar">
                                 <For each={paginatedProducts()}>
                                     {(item) => (
-                                        <div class="grid py-2 px-4 border-b border-gray-200 gap-y-8 grid-cols-1 md:grid-cols-9">
+                                        <div class="grid py-2 px-4 border-b border-gray-200 gap-y-8 grid-cols-1 md:grid-cols-10"> {/* Adjusted column count */}
                                             <div class="md:hidden font-semibold">ID</div>
                                             <div class="col-span-1 truncate">{item.id}</div>
 
@@ -183,6 +185,9 @@ function IndexProduct() {
 
                                             <div class="md:hidden font-semibold">Assure ID</div>
                                             <div class="col-span-1 truncate">{item.assure_id}</div>
+
+                                            <div class="md:hidden font-semibold">Assure Name</div> {/* New column for Assure_name */}
+                                            <div class="col-span-1 truncate">{item.Assure_name}</div>
 
                                             <div class="md:hidden font-semibold">Fractionn</div>
                                             <div class="col-span-1 truncate">{item.Fractionn}</div>
@@ -255,8 +260,8 @@ function IndexProduct() {
                                             <input type="text" name="Matricule" class="py-2 px-3 border border-gray-300 rounded-lg" required />
                                         </div>
                                         <div class="flex flex-col">
-                                            <label for="Attestation" class="mb-1 font-medium text-gray-700">Attestation</label>
-                                            <input type="text" name="Attestation" class="py-2 px-3 border border-gray-300 rounded-lg" required />
+                                            <label for="Assure_name" class="mb-1 font-medium text-gray-700">Assure Name</label> {/* New input for Assure_name */}
+                                            <input type="text" name="Assure_name" class="py-2 px-3 border border-gray-300 rounded-lg" required />
                                         </div>
                                         <div class="flex flex-col">
                                             <label for="Prime_Totale" class="mb-1 font-medium text-gray-700">Prime Totale</label>

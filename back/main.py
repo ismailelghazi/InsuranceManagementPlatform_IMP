@@ -138,10 +138,22 @@ def create_Assure(product: _schemas.ProductCreate,db: _orm.Session = _fastapi.De
     return Productdb
 
 
-@app.get("/api/Product", response_model=List[_schemas.ProductBase])
-async def read_Product_list(Product : _schemas.ProductBase = _fastapi.Depends(_services.get_db)):
-    Product_list = Product.query(models.ProductModel).all()  # get all
-    return Product_list
+@app.get("/api/Product", response_model=List[schemas.ProductBase])
+async def read_Product_list(db: Session = Depends(services.get_db)):
+    Product_list = db.query(
+        models.ProductModel,
+        models.AssureModel.Assure_name
+    ).join(
+        models.AssureModel, models.ProductModel.assure_id == models.AssureModel.Cin
+    ).all()
+
+    return [
+        {
+            **product.__dict__,
+            'Assure_name': assure_name
+        }
+        for product, assure_name in Product_list
+    ]
 
 
 

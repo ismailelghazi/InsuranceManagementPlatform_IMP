@@ -50,6 +50,7 @@ class ProductBase(_pydantic.BaseModel):
     Date_effet: Optional[dt.date] = None
 
     Fractionn: Optional[str] = None
+    Assure_name: Optional[str]  # Add this line
 
     Date_Emission: Optional[dt.date] = None
     Matricule: Optional[str] = None
