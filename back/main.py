@@ -1,4 +1,5 @@
-
+# fastapi-jwt/main.py
+import datetime
 from typing import List,Union
 import fastapi as _fastapi
 import fastapi.security as _security
@@ -8,24 +9,26 @@ from fastapi import FastAPI, UploadFile, File
 import pandas as pd
 import numpy as np
 import io
-from sqlalchemy import func
+from sqlalchemy import func  # Import func from sqlalchemy
 import logging
+import uvicorn
 from fastapi.middleware.cors import CORSMiddleware
+import models
 import services as _services, schemas as _schemas
+from fastapi import HTTPException
 from typing import List
-
+from sqlalchemy.orm import Session
+from fastapi import Depends
 from fastapi import HTTPException, Depends, APIRouter
 from sqlalchemy.orm import Session
 import models, schemas, services
-
+import database as _database
 
 app = _fastapi.FastAPI()
 
-
-
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://python-fastapi-react.vercel.app","http://127.0.0.1:3000"],
+    allow_origins=["https://www.atlaassure.online/"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -675,3 +678,5 @@ async def get_total_counts(db: Session = Depends(services.get_db)):
         total_montant=total_montant,
         total_Prime_Totale=total_Prime_
     )
+if __name__ == '__main__':
+    uvicorn.run("main:app", reload = True , ssl_certfile='cert.crt', ssl_keyfile='key.key' , host='0.0.0.0', port=443)
