@@ -17,10 +17,12 @@ import schemas
 import services
 import database as _database
 
-# Initialize main application
+# -----------------------------
+# Application Setup and Middleware
+# -----------------------------
 app = FastAPI()
 
-# Configure CORS (adjust allowed origins as needed)
+# Configure CORS (allow only the specified origin)
 app.add_middleware(
     fastapi.middleware.cors.CORSMiddleware,
     allow_origins=["https://www.atlaassure.online/"],
@@ -29,19 +31,22 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Configure logger
+# Configure logging to output info messages
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
 
 # -----------------------------
-# Router for user authentication
+# User Authentication Endpoints
 # -----------------------------
 user_router = APIRouter(prefix="/api", tags=["users"])
 
-
 @user_router.post("/users", response_model=schemas.Token)
 async def create_user(user: schemas.UserCreate, db: orm.Session = Depends(services.get_db)):
-    """Register a new user and return a JWT token."""
+    """
+    Create a new user and return a JWT token.
+    - Check if email is already in use.
+    - If not, create user and generate token.
+    """
     db_user = await services.get_user_by_email(user.email, db)
     if db_user:
         raise HTTPException(status_code=400, detail="Email already in use")
@@ -54,7 +59,9 @@ async def generate_token(
     form_data: security.OAuth2PasswordRequestForm = Depends(),
     db: orm.Session = Depends(services.get_db),
 ):
-    """Authenticate user and generate JWT token."""
+    """
+    Authenticate user credentials and generate a JWT token.
+    """
     user = await services.authenticate_user(form_data.username, form_data.password, db)
     if not user:
         raise HTTPException(status_code=401, detail="Invalid Credentials")
@@ -63,62 +70,71 @@ async def generate_token(
 
 @user_router.get("/users/myprofile", response_model=schemas.User)
 async def get_my_profile(user: schemas.User = Depends(services.get_current_user)):
-    """Retrieve the current user's profile."""
+    """
+    Retrieve the profile of the current authenticated user.
+    """
     return user
 
-
 # -----------------------------
-# Router for Assure endpoints
+# Assure Endpoints
 # -----------------------------
 assure_router = APIRouter(prefix="/api", tags=["assure"])
 
-
 @assure_router.get("/Assure", response_model=List[schemas.AssureBase])
 async def list_assures(db: orm.Session = Depends(services.get_db)):
-    """Return a list of all Assure entries."""
+    """
+    Retrieve a list of all Assure records.
+    """
     assures = db.query(models.AssureModel).all()
     return assures
 
 
 @assure_router.post("/Assure_create", response_model=schemas.AssureBase, status_code=status.HTTP_201_CREATED)
 def create_assure(assure: schemas.AssureCreat, db: orm.Session = Depends(services.get_db)):
-    """Create a new Assure record."""
+    """
+    Create a new Assure record.
+    """
+    # Create an Assure instance using the provided data
     assure_db = models.AssureModel(Cin=assure.Cin, Assure_name=assure.Assure_name)
     db.add(assure_db)
-    db.commit()
-    db.refresh(assure_db)
+    db.commit()  # Commit the transaction to save the new record
+    db.refresh(assure_db)  # Refresh to obtain any updated data from the DB
     return assure_db
 
 
 @assure_router.delete("/Assure_delete/{cin}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_assure(cin: str, db: orm.Session = Depends(services.get_db)):
-    """Delete an Assure record by its CIN."""
+    """
+    Delete an Assure record by its CIN.
+    """
     assure_db = db.query(models.AssureModel).filter(models.AssureModel.Cin == cin).first()
     if not assure_db:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Assure not found")
     db.delete(assure_db)
-    db.commit()
+    db.commit()  # Commit changes to remove the record permanently
     return None
 
 
 @assure_router.get("/Assure/{cin}", response_model=schemas.AssureBase)
 def get_assure(cin: str, db: orm.Session = Depends(services.get_db)):
-    """Retrieve a specific Assure by CIN."""
+    """
+    Retrieve a specific Assure record using the CIN.
+    """
     assure_item = db.query(models.AssureModel).get(cin)
     if not assure_item:
         raise HTTPException(status_code=404, detail=f"Item with CIN {cin} not found")
     return assure_item
 
-
 # -----------------------------
-# Router for Product endpoints
+# Product Endpoints
 # -----------------------------
 product_router = APIRouter(prefix="/api", tags=["product"])
 
-
 @product_router.post("/product_create", response_model=schemas.ProductBase, status_code=status.HTTP_201_CREATED)
 def create_product(product: schemas.ProductCreate, db: orm.Session = Depends(services.get_db)):
-    """Create a new product record."""
+    """
+    Create a new product record.
+    """
     product_db = models.ProductModel(
         Police=product.Police,
         Date_effet=product.Date_effet,
@@ -129,14 +145,16 @@ def create_product(product: schemas.ProductCreate, db: orm.Session = Depends(ser
         assure_id=product.assure_id
     )
     db.add(product_db)
-    db.commit()
+    db.commit()  # Commit transaction to save the new product
     db.refresh(product_db)
     return product_db
 
 
 @product_router.get("/Product", response_model=List[schemas.ProductBase])
 def list_products(db: orm.Session = Depends(services.get_db)):
-    """Return a list of products with their Assure names."""
+    """
+    Retrieve a list of products along with their associated Assure name.
+    """
     product_list = db.query(
         models.ProductModel,
         models.AssureModel.Assure_name
@@ -152,33 +170,37 @@ def list_products(db: orm.Session = Depends(services.get_db)):
 
 @product_router.delete("/Product_delete/{id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_product(id: int, db: orm.Session = Depends(services.get_db)):
-    """Delete a product record by its id."""
+    """
+    Delete a product record by its id.
+    """
     product_db = db.query(models.ProductModel).filter(models.ProductModel.id == id).first()
     if not product_db:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Product not found")
     db.delete(product_db)
-    db.commit()
+    db.commit()  # Commit deletion
     return None
 
 
 @product_router.get("/Assure/{cin}/Product", response_model=List[schemas.ProductBase])
 def get_products_by_assure(cin: str, db: orm.Session = Depends(services.get_db)):
-    """Return products associated with a specific Assure."""
+    """
+    Retrieve all product records associated with a specific Assure.
+    """
     assure = db.query(models.AssureModel).filter(models.AssureModel.Cin == cin).first()
     if not assure:
         raise HTTPException(status_code=404, detail="Assure not found")
     return assure.products
 
-
 # -----------------------------
-# Router for Reglement endpoints
+# Reglement Endpoints
 # -----------------------------
 reglement_router = APIRouter(prefix="/api", tags=["reglement"])
 
-
 @reglement_router.get("/Reglement/AssureNames_Product", response_model=List[schemas.ProductWithAssureName])
 def get_products_with_assure_names(db: orm.Session = Depends(services.get_db)):
-    """Return reglement details along with the Assure name for each product."""
+    """
+    Retrieve reglement details along with each product's associated Assure name.
+    """
     products = db.query(models.ProductModel).all()
     result = []
     for product in products:
@@ -200,17 +222,22 @@ def get_products_with_assure_names(db: orm.Session = Depends(services.get_db)):
 
 @reglement_router.post("", response_model=schemas.ReglementBase)
 def create_reglement(reglement: schemas.ReglementCreate, db: orm.Session = Depends(services.get_db)):
-    """Create a reglement for a product and log the action in history."""
+    """
+    Create a new reglement record for a given product and log this action in the history.
+    """
+    # Validate that the product exists
     product = db.query(models.ProductModel).filter(models.ProductModel.id == reglement.Product_id).first()
     if not product:
         raise HTTPException(status_code=404, detail="Product not found")
 
+    # Calculate new remaining amount (reste) based on the last reglement
     last_reglement = db.query(models.ReglementModel).filter(
         models.ReglementModel.Product_id == reglement.Product_id
     ).order_by(models.ReglementModel.id.desc()).first()
     last_reste = last_reglement.Reste if last_reglement else product.Prime_Totale
     new_reste = last_reste - reglement.Reglement
 
+    # Create and commit new reglement
     db_reglement = models.ReglementModel(
         Product_id=reglement.Product_id,
         Reste=new_reste,
@@ -225,6 +252,7 @@ def create_reglement(reglement: schemas.ReglementCreate, db: orm.Session = Depen
     db.commit()
     db.refresh(db_reglement)
 
+    # Log this creation in history
     db_history = models.HistoryModel(
         assure_id=product.assure_id,
         product_id=product.id,
@@ -249,7 +277,9 @@ def update_reglement_by_product_id(
     reglement_update: schemas.ReglementUpdate,
     db: orm.Session = Depends(services.get_db)
 ):
-    """Update the latest reglement for a product and create a history record."""
+    """
+    Update the latest reglement for a specific product and create a history record.
+    """
     last_reglement = db.query(models.ReglementModel).filter(
         models.ReglementModel.Product_id == product_id
     ).order_by(models.ReglementModel.id.desc()).first()
@@ -262,6 +292,7 @@ def update_reglement_by_product_id(
         raise HTTPException(status_code=404, detail="Product not found")
 
     new_reste = reglement_update.Reglement
+    # Update reglement values
     last_reglement.Reste = new_reste
     last_reglement.Garant = reglement_update.Garant
     last_reglement.numero = reglement_update.numero
@@ -273,6 +304,7 @@ def update_reglement_by_product_id(
     db.commit()
     db.refresh(last_reglement)
 
+    # Create history record for the update
     db_history = models.HistoryModel(
         assure_id=product.assure_id,
         product_id=product.id,
@@ -293,7 +325,9 @@ def update_reglement_by_product_id(
 
 @reglement_router.get("/reglements/{id}", response_model=List[schemas.ReglementDetail])
 def get_reglements_by_product_id(id: int, db: orm.Session = Depends(services.get_db)):
-    """Return all reglements for a given product id, with associated Assure details."""
+    """
+    Retrieve all reglement records for a given product along with its Assure details.
+    """
     reglements = db.query(models.ReglementModel).join(models.ProductModel).join(models.AssureModel)\
         .filter(models.ProductModel.id == id).all()
     if not reglements:
@@ -319,12 +353,15 @@ def get_reglements_by_product_id(id: int, db: orm.Session = Depends(services.get
 
 @reglement_router.delete("/{reglement_id}", response_model=schemas.ReglementBase)
 def delete_reglement(reglement_id: int, db: orm.Session = Depends(services.get_db)):
-    """Delete a reglement by id and log the deletion in history."""
+    """
+    Delete a reglement record and log the deletion in the history.
+    """
     reglement = db.query(models.ReglementModel).filter(models.ReglementModel.id == reglement_id).first()
     if not reglement:
         raise HTTPException(status_code=404, detail="Reglement not found")
 
     product = reglement.product
+    # Create history entry before deletion
     db_history = models.HistoryModel(
         assure_id=product.assure_id,
         product_id=product.id,
@@ -346,7 +383,9 @@ def delete_reglement(reglement_id: int, db: orm.Session = Depends(services.get_d
 
 @reglement_router.get("/reglements-caisse", response_model=List[schemas.ReglementDetailss])
 def list_reglements_caisse(db: orm.Session = Depends(services.get_db)):
-    """Return detailed reglement records for caisse view."""
+    """
+    Retrieve detailed reglement records for the caisse view.
+    """
     reglements = db.query(models.ReglementModel).all()
     details = []
     for reglement in reglements:
@@ -375,7 +414,9 @@ def list_reglements_caisse(db: orm.Session = Depends(services.get_db)):
 
 @reglement_router.get("/reglements-credit", response_model=schemas.ReglementCreditSummary)
 def get_reglements_credit(db: orm.Session = Depends(services.get_db)):
-    """Return a summary of reglements credit with totals."""
+    """
+    Retrieve a summary of reglement credits along with total prime and remaining amounts.
+    """
     reglements = db.query(models.ReglementModel).all()
     details = []
     total_prime_totale = 0.0
@@ -405,16 +446,16 @@ def get_reglements_credit(db: orm.Session = Depends(services.get_db)):
         total_reste=total_reste
     )
 
-
 # -----------------------------
-# Router for History endpoints
+# History Endpoints
 # -----------------------------
 history_router = APIRouter(prefix="/api", tags=["history"])
 
-
 @history_router.get("/{cin}", response_model=List[schemas.HistoryBase])
 def get_history_by_cin(cin: str, db: orm.Session = Depends(services.get_db)):
-    """Retrieve history entries by Assure CIN."""
+    """
+    Retrieve history records by Assure CIN.
+    """
     history_entries = db.query(models.HistoryModel).join(models.AssureModel)\
         .filter(models.AssureModel.Cin == cin).all()
     if not history_entries:
@@ -424,7 +465,9 @@ def get_history_by_cin(cin: str, db: orm.Session = Depends(services.get_db)):
 
 @history_router.delete("/{history_id}", response_model=schemas.HistoryBase)
 def delete_history(history_id: int, db: orm.Session = Depends(services.get_db)):
-    """Delete a history entry by id."""
+    """
+    Delete a history record by its ID.
+    """
     history_entry = db.query(models.HistoryModel).filter(models.HistoryModel.id == history_id).first()
     if not history_entry:
         raise HTTPException(status_code=404, detail="History entry not found")
@@ -432,33 +475,34 @@ def delete_history(history_id: int, db: orm.Session = Depends(services.get_db)):
     db.commit()
     return history_entry
 
-
 # -----------------------------
-# File upload and data insertion
+# File Upload and Data Insertion
 # -----------------------------
 @app.post("/upload", status_code=status.HTTP_201_CREATED)
 async def upload_file(file: UploadFile = File(...), db: orm.Session = Depends(services.get_db)):
     """
-    Upload an Excel file with two sheets to insert data into Assure and Product tables.
-    Sheet 1: AssureModel with columns {CIN, Assuré}
-    Sheet 2: ProductModel with columns {Date Emission, Police, Date effet, Prime Totale, CIN, Fractionn, Matricule}
+    Upload an Excel file containing two sheets:
+    - Sheet 1: AssureModel data with columns {CIN, Assuré}
+    - Sheet 2: ProductModel data with columns {Date Emission, Police, Date effet, Prime Totale, CIN, Fractionn, Matricule}
+    Process the file and insert data into the respective tables.
     """
     df1, df2 = await process_excel_file(file)
 
-    # Clean DataFrames
+    # Clean data: Replace infinite values with NaN and fill NaN with 0
     df1 = df1.replace([np.inf, -np.inf], np.nan).fillna(0)
     df2 = df2.replace([np.inf, -np.inf], np.nan).fillna(0)
 
-    # Validate required columns
+    # Validate required columns for Assure data
     required_columns_df1 = {'CIN', 'Assuré'}
     if not required_columns_df1.issubset(df1.columns):
         raise HTTPException(status_code=400, detail=f"Sheet 1 must contain columns: {required_columns_df1}")
 
+    # Validate required columns for Product data
     required_columns_df2 = {'Date Emission', 'Police', 'Date effet', 'Prime Totale', 'CIN', 'Fractionn', 'Matricule'}
     if not required_columns_df2.issubset(df2.columns):
         raise HTTPException(status_code=400, detail=f"Sheet 2 must contain columns: {required_columns_df2}")
 
-    # Insert Assure data from df1
+    # Insert data into AssureModel table from df1
     for _, row in df1.iterrows():
         cin = row['CIN']
         if db.query(models.AssureModel).filter(models.AssureModel.Cin == cin).first():
@@ -468,7 +512,7 @@ async def upload_file(file: UploadFile = File(...), db: orm.Session = Depends(se
         db.commit()
         db.refresh(assure_data)
 
-    # Insert Product data from df2
+    # Insert data into ProductModel table from df2
     for _, row in df2.iterrows():
         existing_product = db.query(models.ProductModel).filter(
             models.ProductModel.Date_Emission == row['Date Emission'],
@@ -498,7 +542,11 @@ async def upload_file(file: UploadFile = File(...), db: orm.Session = Depends(se
 
 
 async def process_excel_file(file: UploadFile):
-    """Process and read Excel file into two DataFrames."""
+    """
+    Process the uploaded Excel file and return two pandas DataFrames:
+    - df1: for Assure data
+    - df2: for Product data
+    """
     contents = await file.read()
     buffer = io.BytesIO(contents)
 
@@ -511,11 +559,11 @@ async def process_excel_file(file: UploadFile):
     if len(excel_file.sheet_names) < 1:
         raise HTTPException(status_code=400, detail="Excel file must contain at least one sheet")
 
-    # Adjust sheet names as needed; currently both sheets are read from the first sheet index
+    # Currently reading the first sheet for both data sets; adjust sheet indexes if needed
     df1 = pd.read_excel(excel_file, sheet_name=0)
     df2 = pd.read_excel(excel_file, sheet_name=0)
 
-    # Standardize column names
+    # Standardize column names (strip whitespace)
     df1.columns = [col.strip() for col in df1.columns]
     df2.columns = [col.strip() for col in df2.columns]
 
@@ -523,13 +571,18 @@ async def process_excel_file(file: UploadFile):
     logger.info(f"Sheet 2 columns: {df2.columns}")
     return df1, df2
 
-
 # -----------------------------
 # Total Counts Endpoint
 # -----------------------------
 @app.get("/api/total", response_model=schemas.TotalCounts)
 async def get_total_counts(db: orm.Session = Depends(services.get_db)):
-    """Return totals of products, assures, reglement amounts, and Prime Totale."""
+    """
+    Retrieve overall totals including:
+    - Total number of products
+    - Total number of assures
+    - Total reglement amount
+    - Total Prime Totale from products
+    """
     total_product_count = db.query(models.ProductModel).count()
     total_assure_count = db.query(models.AssureModel).count()
     total_montant_reglement = db.query(func.sum(models.ReglementModel.Reglement)).scalar() or 0
@@ -542,14 +595,18 @@ async def get_total_counts(db: orm.Session = Depends(services.get_db)):
         total_Prime_Totale=round(float(total_Prime_Totale), 2)
     )
 
-
-# Include routers in the main app
+# -----------------------------
+# Register Routers with the Main Application
+# -----------------------------
 app.include_router(user_router)
 app.include_router(assure_router)
 app.include_router(product_router)
 app.include_router(reglement_router)
 app.include_router(history_router)
 
+# -----------------------------
+# Run the Application with Uvicorn (with SSL)
+# -----------------------------
 if __name__ == '__main__':
     uvicorn.run(
         "main:app",
